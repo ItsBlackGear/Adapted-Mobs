@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "adaptedmobs",
   "version": "${version}",
-  "name": "Example Mod",
+  "name": "Adapted Mobs",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -12,16 +12,16 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "Insert License Here",
-  "icon": "assets/examplemod/icon.png",
+  "icon": "assets/adaptedmobs/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.groupid.examplemod.core.fabric.ExampleModFabric"
+      "com.cf28.adaptedmobs.core.fabric.AdaptedMobsFabric"
     ]
   },
   "mixins": [
-    "examplemod.mixins.json",
-    "examplemod-common.mixins.json"
+    "adaptedmobs.mixins.json",
+    "adaptedmobs-common.mixins.json"
   ],
   "depends": {
     "fabric": "*",

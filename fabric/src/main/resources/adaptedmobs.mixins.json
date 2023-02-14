@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.cf28.adaptedmobs.core.mixin.fabric",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "SheetsMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

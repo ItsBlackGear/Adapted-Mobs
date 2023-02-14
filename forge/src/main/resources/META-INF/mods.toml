@@ -4,9 +4,9 @@ loaderVersion = "[43,)"
 license = "Insert License Here"
 
 [[mods]]
-modId = "examplemod"
+modId = "adaptedmobs"
 version = "${version}"
-displayName = "Example Mod"
+displayName = "Adapted Mobs"
 authors = "Me!"
 description = '''
 This is an example description! Tell everyone what your mod is about!
