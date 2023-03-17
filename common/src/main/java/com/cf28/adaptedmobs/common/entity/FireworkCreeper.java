@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
  * - red/white creeper charge fireworks [rare]
  * - a rare egg from them [very rare]
  */
-public class FireworkCreeper extends Creeper {
+public class FireworkCreeper extends TamableCreeper {
     public FireworkCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
     }

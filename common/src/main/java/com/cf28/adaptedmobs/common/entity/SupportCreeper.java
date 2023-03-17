@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
  * - gunpowder [similar to creepers]
  * - yellow mystery egg [very rare]
  */
-public class SupportCreeper extends Creeper {
+public class SupportCreeper extends TamableCreeper {
     public SupportCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
     }
