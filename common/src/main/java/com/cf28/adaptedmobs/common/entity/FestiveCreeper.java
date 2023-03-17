@@ -1,7 +1,6 @@
 package com.cf28.adaptedmobs.common.entity;
 
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
-import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
@@ -89,7 +88,6 @@ public class FestiveCreeper extends TamableCreeper {
     }
 
     public void transitionTo(State state) {
-        AdaptedMobs.LOGGER.info("current state: " + state.name());
         switch (state) {
             case IDLING -> this.setState(State.IDLING);
             case FIRING -> {
@@ -144,6 +142,7 @@ public class FestiveCreeper extends TamableCreeper {
                 double offset = -0.7D / (target.x * target.x + target.z * target.z + 0.2D) * 0.5D;
                 this.creature.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
                 this.creature.getLookControl().tick();
+                this.creature.setYBodyRot(this.creature.getYHeadRot());
                 this.creature.setDeltaMovement(target.x * offset, creature.getDeltaMovement().y, target.z * offset);
 
                 if (this.creature.horizontalCollision) {
@@ -156,13 +155,13 @@ public class FestiveCreeper extends TamableCreeper {
     public static class ThrowTNTToTarget extends Goal {
         private final FestiveCreeper creeper;
         private LivingEntity target;
-        float power;
-        int attackCooldown;
+        private float power;
+        private int attackCooldown;
 
         public ThrowTNTToTarget(FestiveCreeper creeper) {
             this.creeper = creeper;
             this.power = 1.5F;
-            this.attackCooldown = 0;
+            this.attackCooldown = 20;
         }
 
         @Override
@@ -173,7 +172,7 @@ public class FestiveCreeper extends TamableCreeper {
             } else if (!this.target.isAlive()) {
                 return false;
             } else {
-                return this.creeper.distanceTo(this.target) > 2.0D && this.creeper.distanceTo(this.target) < 144D && this.creeper.hasLineOfSight(this.target);
+                return this.creeper.distanceTo(this.target) < 144D && this.creeper.hasLineOfSight(this.target);
             }
         }
 
@@ -201,7 +200,7 @@ public class FestiveCreeper extends TamableCreeper {
             }
 
             if (this.target != null && this.attackCooldown <= 0) {
-                if (!this.creeper.level.isClientSide) {
+                if (!this.creeper.level.isClientSide && this.attackCooldown == 0) {
                     PrimedTnt tnt = new PrimedTnt(this.creeper.level, this.creeper.getX(), this.creeper.getY(), this.creeper.getZ(), this.creeper);
                     tnt.setFuse(30);
                     tnt.setPos(this.creeper.getX(), this.creeper.getY(), this.creeper.getZ());
