@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class AMModelLayers {
     public static final ModelLayerLocation FESTIVE_CREEPER = create("festive_creeper");
+    public static final ModelLayerLocation FESTIVE_CREEPER_ARMOR = create("festive_creeper", "armor");
 
     private static ModelLayerLocation create(String key) {
         return create(key, "main");

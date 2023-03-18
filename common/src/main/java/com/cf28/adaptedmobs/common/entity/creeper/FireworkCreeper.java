@@ -1,4 +1,4 @@
-package com.cf28.adaptedmobs.common.entity;
+package com.cf28.adaptedmobs.common.entity.creeper;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;

@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.common.registry;
 
-import com.cf28.adaptedmobs.common.entity.FestiveCreeper;
+import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 

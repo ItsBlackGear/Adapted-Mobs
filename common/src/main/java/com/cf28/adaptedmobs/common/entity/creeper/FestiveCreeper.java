@@ -1,16 +1,19 @@
-package com.cf28.adaptedmobs.common.entity;
+package com.cf28.adaptedmobs.common.entity.creeper;
 
+import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -58,6 +61,30 @@ public class FestiveCreeper extends TamableCreeper {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Creeper.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.3D);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        Entity entity = source.getEntity();
+        if (entity != null) {
+            if (entity == this.getOwner()) {
+                return false;
+            }
+
+            if (entity instanceof OwnableEntity pet) {
+                return this.getOwner() != pet.getOwner();
+            }
+
+            if (entity instanceof PrimedFestiveTnt tnt && tnt.getOwner() instanceof FestiveCreeper creeper && creeper.getOwner() == null) {
+                return false;
+            }
+
+            if (entity.isAlliedTo(this)) {
+                return false;
+            }
+        }
+
+        return super.hurt(source, amount);
     }
 
     @Override
@@ -155,12 +182,10 @@ public class FestiveCreeper extends TamableCreeper {
     public static class ThrowTNTToTarget extends Goal {
         private final FestiveCreeper creeper;
         private LivingEntity target;
-        private float power;
         private int attackCooldown;
 
         public ThrowTNTToTarget(FestiveCreeper creeper) {
             this.creeper = creeper;
-            this.power = 1.5F;
             this.attackCooldown = 20;
         }
 
@@ -189,10 +214,6 @@ public class FestiveCreeper extends TamableCreeper {
 
         @Override
         public void tick() {
-            if (this.creeper.isPowered()) {
-                this.power = 3;
-            }
-
             --this.attackCooldown;
 
             if (this.target != null && this.attackCooldown == 7) {
@@ -201,9 +222,9 @@ public class FestiveCreeper extends TamableCreeper {
 
             if (this.target != null && this.attackCooldown <= 0) {
                 if (!this.creeper.level.isClientSide && this.attackCooldown == 0) {
-                    PrimedTnt tnt = new PrimedTnt(this.creeper.level, this.creeper.getX(), this.creeper.getY(), this.creeper.getZ(), this.creeper);
+                    PrimedFestiveTnt tnt = new PrimedFestiveTnt(this.creeper.level, this.creeper.getX(), this.creeper.getY(), this.creeper.getZ(), this.creeper);
                     tnt.setFuse(30);
-                    tnt.setPos(this.creeper.getX(), this.creeper.getY(), this.creeper.getZ());
+                    tnt.setCharged(this.creeper.isPowered());
                     tnt.setDeltaMovement((this.target.getX() - tnt.getX()) / 18D, (this.target.getY() - tnt.getY()) / 18D + 0.5D, (this.target.getZ() - tnt.getZ()) / 18D);
                     this.creeper.level.addFreshEntity(tnt);
                 }

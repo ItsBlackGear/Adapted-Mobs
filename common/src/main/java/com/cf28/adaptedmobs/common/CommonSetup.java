@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.common;
 
-import com.cf28.adaptedmobs.common.entity.FestiveCreeper;
+import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.core.platform.common.BiomeManager;
 import com.cf28.adaptedmobs.core.platform.common.EntityRegistry;

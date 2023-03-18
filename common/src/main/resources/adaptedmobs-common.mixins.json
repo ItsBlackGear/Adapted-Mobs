@@ -5,7 +5,9 @@
   "client": [
   ],
   "mixins": [
-    "BlockEntityTypeMixin"
+    "BlockEntityTypeMixin",
+    "ExplosionMixin",
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
