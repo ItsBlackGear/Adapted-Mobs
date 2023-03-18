@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.client.renderer.layer;
 import com.cf28.adaptedmobs.client.AMModelLayers;
 import com.cf28.adaptedmobs.client.renderer.model.FestiveCreeperModel;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
+import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -24,7 +25,7 @@ public class FestiveCreeperPowerLayer extends EnergySwirlLayer<FestiveCreeper, F
 
     @Override
     protected ResourceLocation getTextureLocation() {
-        return new ResourceLocation("textures/entity/creeper/creeper_armor.png");
+        return new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/armor.png");
     }
 
     @Override
