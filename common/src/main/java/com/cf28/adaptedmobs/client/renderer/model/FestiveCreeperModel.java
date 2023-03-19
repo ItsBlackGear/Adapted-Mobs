@@ -18,7 +18,7 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
     private final ModelPart head;
 
     public FestiveCreeperModel(ModelPart root) {
-        super(0.0F, 0.0f);
+        super(0.5F, 24.0F);
         this.root = root;
         ModelPart upper = root.getChild("upper");
         this.head = upper.getChild("head");

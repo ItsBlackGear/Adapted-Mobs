@@ -5,12 +5,9 @@ import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -61,30 +58,6 @@ public class FestiveCreeper extends TamableCreeper {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Creeper.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.3D);
-    }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        Entity entity = source.getEntity();
-        if (entity != null) {
-            if (entity == this.getOwner()) {
-                return false;
-            }
-
-            if (entity instanceof OwnableEntity pet) {
-                return this.getOwner() != pet.getOwner();
-            }
-
-            if (entity instanceof PrimedFestiveTnt tnt && tnt.getOwner() instanceof FestiveCreeper creeper && creeper.getOwner() == null) {
-                return false;
-            }
-
-            if (entity.isAlliedTo(this)) {
-                return false;
-            }
-        }
-
-        return super.hurt(source, amount);
     }
 
     @Override
