@@ -66,15 +66,19 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
         this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0F, 1.2F));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Cat.class, 6.0F, 1.0F, 1.2F));
+        this.goalSelector.addGoal(3, new CreeperFollowOwnerGoal(this, 1.25D, 10.0F, 2.0F));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0F, false));
-        this.goalSelector.addGoal(5, new CreeperFollowOwnerGoal(this, 1.5D, 10.0F, 2.0F));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8F));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this, true));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame()));
-        this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame() && !this.isBaby()));
+        this.targetSelector.addGoal(4, new HurtByTargetGoal(this) {
+            @Override public boolean canUse() {
+                return !TamableCreeper.this.isBaby() && super.canUse();
+            }
+        });
     }
 
     @Override
@@ -459,7 +463,7 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
 
         @Override
         public boolean canUse() {
-            if (this.creeper.isTame() && !this.creeper.isOrderedToSit()) {
+            if (this.creeper.isTame() && !this.creeper.isBaby() && !this.creeper.isOrderedToSit()) {
                 LivingEntity owner = this.creeper.getOwner();
                 if (owner == null) {
                     return false;

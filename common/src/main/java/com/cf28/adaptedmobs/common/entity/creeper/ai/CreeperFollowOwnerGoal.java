@@ -82,7 +82,8 @@ public class CreeperFollowOwnerGoal extends Goal {
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = this.adjustedTickDelay(10);
             if (!this.tamable.isLeashed() && !this.tamable.isPassenger()) {
-                if (this.tamable.distanceToSqr(this.owner) >= 144.0D) {
+                if (this.tamable.distanceToSqr(this.owner) >= 256.0D) {
+//                if (this.tamable.distanceToSqr(this.owner) >= 144.0D) {
                     this.teleportToOwner();
                 } else {
                     this.navigation.moveTo(this.owner, this.speedModifier);
@@ -98,8 +99,8 @@ public class CreeperFollowOwnerGoal extends Goal {
             int x = this.randomIntInclusive(-3, 3);
             int y = this.randomIntInclusive(-1, 1);
             int z = this.randomIntInclusive(-3, 3);
-            boolean bl = this.maybeTeleportTo(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
-            if (bl) return;
+            boolean shouldTeleportToPlayer = this.maybeTeleportTo(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
+            if (shouldTeleportToPlayer) return;
         }
     }
 

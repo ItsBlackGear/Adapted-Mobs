@@ -29,6 +29,9 @@ public class PrimedFestiveTnt extends Entity {
         this.blocksBuilding = true;
     }
 
+    /**
+     * Creates the Festive TNT once it's primed, applying an offset
+     */
     public PrimedFestiveTnt(Level level, double x, double y, double z, @Nullable LivingEntity owner) {
         this(AMEntityTypes.FESTIVE_TNT.get(), level);
         this.setPos(x, y, z);
@@ -83,6 +86,11 @@ public class PrimedFestiveTnt extends Entity {
         }
     }
 
+    /**
+     * Triggers the explosion behavior for the Festive TNT
+     * - when charged, it has a radius of 4 blocks, otherwise it has a radius of 2 blocks
+     * - when charged, it breaks blocks on radius as long as the rule doMobGriefing is set to true
+     */
     private void explode() {
         Explosion.BlockInteraction interaction = this.isCharged() && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE;
         this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), this.isCharged() ? 4.0F : 2.0F, interaction);
