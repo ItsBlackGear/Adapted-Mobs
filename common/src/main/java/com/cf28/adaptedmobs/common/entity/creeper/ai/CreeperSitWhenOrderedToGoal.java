@@ -6,10 +6,10 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public class SitWhenOrderedToGoal extends Goal {
+public class CreeperSitWhenOrderedToGoal extends Goal {
     private final TamableCreeper mob;
 
-    public SitWhenOrderedToGoal(TamableCreeper mob) {
+    public CreeperSitWhenOrderedToGoal(TamableCreeper mob) {
         this.mob = mob;
         this.setFlags(EnumSet.of(Flag.JUMP, Flag.MOVE));
     }

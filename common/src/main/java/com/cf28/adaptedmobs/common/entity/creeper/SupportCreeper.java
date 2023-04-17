@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
-import com.cf28.adaptedmobs.common.entity.creeper.ai.BuffTargetGoal;
+import com.cf28.adaptedmobs.common.entity.creeper.ai.ApplyBuffsToTargetGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -47,7 +47,7 @@ public class SupportCreeper extends TamableCreeper {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new BuffTargetGoal(this, 16.0D, 1.25D));
+        this.goalSelector.addGoal(2, new ApplyBuffsToTargetGoal(this, 16.0D, 1.25D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Player.class, 16.0F, 1.0F, 1.2F, target -> {
             return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && this.getSupportedUUID() == null;
         }));

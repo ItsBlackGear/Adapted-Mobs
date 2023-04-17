@@ -12,18 +12,20 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-public class BuffTargetGoal extends Goal {
+public class ApplyBuffsToTargetGoal extends Goal {
     private final SupportCreeper mob;
     private LivingEntity target;
     private final double range;
     private final double speed;
     private int animationTimer;
     private boolean playingAnimation;
+    private final boolean boosted;
 
-    public BuffTargetGoal(SupportCreeper mob, double range, double speed) {
+    public ApplyBuffsToTargetGoal(SupportCreeper mob, double range, double speed) {
         this.mob = mob;
         this.range = range;
         this.speed = speed;
+        this.boosted = mob.isPowered();
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
@@ -58,6 +60,7 @@ public class BuffTargetGoal extends Goal {
     @Override
     public void tick() {
         if (this.target != null && this.target.isAlive()) {
+            int amplification = this.boosted ? 1 : 0;
             if (!this.target.hasEffect(MobEffects.MOVEMENT_SPEED) || !this.target.hasEffect(MobEffects.DAMAGE_BOOST)) {
                 if (!this.playingAnimation) {
                     this.playingAnimation = true;
@@ -66,8 +69,8 @@ public class BuffTargetGoal extends Goal {
                 }
 
                 if (this.animationTimer == 0) {
-                    this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200), this.mob);
-                    this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200), this.mob);
+                    this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, amplification), this.mob);
+                    this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, amplification), this.mob);
                     this.mob.transitionTo(CreeperState.IDLING);
                     this.playingAnimation = false;
                 } else {

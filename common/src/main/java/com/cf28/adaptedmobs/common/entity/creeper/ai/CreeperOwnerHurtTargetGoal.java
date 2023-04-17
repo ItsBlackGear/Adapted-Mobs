@@ -7,13 +7,13 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import java.util.EnumSet;
 
-public class OwnerHurtTargetGoal extends TargetGoal {
+public class CreeperOwnerHurtTargetGoal extends TargetGoal {
     private final TamableCreeper creeper;
     private final boolean isHurtBy;
     private LivingEntity target;
     private int timestamp;
 
-    public OwnerHurtTargetGoal(TamableCreeper creeper, boolean isHurtBy) {
+    public CreeperOwnerHurtTargetGoal(TamableCreeper creeper, boolean isHurtBy) {
         super(creeper, false);
         this.creeper = creeper;
         this.isHurtBy = isHurtBy;

@@ -2,8 +2,8 @@ package com.cf28.adaptedmobs.common.entity.creeper;
 
 import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperFollowOwnerGoal;
-import com.cf28.adaptedmobs.common.entity.creeper.ai.OwnerHurtTargetGoal;
-import com.cf28.adaptedmobs.common.entity.creeper.ai.SitWhenOrderedToGoal;
+import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperOwnerHurtTargetGoal;
+import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperSitWhenOrderedToGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
 import net.minecraft.core.particles.ParticleTypes;
@@ -71,7 +71,7 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
                 return super.canUse() && TamableCreeper.this.shouldSwell();
             }
         });
-        this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0F, 1.2F));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Cat.class, 6.0F, 1.0F, 1.2F));
         this.goalSelector.addGoal(3, new CreeperFollowOwnerGoal(this, 1.25D, 10.0F, 2.0F));
@@ -80,8 +80,8 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this, true));
-        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this, false));
+        this.targetSelector.addGoal(1, new CreeperOwnerHurtTargetGoal(this, true));
+        this.targetSelector.addGoal(2, new CreeperOwnerHurtTargetGoal(this, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame() && !this.isBaby()));
         this.targetSelector.addGoal(4, new HurtByTargetGoal(this) {
             @Override public boolean canUse() {
