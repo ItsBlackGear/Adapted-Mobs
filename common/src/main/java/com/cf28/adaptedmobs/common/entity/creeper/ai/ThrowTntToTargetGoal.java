@@ -2,16 +2,17 @@ package com.cf28.adaptedmobs.common.entity.creeper.ai;
 
 import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
+import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 public class ThrowTntToTargetGoal extends Goal {
-    private final FestiveCreeper mob;
+    private final TamableCreeper mob;
     private LivingEntity target;
     private int attackCooldown;
 
-    public ThrowTntToTargetGoal(FestiveCreeper mob) {
+    public ThrowTntToTargetGoal(TamableCreeper mob) {
         this.mob = mob;
         this.attackCooldown = 20;
     }

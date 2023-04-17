@@ -1,9 +1,11 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
 import com.cf28.adaptedmobs.common.entity.creeper.ai.BuffTargetGoal;
+import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
@@ -35,6 +37,8 @@ import java.util.UUID;
 // */
 public class SupportCreeper extends TamableCreeper {
     private static final EntityDataAccessor<Optional<UUID>> SUPPORTED_ENTITY_UUID = SynchedEntityData.defineId(SupportCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
+    public final AnimationState walkingAnimationState = new AnimationState();
+    public final AnimationState bestowingAnimationState = new AnimationState();
 
     public SupportCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
@@ -53,6 +57,25 @@ public class SupportCreeper extends TamableCreeper {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SUPPORTED_ENTITY_UUID, Optional.empty());
+    }
+
+    @Override
+    public void tick() {
+        if (!this.isMoving() && !this.isInWater()) {
+            this.walkingAnimationState.stop();
+        } else {
+            this.walkingAnimationState.startIfStopped(this.tickCount);
+        }
+
+        if (this.level.isClientSide) {
+            if (this.getState().is(CreeperState.ATTACKING)) {
+                this.bestowingAnimationState.startIfStopped(this.tickCount);
+            } else {
+                this.bestowingAnimationState.stop();
+            }
+        }
+
+        super.tick();
     }
 
     @Nullable

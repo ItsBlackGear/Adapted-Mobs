@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.entity.creeper.ai;
 
 import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
+import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,12 +16,14 @@ public class BuffTargetGoal extends Goal {
     private final SupportCreeper mob;
     private LivingEntity target;
     private final double range;
-    private final double speedModifier;
+    private final double speed;
+    private int animationTimer;
+    private boolean playingAnimation;
 
-    public BuffTargetGoal(SupportCreeper mob, double range, double speedModifier) {
+    public BuffTargetGoal(SupportCreeper mob, double range, double speed) {
         this.mob = mob;
         this.range = range;
-        this.speedModifier = speedModifier;
+        this.speed = speed;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
@@ -48,18 +51,35 @@ public class BuffTargetGoal extends Goal {
     public void stop() {
         this.target = null;
         this.mob.setSupportedUUID(null);
+        this.playingAnimation = false;
+        this.animationTimer = 0;
     }
 
     @Override
     public void tick() {
         if (this.target != null && this.target.isAlive()) {
-            if (!this.target.hasEffect(MobEffects.MOVEMENT_SPEED) && !this.target.hasEffect(MobEffects.DAMAGE_BOOST)) {
-                this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 3600), this.mob);
-                this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 3600), this.mob);
-                this.mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 3600));
+            if (!this.target.hasEffect(MobEffects.MOVEMENT_SPEED) || !this.target.hasEffect(MobEffects.DAMAGE_BOOST)) {
+                if (!this.playingAnimation) {
+                    this.playingAnimation = true;
+                    this.mob.transitionTo(CreeperState.ATTACKING);
+                    this.animationTimer = 20;
+                }
+
+                if (this.animationTimer == 0) {
+                    this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200), this.mob);
+                    this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200), this.mob);
+                    this.mob.transitionTo(CreeperState.IDLING);
+                    this.playingAnimation = false;
+                } else {
+                    this.animationTimer--;
+                }
             }
 
-            this.mob.getNavigation().moveTo(this.target, this.speedModifier);
+            if (!this.mob.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                this.mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED));
+            }
+
+            this.mob.getNavigation().moveTo(this.target, this.speed);
         }
     }
 
