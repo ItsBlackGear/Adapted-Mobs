@@ -42,8 +42,6 @@ public class BuffTargetGoal extends Goal {
     @Override
     public void start() {
         this.mob.setSupportedUUID(this.target.getUUID());
-        this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, 2), this.mob);
-        this.target.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 2), this.mob);
     }
 
     @Override
@@ -55,6 +53,12 @@ public class BuffTargetGoal extends Goal {
     @Override
     public void tick() {
         if (this.target != null && this.target.isAlive()) {
+            if (!this.target.hasEffect(MobEffects.MOVEMENT_SPEED) && !this.target.hasEffect(MobEffects.DAMAGE_BOOST)) {
+                this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 3600), this.mob);
+                this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 3600), this.mob);
+                this.mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 3600));
+            }
+
             this.mob.getNavigation().moveTo(this.target, this.speedModifier);
         }
     }
@@ -62,7 +66,7 @@ public class BuffTargetGoal extends Goal {
     @Nullable
     private LivingEntity findTarget() {
         List<LivingEntity> targets = this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range / 2, this.range), target -> {
-            return target instanceof Enemy && target.isAlive() && target != this.mob;
+            return target instanceof Enemy && target.isAlive() && !(target instanceof SupportCreeper);
         });
         if (!targets.isEmpty()) {
             return targets.get(0);
