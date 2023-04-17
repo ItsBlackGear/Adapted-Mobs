@@ -92,6 +92,16 @@ public class FestiveCreeper extends TamableCreeper {
         }
     }
 
+    @Override
+    public boolean detonateOnInteraction() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSwell() {
+        return false;
+    }
+
     public enum State {
         IDLING,
         FIRING

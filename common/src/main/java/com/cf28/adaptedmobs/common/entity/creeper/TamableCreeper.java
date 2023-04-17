@@ -23,6 +23,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.SwellGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -63,6 +64,11 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new SwellGoal(this) {
+            @Override public boolean canUse() {
+                return super.canUse() && TamableCreeper.this.shouldSwell();
+            }
+        });
         this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0F, 1.2F));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Cat.class, 6.0F, 1.0F, 1.2F));
@@ -71,6 +77,7 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8F));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+
         this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this, true));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame() && !this.isBaby()));
@@ -80,6 +87,8 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
             }
         });
     }
+
+
 
     @Override
     protected void defineSynchedData() {
@@ -251,7 +260,7 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
 
     private InteractionResult onInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.is(Items.FLINT_AND_STEEL) && this.shouldDetonate()) {
+        if (stack.is(Items.FLINT_AND_STEEL) && this.detonateOnInteraction()) {
             this.level.playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
             if (!this.level.isClientSide) {
                 this.ignite();
@@ -277,7 +286,11 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
         }
     }
 
-    private boolean shouldDetonate() {
+    public boolean detonateOnInteraction() {
+        return true;
+    }
+
+    public boolean shouldSwell() {
         return true;
     }
 
