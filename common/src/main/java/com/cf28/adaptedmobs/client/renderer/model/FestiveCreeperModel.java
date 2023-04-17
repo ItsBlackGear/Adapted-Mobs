@@ -20,8 +20,7 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
     public FestiveCreeperModel(ModelPart root) {
         super(0.5F, 24.0F);
         this.root = root;
-        ModelPart upper = root.getChild("upper");
-        this.head = upper.getChild("head");
+        this.head = root.getChild("upper").getChild("head");
     }
 
     public static LayerDefinition createBodyLayer(CubeDeformation deformation) {

@@ -1,11 +1,11 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
+import com.cf28.adaptedmobs.common.entity.creeper.ai.BuffTargetGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
@@ -43,6 +43,7 @@ public class SupportCreeper extends TamableCreeper {
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.goalSelector.addGoal(2, new BuffTargetGoal(this, 16.0D, 1.25D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Player.class, 6.0F, 1.0F, 1.2F, target -> {
             return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && !this.isSupporting();
         }));
@@ -65,5 +66,10 @@ public class SupportCreeper extends TamableCreeper {
 
     public boolean isSupporting() {
         return this.getSupportedUUID() != null;
+    }
+
+    @Override
+    public boolean shouldSwell() {
+        return !this.isSupporting() && this.getHealth() <= this.getMaxHealth() / 2;
     }
 }
