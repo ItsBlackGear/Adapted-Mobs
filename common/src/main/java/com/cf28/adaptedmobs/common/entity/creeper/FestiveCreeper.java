@@ -2,9 +2,7 @@ package com.cf28.adaptedmobs.common.entity.creeper;
 
 import com.cf28.adaptedmobs.common.entity.creeper.ai.BackOffWithRangeGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.ThrowTntToTargetGoal;
-import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.SynchedEntityData;
+import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
@@ -35,13 +33,11 @@ import net.minecraft.world.level.Level;
 // * - red mystery egg [very rare]
 // */
 public class FestiveCreeper extends TamableCreeper {
-    private static final EntityDataAccessor<State> DATA_STATE = SynchedEntityData.defineId(FestiveCreeper.class, AMEntityDataSerializers.FESTIVE_CREEPER_STATE);
     public final AnimationState walkingAnimationState = new AnimationState();
     public final AnimationState firingAnimationState = new AnimationState();
 
     public FestiveCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
-        this.entityData.define(DATA_STATE, State.IDLING);
     }
 
     @Override
@@ -64,7 +60,7 @@ public class FestiveCreeper extends TamableCreeper {
         }
 
         if (this.level.isClientSide) {
-            if (this.getState() == State.FIRING) {
+            if (this.getState().is(CreeperState.ATTACKING)) {
                 this.firingAnimationState.startIfStopped(this.tickCount);
             } else {
                 this.firingAnimationState.stop();
@@ -74,21 +70,13 @@ public class FestiveCreeper extends TamableCreeper {
         super.tick();
     }
 
-    private State getState() {
-        return this.entityData.get(DATA_STATE);
-    }
-
-    private void setState(State state) {
-        this.entityData.set(DATA_STATE, state);
-    }
-
-    public void transitionTo(State state) {
-        switch (state) {
-            case IDLING -> this.setState(State.IDLING);
-            case FIRING -> {
-                this.playSound(SoundEvents.TNT_PRIMED, 1.0F, 1.0F);
-                this.setState(State.FIRING);
-            }
+    @Override
+    public void transitionTo(CreeperState state) {
+        if (state.is(CreeperState.ATTACKING)) {
+            this.playSound(SoundEvents.TNT_PRIMED, 1.0F, 1.0F);
+            this.setState(CreeperState.ATTACKING);
+        } else {
+            this.setState(state);
         }
     }
 
@@ -100,10 +88,5 @@ public class FestiveCreeper extends TamableCreeper {
     @Override
     public boolean shouldSwell() {
         return false;
-    }
-
-    public enum State {
-        IDLING,
-        FIRING
     }
 }

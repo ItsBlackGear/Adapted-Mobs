@@ -2,6 +2,10 @@ package com.cf28.adaptedmobs.common.entity.creeper;
 
 import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperFollowOwnerGoal;
+import com.cf28.adaptedmobs.common.entity.creeper.ai.OwnerHurtTargetGoal;
+import com.cf28.adaptedmobs.common.entity.creeper.ai.SitWhenOrderedToGoal;
+import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
+import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,7 +23,6 @@ import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -27,8 +30,6 @@ import net.minecraft.world.entity.ai.goal.SwellGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.animal.Wolf;
@@ -43,7 +44,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,6 +51,7 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
     protected static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BYTE);
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<CreeperState> DATA_STATE = SynchedEntityData.defineId(TamableCreeper.class, AMEntityDataSerializers.CREEPER_STATE);
     private boolean orderedToSit;
     private int age;
     private int forcedAge;
@@ -58,6 +59,7 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
 
     public TamableCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
+        this.entityData.define(DATA_STATE, CreeperState.IDLING);
         this.reassessTameGoals();
     }
 
@@ -69,7 +71,7 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
                 return super.canUse() && TamableCreeper.this.shouldSwell();
             }
         });
-        this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0F, 1.2F));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Cat.class, 6.0F, 1.0F, 1.2F));
         this.goalSelector.addGoal(3, new CreeperFollowOwnerGoal(this, 1.25D, 10.0F, 2.0F));
@@ -88,7 +90,17 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
         });
     }
 
+    public CreeperState getState() {
+        return this.entityData.get(DATA_STATE);
+    }
 
+    public void setState(CreeperState state) {
+        this.entityData.set(DATA_STATE, state);
+    }
+
+    public void transitionTo(CreeperState state) {
+        this.setState(state);
+    }
 
     @Override
     protected void defineSynchedData() {
@@ -459,86 +471,5 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
         }
 
         super.onSyncedDataUpdated(key);
-    }
-
-    public static class OwnerHurtTargetGoal extends TargetGoal {
-        private final TamableCreeper creeper;
-        private final boolean isHurtBy;
-        private LivingEntity target;
-        private int timestamp;
-
-        public OwnerHurtTargetGoal(TamableCreeper creeper, boolean isHurtBy) {
-            super(creeper, false);
-            this.creeper = creeper;
-            this.isHurtBy = isHurtBy;
-            this.setFlags(EnumSet.of(Flag.TARGET));
-        }
-
-        @Override
-        public boolean canUse() {
-            if (this.creeper.isTame() && !this.creeper.isBaby() && !this.creeper.isOrderedToSit()) {
-                LivingEntity owner = this.creeper.getOwner();
-                if (owner == null) {
-                    return false;
-                } else {
-                    this.target = this.isHurtBy ? owner.getLastHurtByMob() : owner.getLastHurtMob();
-                    int timestamp = this.isHurtBy ? owner.getLastHurtByMobTimestamp() : owner.getLastHurtMobTimestamp();
-                    return timestamp != this.timestamp && this.canAttack(this.target, TargetingConditions.DEFAULT) && this.creeper.wantsToAttack(this.target, owner);
-                }
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public void start() {
-            this.mob.setTarget(this.target);
-            LivingEntity owner = this.creeper.getOwner();
-            if (owner != null) this.timestamp = this.isHurtBy ? owner.getLastHurtByMobTimestamp() : owner.getLastHurtMobTimestamp();
-            super.start();
-        }
-    }
-
-    public static class CreeperSitWhenOrderedToGoal extends Goal {
-        private final TamableCreeper creeper;
-
-        public CreeperSitWhenOrderedToGoal(TamableCreeper creeper) {
-            this.creeper = creeper;
-            this.setFlags(EnumSet.of(Flag.JUMP, Flag.MOVE));
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return this.creeper.isOrderedToSit();
-        }
-
-        @Override
-        public boolean canUse() {
-            if (!this.creeper.isTame()) {
-                return false;
-            } else if (this.creeper.isInWaterOrBubble()) {
-                return false;
-            } else if (!this.creeper.isOnGround()) {
-                return false;
-            } else {
-                LivingEntity owner = this.creeper.getOwner();
-                if (owner == null) {
-                    return true;
-                } else {
-                    return (!(this.creeper.distanceToSqr(owner) < 144.0D) || owner.getLastHurtByMob() == null) && this.creeper.isOrderedToSit();
-                }
-            }
-        }
-
-        @Override
-        public void start() {
-            this.creeper.getNavigation().stop();
-            this.creeper.setInSittingPose(true);
-        }
-
-        @Override
-        public void stop() {
-            this.creeper.setInSittingPose(false);
-        }
     }
 }

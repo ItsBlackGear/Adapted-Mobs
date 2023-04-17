@@ -45,7 +45,7 @@ public class SupportCreeper extends TamableCreeper {
         super.registerGoals();
         this.goalSelector.addGoal(2, new BuffTargetGoal(this, 16.0D, 1.25D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Player.class, 16.0F, 1.0F, 1.2F, target -> {
-            return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && !this.isSupporting();
+            return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && this.getSupportedUUID() == null;
         }));
     }
 
@@ -64,12 +64,8 @@ public class SupportCreeper extends TamableCreeper {
         this.entityData.set(SUPPORTED_ENTITY_UUID, Optional.ofNullable(uuid));
     }
 
-    public boolean isSupporting() {
-        return this.getSupportedUUID() != null;
-    }
-
     @Override
     public boolean shouldSwell() {
-        return !this.isSupporting() && this.getHealth() <= this.getMaxHealth() / 2;
+        return this.getSupportedUUID() == null && this.getHealth() <= this.getMaxHealth() / 2;
     }
 }

@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.common.entity.creeper.ai;
 
 import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
+import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -43,7 +44,7 @@ public class ThrowTntToTargetGoal extends Goal {
         --this.attackCooldown;
 
         if (this.target != null && this.attackCooldown == 7) {
-            this.mob.transitionTo(FestiveCreeper.State.FIRING);
+            this.mob.transitionTo(CreeperState.ATTACKING);
         }
 
         if (this.target != null && this.attackCooldown <= 0) {
@@ -55,7 +56,7 @@ public class ThrowTntToTargetGoal extends Goal {
                 this.mob.level.addFreshEntity(tnt);
             }
 
-            this.mob.transitionTo(FestiveCreeper.State.IDLING);
+            this.mob.transitionTo(CreeperState.IDLING);
             this.attackCooldown = 100;
         }
     }
