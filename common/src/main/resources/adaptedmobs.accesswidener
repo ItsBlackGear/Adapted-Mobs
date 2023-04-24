@@ -10,3 +10,5 @@ accessible class net/minecraft/core/Registry$RegistryBootstrap
 
 mutable field net/minecraft/world/item/AxeItem STRIPPABLES Ljava/util/Map;
 accessible field net/minecraft/world/item/AxeItem STRIPPABLES Ljava/util/Map;
+
+extendable method net/minecraft/world/entity/monster/Creeper explodeCreeper ()V

@@ -6,6 +6,7 @@ import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperOwnerHurtTargetGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperSitWhenOrderedToGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
+import com.cf28.adaptedmobs.core.mixin.access.CreeperAccessor;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
@@ -47,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class TamableCreeper extends Creeper implements OwnableEntity {
+public class TamableCreeper extends Creeper implements OwnableEntity {
     protected static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BYTE);
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -160,6 +162,20 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
 
     public boolean isMoving() {
         return (this.onGround || this.isInWaterOrBubble()) && this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6;
+    }
+
+    @Override
+    protected void explodeCreeper() {
+        if (!this.level.isClientSide) {
+            Explosion.BlockInteraction interaction = this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+            float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
+            this.dead = this.getOwner() == null;
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor)this).getExplosionRadius() * explosionMultiplier, interaction);
+            if (this.getOwner() == null) {
+                this.discard();
+            }
+            ((CreeperAccessor)this).callSpawnLingeringCloud();
+        }
     }
 
     @Override
@@ -282,10 +298,10 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         } else {
             if (this.isFood(stack)) {
-                int i = this.getAge();
+                int age = this.getAge();
                 if (this.isBaby()) {
                     if (!player.getAbilities().instabuild) stack.shrink(1);
-                    this.ageUp(this.getSpeedUpSecondsWhenFeeding(-i), true);
+                    this.ageUp(this.getSpeedUpSecondsWhenFeeding(-age), true);
                     return InteractionResult.sidedSuccess(this.level.isClientSide);
                 }
 
@@ -368,6 +384,10 @@ public abstract class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
         Entity entity = source.getEntity();
+        if (source.isExplosion() && source.getDirectEntity() == this) {
+            return false;
+        }
+
         if (source.getDirectEntity() instanceof PrimedFestiveTnt tnt && source.isExplosion()) {
             if (tnt.getOwner() instanceof FestiveCreeper creeper) {
                 return creeper.getOwner() == this.getOwner();

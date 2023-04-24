@@ -36,12 +36,12 @@ public class ApplyBuffsToTargetGoal extends Goal {
             return this.target != null;
         }
 
-        return false;
+        return !this.mob.isInSittingPose();
     }
 
     @Override
     public boolean canContinueToUse() {
-        return this.target != null && this.target.isAlive() && this.mob.distanceToSqr(this.target) <= this.range * this.range && !(this.target instanceof SupportCreeper);
+        return this.target != null && !this.mob.isInSittingPose() && this.target.isAlive() && this.mob.distanceToSqr(this.target) <= this.range * this.range && !(this.target instanceof SupportCreeper);
     }
 
     @Override
@@ -89,7 +89,11 @@ public class ApplyBuffsToTargetGoal extends Goal {
     @Nullable
     private LivingEntity findTarget() {
         List<LivingEntity> targets = this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range / 2, this.range), target -> {
-            return target instanceof Enemy && target.isAlive() && !(target instanceof SupportCreeper);
+            if (this.mob.isTame()) {
+                return target == this.mob.getOwner();
+            } else {
+                return target instanceof Enemy && target.isAlive() && !(target instanceof SupportCreeper);
+            }
         });
         if (!targets.isEmpty()) {
             return targets.get(0);
