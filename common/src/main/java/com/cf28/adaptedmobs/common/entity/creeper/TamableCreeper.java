@@ -167,14 +167,14 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     protected void explodeCreeper() {
         if (!this.level.isClientSide) {
-            Explosion.BlockInteraction interaction = this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
             this.dead = this.getOwner() == null;
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor)this).getExplosionRadius() * explosionMultiplier, interaction);
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor)this).getExplosionRadius() * explosionMultiplier, Explosion.BlockInteraction.NONE);
             if (this.getOwner() == null) {
                 this.discard();
             }
             ((CreeperAccessor)this).callSpawnLingeringCloud();
+            this.entityData.set(CreeperAccessor.getDATA_SWELL_DIR(), -1);
         }
     }
 

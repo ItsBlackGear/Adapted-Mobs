@@ -9,6 +9,8 @@ public class AMModelLayers {
     public static final ModelLayerLocation FESTIVE_CREEPER_ARMOR = create("festive_creeper", "armor");
     public static final ModelLayerLocation SUPPORT_CREEPER = create("support_creeper");
     public static final ModelLayerLocation SUPPORT_CREEPER_ARMOR = create("support_creeper", "armor");
+    public static final ModelLayerLocation CREEPER = create("creeper");
+    public static final ModelLayerLocation CREEPER_ARMOR = create("creeper", "armor");
 
     private static ModelLayerLocation create(String key) {
         return create(key, "main");
