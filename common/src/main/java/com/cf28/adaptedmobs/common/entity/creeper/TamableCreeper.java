@@ -86,7 +86,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.targetSelector.addGoal(1, new CreeperOwnerHurtTargetGoal(this, true));
         this.targetSelector.addGoal(2, new CreeperOwnerHurtTargetGoal(this, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame() && !this.isBaby()));
-        this.targetSelector.addGoal(4, new HurtByTargetGoal(this, Creeper.class) {
+        this.targetSelector.addGoal(4, new HurtByTargetGoal(this) {
             @Override public boolean canUse() {
                 return !TamableCreeper.this.isBaby() && super.canUse();
             }
@@ -232,7 +232,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        return !this.isOwnedBy(target) && super.canAttack(target);
+        return !this.isOwnedBy(target) && !(target instanceof Creeper) && super.canAttack(target);
     }
 
     public boolean isOwnedBy(LivingEntity target) {
