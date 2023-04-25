@@ -39,7 +39,7 @@ import java.util.UUID;
 public class SupportCreeper extends TamableCreeper {
     private static final EntityDataAccessor<Optional<UUID>> SUPPORTED_ENTITY_UUID = SynchedEntityData.defineId(SupportCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
     public final AnimationState walkingAnimationState = new AnimationState();
-    public final AnimationState bestowingAnimationState = new AnimationState();
+    public final AnimationState bestowAnimationState = new AnimationState();
 
     public SupportCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
@@ -70,9 +70,9 @@ public class SupportCreeper extends TamableCreeper {
 
         if (this.level.isClientSide) {
             if (this.getState().is(CreeperState.ATTACKING)) {
-                this.bestowingAnimationState.startIfStopped(this.tickCount);
+                this.bestowAnimationState.startIfStopped(this.tickCount);
             } else {
-                this.bestowingAnimationState.stop();
+                this.bestowAnimationState.stop();
             }
         }
 

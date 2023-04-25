@@ -1,7 +1,8 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
+import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 
 /**
@@ -17,8 +18,30 @@ import net.minecraft.world.level.Level;
  * - light blue creeper burst firework star [rare]
  * - blue mystery egg [very rare]
  */
-public class RocketCreeper extends Creeper {
-    public RocketCreeper(EntityType<? extends Creeper> entityType, Level level) {
+public class RocketCreeper extends TamableCreeper {
+    public final AnimationState walkingAnimationState = new AnimationState();
+    public final AnimationState rocketAnimationState = new AnimationState();
+
+    public RocketCreeper(EntityType<? extends TamableCreeper> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Override
+    public void tick() {
+        if (!this.isMoving() && !this.isInWater()) {
+            this.walkingAnimationState.stop();
+        } else {
+            this.walkingAnimationState.startIfStopped(this.tickCount);
+        }
+
+        if (this.level.isClientSide) {
+            if (this.getState().is(CreeperState.ATTACKING)) {
+                this.rocketAnimationState.startIfStopped(this.tickCount);
+            } else {
+                this.rocketAnimationState.stop();
+            }
+        }
+
+        super.tick();
     }
 }

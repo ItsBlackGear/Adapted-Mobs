@@ -1,7 +1,7 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
 import com.cf28.adaptedmobs.client.renderer.animation.FestiveCreeperAnimations;
-import com.cf28.adaptedmobs.client.renderer.animation.GlobalAnimations;
+import com.cf28.adaptedmobs.client.renderer.animation.EntityTransformations;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,6 +50,6 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
         float speed = Math.min((float)entity.getDeltaMovement().lengthSqr() * 70.0F, 8.0F);
         this.animate(entity.walkingAnimationState, FestiveCreeperAnimations.WALK, ageInTicks, speed);
         this.animate(entity.firingAnimationState, FestiveCreeperAnimations.FIRE, ageInTicks);
-        this.animate(entity.babyTransformationState, GlobalAnimations.BABY_TRANSFORM, ageInTicks);
+        this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
     }
 }

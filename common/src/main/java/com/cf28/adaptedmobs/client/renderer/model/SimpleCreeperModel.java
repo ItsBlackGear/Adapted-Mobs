@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
-import com.cf28.adaptedmobs.client.renderer.animation.GlobalAnimations;
+import com.cf28.adaptedmobs.client.renderer.animation.EntityTransformations;
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -59,6 +59,6 @@ public class SimpleCreeperModel<T extends TamableCreeper> extends AgeableHierarc
         this.leftHindLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         this.rightFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         this.leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.animate(entity.babyTransformationState, GlobalAnimations.BABY_TRANSFORM, ageInTicks);
+        this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
     }
 }
