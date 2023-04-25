@@ -1,5 +1,6 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
+import com.cf28.adaptedmobs.client.renderer.animation.GlobalAnimations;
 import com.cf28.adaptedmobs.client.renderer.animation.SupportCreeperAnimations;
 import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
 import net.fabricmc.api.EnvType;
@@ -57,5 +58,6 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
         float speed = Math.min((float)entity.getDeltaMovement().lengthSqr() * 70.0F, 8.0F);
         this.animate(entity.walkingAnimationState, SupportCreeperAnimations.WALK, ageInTicks, speed);
         this.animate(entity.bestowingAnimationState, SupportCreeperAnimations.BESTOW, ageInTicks);
+        this.animate(entity.babyTransformationState, GlobalAnimations.BABY_TRANSFORM, ageInTicks);
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -54,6 +55,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BYTE);
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final EntityDataAccessor<CreeperState> DATA_STATE = SynchedEntityData.defineId(TamableCreeper.class, AMEntityDataSerializers.CREEPER_STATE);
+    public final AnimationState babyTransformationState = new AnimationState();
     private boolean orderedToSit;
     private int age;
     private int forcedAge;
@@ -62,7 +64,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public TamableCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
         this.entityData.define(DATA_STATE, CreeperState.IDLING);
-        this.reassessTameGoals();
     }
 
     @Override
@@ -85,7 +86,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.targetSelector.addGoal(1, new CreeperOwnerHurtTargetGoal(this, true));
         this.targetSelector.addGoal(2, new CreeperOwnerHurtTargetGoal(this, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame() && !this.isBaby()));
-        this.targetSelector.addGoal(4, new HurtByTargetGoal(this) {
+        this.targetSelector.addGoal(4, new HurtByTargetGoal(this, Creeper.class) {
             @Override public boolean canUse() {
                 return !TamableCreeper.this.isBaby() && super.canUse();
             }
@@ -195,11 +196,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
             this.entityData.set(DATA_FLAGS_ID, (byte)(flag & -5));
             this.entityData.set(DATA_FLAGS_ID, (byte)(flag & -5));
         }
-
-        this.reassessTameGoals();
-    }
-
-    protected void reassessTameGoals() {
     }
 
     public boolean isInSittingPose() {
@@ -435,7 +431,17 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                 this.setAge(--i);
             }
         }
+    }
 
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.isBaby()) {
+            this.babyTransformationState.startIfStopped(this.tickCount);
+        } else {
+            this.babyTransformationState.stop();
+        }
     }
 
     public int getAge() {
