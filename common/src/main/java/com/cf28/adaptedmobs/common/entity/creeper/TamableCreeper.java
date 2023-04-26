@@ -267,7 +267,10 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!this.level.isClientSide) {
+        if (this.level.isClientSide) {
+            boolean isTamed = this.isOwnedBy(player) || this.isTame();
+            return isTamed ? InteractionResult.CONSUME : InteractionResult.PASS;
+        } else {
             if (this.isTame()) {
                 if (this.isFood(stack) && this.getHealth() < this.getMaxHealth()) {
                     if (!player.getAbilities().instabuild) stack.shrink(1);
@@ -279,6 +282,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                 InteractionResult result = this.onInteract(player, hand);
                 if ((!result.consumesAction() || this.isBaby()) && this.isOwnedBy(player)) {
                     this.setOrderedToSit(!this.isOrderedToSit());
+                    this.jumping = false;
                     this.navigation.stop();
                     this.setTarget(null);
                     return InteractionResult.SUCCESS;
@@ -406,6 +410,11 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         }
 
         return super.isInvulnerableTo(source);
+    }
+
+    @Override
+    public int getMaxHeadXRot() {
+        return this.isInSittingPose() ? 20 : super.getMaxHeadXRot();
     }
 
     @Override

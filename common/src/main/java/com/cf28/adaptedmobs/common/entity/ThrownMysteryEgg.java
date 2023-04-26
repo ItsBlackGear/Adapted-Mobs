@@ -27,10 +27,6 @@ public class ThrownMysteryEgg extends ThrowableItemProjectile {
         super(AMEntityTypes.MYSTERY_EGG.get(), entity, level);
     }
 
-    public ThrownMysteryEgg(Level level, double x, double y, double z) {
-        super(AMEntityTypes.MYSTERY_EGG.get(), x, y, z, level);
-    }
-
     @Override
     public void handleEntityEvent(byte id) {
         if (id == 3) {
