@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.entity.creeper.ai;
 
 import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
+import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -92,7 +93,11 @@ public class ApplyBuffsToTargetGoal extends Goal {
             if (this.mob.isTame()) {
                 return target == this.mob.getOwner();
             } else {
-                return target instanceof Enemy && target.isAlive() && !(target instanceof SupportCreeper);
+                if (target instanceof TamableCreeper creeper) {
+                    return creeper.getOwner() != null && creeper.isAlive() && !(target instanceof SupportCreeper);
+                }
+
+                return target instanceof Enemy && target.isAlive();
             }
         });
         if (!targets.isEmpty()) {
