@@ -9,7 +9,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -33,8 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class RocketCreeper extends TamableCreeper {
     private static final EntityDataAccessor<Boolean> IS_ROCKET = SynchedEntityData.defineId(RocketCreeper.class, EntityDataSerializers.BOOLEAN);
-    public final AnimationState walkingAnimationState = new AnimationState();
-    public final AnimationState rocketAnimationState = new AnimationState();
     private int timeBeforeJumping;
 
     public RocketCreeper(EntityType<? extends TamableCreeper> entityType, Level level) {
@@ -85,21 +82,7 @@ public class RocketCreeper extends TamableCreeper {
     @Override
     public void tick() {
         this.launchTowardsTarget();
-
-        if (!this.isMoving() && !this.isInWater()) {
-            this.walkingAnimationState.stop();
-        } else {
-            this.walkingAnimationState.startIfStopped(this.tickCount);
-        }
-
-        if (this.level.isClientSide) {
-            if (this.getState().is(CreeperState.ATTACKING)) {
-                this.rocketAnimationState.startIfStopped(this.tickCount);
-            } else {
-                this.rocketAnimationState.stop();
-            }
-        }
-
+        this.processAnimations();
         super.tick();
     }
 

@@ -4,7 +4,6 @@ import com.cf28.adaptedmobs.common.entity.creeper.ai.BackOffWithRangeGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.ThrowTntToTargetGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,9 +29,6 @@ import net.minecraft.world.level.Level;
 // * - red mystery egg [very rare]
 // */
 public class FestiveCreeper extends TamableCreeper {
-    public final AnimationState walkingAnimationState = new AnimationState();
-    public final AnimationState firingAnimationState = new AnimationState();
-
     public FestiveCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
     }
@@ -50,20 +46,7 @@ public class FestiveCreeper extends TamableCreeper {
 
     @Override
     public void tick() {
-        if (!this.isMoving() && !this.isInWater()) {
-            this.walkingAnimationState.stop();
-        } else {
-            this.walkingAnimationState.startIfStopped(this.tickCount);
-        }
-
-        if (this.level.isClientSide) {
-            if (this.getState().is(CreeperState.ATTACKING)) {
-                this.firingAnimationState.startIfStopped(this.tickCount);
-            } else {
-                this.firingAnimationState.stop();
-            }
-        }
-
+        this.processAnimations();
         super.tick();
     }
 

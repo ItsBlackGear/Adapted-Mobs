@@ -49,7 +49,7 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
         this.head.xRot = headPitch * (float)(Math.PI / 180.0F);
         float speed = Math.min((float)entity.getDeltaMovement().lengthSqr() * 70.0F, 8.0F);
         this.animate(entity.walkingAnimationState, FestiveCreeperAnimations.WALK, ageInTicks, speed);
-        this.animate(entity.firingAnimationState, FestiveCreeperAnimations.FIRE, ageInTicks);
+        this.animate(entity.attackAnimationState, FestiveCreeperAnimations.FIRE, ageInTicks);
         this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
     }
 }

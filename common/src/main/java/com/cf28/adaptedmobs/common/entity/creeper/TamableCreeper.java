@@ -55,6 +55,8 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BYTE);
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final EntityDataAccessor<CreeperState> DATA_STATE = SynchedEntityData.defineId(TamableCreeper.class, AMEntityDataSerializers.CREEPER_STATE);
+    public final AnimationState walkingAnimationState = new AnimationState();
+    public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState babyTransformationState = new AnimationState();
     private boolean orderedToSit;
     private int age;
@@ -448,6 +450,22 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
             this.babyTransformationState.startIfStopped(this.tickCount);
         } else {
             this.babyTransformationState.stop();
+        }
+    }
+
+    protected void processAnimations() {
+        if (!this.isMoving() && !this.isInWater()) {
+            this.walkingAnimationState.stop();
+        } else {
+            this.walkingAnimationState.startIfStopped(this.tickCount);
+        }
+
+        if (this.level.isClientSide) {
+            if (this.getState().is(CreeperState.ATTACKING)) {
+                this.attackAnimationState.startIfStopped(this.tickCount);
+            } else {
+                this.attackAnimationState.stop();
+            }
         }
     }
 

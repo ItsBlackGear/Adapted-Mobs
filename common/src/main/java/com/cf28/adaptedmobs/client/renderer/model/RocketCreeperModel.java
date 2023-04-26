@@ -59,7 +59,7 @@ public class RocketCreeperModel<T extends RocketCreeper> extends AgeableHierarch
         this.head.xRot = headPitch * (float)(Math.PI / 180.0F);
         float speed = Math.min((float)entity.getDeltaMovement().lengthSqr() * 70.0F, 8.0F);
         this.animate(entity.walkingAnimationState, RocketCreeperAnimations.WALK, ageInTicks, speed);
-        this.animate(entity.rocketAnimationState, RocketCreeperAnimations.ROCKET, ageInTicks);
+        this.animate(entity.attackAnimationState, RocketCreeperAnimations.ROCKET, ageInTicks);
         this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
     }
 }
