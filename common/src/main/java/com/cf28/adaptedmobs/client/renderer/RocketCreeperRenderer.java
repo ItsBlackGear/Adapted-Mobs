@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 
 @Environment(EnvType.CLIENT)
 public class RocketCreeperRenderer extends MobRenderer<RocketCreeper, RocketCreeperModel<RocketCreeper>> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/rocket.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/rocket_creeper.png");
 
     public RocketCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new RocketCreeperModel<>(context.bakeLayer(AMModelLayers.ROCKET_CREEPER)), 0.5F);

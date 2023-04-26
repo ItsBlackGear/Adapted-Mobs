@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class FestiveCreeperRenderer extends MobRenderer<FestiveCreeper, FestiveCreeperModel<FestiveCreeper>> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/festive.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/festive_creeper.png");
 
     public FestiveCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new FestiveCreeperModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPER)), 0.5F);

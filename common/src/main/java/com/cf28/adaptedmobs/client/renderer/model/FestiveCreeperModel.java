@@ -27,13 +27,13 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
     public static LayerDefinition createBodyLayer(CubeDeformation deformation) {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        root.addOrReplaceChild("backleftleg", CubeListBuilder.create().texOffs(0, 40).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F, deformation), PartPose.offset(-4.5F, 19.0F, 4.5F));
-        root.addOrReplaceChild("backrightleg", CubeListBuilder.create().texOffs(31, 35).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F, deformation), PartPose.offset(4.5F, 19.0F, 4.5F));
-        root.addOrReplaceChild("frontrightleg", CubeListBuilder.create().texOffs(31, 35).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F, deformation), PartPose.offset(4.5F, 19.0F, -4.5F));
+        root.addOrReplaceChild("backleftleg", CubeListBuilder.create().texOffs(0, 50).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F, deformation), PartPose.offset(-4.5F, 19.0F, 4.5F));
+        root.addOrReplaceChild("backrightleg", CubeListBuilder.create().texOffs(21, 50).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F, deformation), PartPose.offset(4.5F, 19.0F, 4.5F));
+        root.addOrReplaceChild("frontrightleg", CubeListBuilder.create().texOffs(21, 40).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F, deformation), PartPose.offset(4.5F, 19.0F, -4.5F));
         root.addOrReplaceChild("frontleftleg", CubeListBuilder.create().texOffs(0, 40).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F, deformation), PartPose.offset(-4.5F, 19.0F, -4.5F));
         PartDefinition upper = root.addOrReplaceChild("upper", CubeListBuilder.create(), PartPose.offset(0.0F, 19.0F, 0.0F));
-        upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 24).addBox(-5.0F, -8.0F, -4.0F, 10.0F, 8.0F, 8.0F, deformation), PartPose.offset(0.0F, -10.0F, 0.0F));
-        upper.addOrReplaceChild("belly", CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, -10.0F, -7.0F, 14.0F, 10.0F, 14.0F, deformation), PartPose.offset(0.0F, 0.0F, 0.0F));
+        upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -8.0F, -4.0F, 10.0F, 8.0F, 8.0F, deformation), PartPose.offset(0.0F, -10.0F, 0.0F));
+        upper.addOrReplaceChild("belly", CubeListBuilder.create().texOffs(0, 16).addBox(-7.0F, -10.0F, -7.0F, 14.0F, 10.0F, 14.0F, deformation), PartPose.offset(0.0F, 0.0F, 0.0F));
         return LayerDefinition.create(mesh, 64, 64);
     }
 

@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 
 @Environment(EnvType.CLIENT)
 public class SupportCreeperRenderer extends MobRenderer<SupportCreeper, SupportCreeperModel<SupportCreeper>> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/support.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/support_creeper.png");
 
     public SupportCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new SupportCreeperModel<>(context.bakeLayer(AMModelLayers.SUPPORT_CREEPER)), 0.5F);
