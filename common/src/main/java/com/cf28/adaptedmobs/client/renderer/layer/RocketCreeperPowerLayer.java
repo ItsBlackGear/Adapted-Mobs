@@ -17,7 +17,7 @@ public class RocketCreeperPowerLayer extends EnergySwirlLayer<RocketCreeper, Roc
 
     public RocketCreeperPowerLayer(RenderLayerParent<RocketCreeper, RocketCreeperModel<RocketCreeper>> parent, EntityModelSet modelSet) {
         super(parent);
-        this.model = new RocketCreeperModel<>(modelSet.bakeLayer(AMModelLayers.SUPPORT_CREEPER_ARMOR));
+        this.model = new RocketCreeperModel<>(modelSet.bakeLayer(AMModelLayers.ROCKET_CREEPER_ARMOR));
     }
 
     @Override

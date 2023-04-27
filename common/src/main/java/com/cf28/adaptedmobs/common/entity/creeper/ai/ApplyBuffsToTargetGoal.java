@@ -10,8 +10,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Enemy;
 
 import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.List;
 
 public class ApplyBuffsToTargetGoal extends Goal {
     private final SupportCreeper mob;
@@ -89,21 +89,18 @@ public class ApplyBuffsToTargetGoal extends Goal {
 
     @Nullable
     private LivingEntity findTarget() {
-        List<LivingEntity> targets = this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range / 2, this.range), target -> {
-            if (this.mob.isTame()) {
-                return target == this.mob.getOwner();
-            } else {
-                if (target instanceof TamableCreeper creeper) {
-                    return creeper.getOwner() != null && creeper.isAlive() && !(target instanceof SupportCreeper);
-                }
-
-                return target instanceof Enemy && target.isAlive();
-            }
-        });
-        if (!targets.isEmpty()) {
-            return targets.get(0);
-        }
-
-        return null;
+        return this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range / 2, this.range))
+                .stream()
+                .filter(target -> {
+                    if (this.mob.isTame()) {
+                        return target == this.mob.getOwner();
+                    } else if (target instanceof TamableCreeper creeper) {
+                        return creeper.getOwner() == null && creeper.isAlive() && !(target instanceof SupportCreeper);
+                    } else {
+                        return target instanceof Enemy && target.isAlive();
+                    }
+                })
+                .min(Comparator.comparingDouble(target -> target.distanceTo(this.mob)))
+                .orElse(null);
     }
 }
