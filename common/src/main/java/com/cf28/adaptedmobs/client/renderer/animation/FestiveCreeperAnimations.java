@@ -135,4 +135,46 @@ public class FestiveCreeperAnimations {
                                     AnimationChannel.Interpolations.LINEAR),
                             new Keyframe(0.8343334f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR))).build();
+
+    public static final AnimationDefinition SITTING_TRANSFORM = AnimationDefinition.Builder.withLength(0f)
+            .addAnimation("backleftleg",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -2.5f, 2f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("backleftleg",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(90f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("backrightleg",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -2.5f, 2f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("backrightleg",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(90f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("frontrightleg",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -2.5f, -2f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("frontrightleg",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(-90f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("frontleftleg",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -2.5f, -2f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("frontleftleg",
+                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                            new Keyframe(0f, KeyframeAnimations.degreeVec(-90f, 0f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("head",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -5f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR)))
+            .addAnimation("belly",
+                    new AnimationChannel(AnimationChannel.Targets.POSITION,
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -5f, 0f),
+                                    AnimationChannel.Interpolations.LINEAR))).build();
 }

@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.core.mixin;
 
 import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
+import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.google.common.collect.Sets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -65,94 +66,111 @@ public abstract class ExplosionMixin {
      */
     @Inject(method = "explode", at = @At("HEAD"), cancellable = true)
     private void am$explode(CallbackInfo ci) {
-        if (this.source instanceof PrimedFestiveTnt tnt) {
+        if (this.source instanceof PrimedFestiveTnt || this.source instanceof TamableCreeper) {
             this.level.gameEvent(this.source, GameEvent.EXPLODE, new Vec3(this.x, this.y, this.z));
-            Set<BlockPos> affectedBlocks = Sets.newHashSet();
-
-            for(int xIndex = 0; xIndex < 16; ++xIndex) {
-                for(int yIndex = 0; yIndex < 16; ++yIndex) {
-                    for(int zIndex = 0; zIndex < 16; ++zIndex) {
-                        if (xIndex == 0 || xIndex == 15 || yIndex == 0 || yIndex == 15 || zIndex == 0 || zIndex == 15) {
-                            double xNormalized = (float)xIndex / 15.0F * 2.0F - 1.0F;
-                            double yNormalized = (float)yIndex / 15.0F * 2.0F - 1.0F;
-                            double zNormalized = (float)zIndex / 15.0F * 2.0F - 1.0F;
-                            double distance = Math.sqrt(xNormalized * xNormalized + yNormalized * yNormalized + zNormalized * zNormalized);
-                            xNormalized /= distance;
-                            yNormalized /= distance;
-                            zNormalized /= distance;
-                            float explosionPower = this.radius * (0.7F + this.level.random.nextFloat() * 0.6F);
-                            double x = this.x;
-                            double y = this.y;
-                            double z = this.z;
-
-                            for(; explosionPower > 0.0F; explosionPower -= 0.22500001F) {
-                                BlockPos pos = new BlockPos(x, y, z);
-                                BlockState state = this.level.getBlockState(pos);
-                                FluidState fluid = this.level.getFluidState(pos);
-                                if (!this.level.isInWorldBounds(pos)) {
-                                    break;
-                                }
-
-                                Optional<Float> resistance = this.damageCalculator.getBlockExplosionResistance((Explosion)(Object)this, this.level, pos, state, fluid);
-                                if (resistance.isPresent()) {
-                                    explosionPower -= (resistance.get() + 0.3F) * 0.3F;
-                                }
-
-                                if (explosionPower > 0.0F && this.damageCalculator.shouldBlockExplode((Explosion)(Object)this, this.level, pos, state, explosionPower)) {
-                                    affectedBlocks.add(pos);
-                                }
-
-                                x += xNormalized * 0.3F;
-                                y += yNormalized * 0.3F;
-                                z += zNormalized * 0.3F;
-                            }
-                        }
-                    }
-                }
-            }
-
-            this.toBlow.addAll(affectedBlocks);
-            float explosionRadius = this.radius * 2.0F;
-            int minX = Mth.floor(this.x - (double)explosionRadius - 1.0);
-            int maxX = Mth.floor(this.x + (double)explosionRadius + 1.0);
-            int minY = Mth.floor(this.y - (double)explosionRadius - 1.0);
-            int maxY = Mth.floor(this.y + (double)explosionRadius + 1.0);
-            int minZ = Mth.floor(this.z - (double)explosionRadius - 1.0);
-            int maxZ = Mth.floor(this.z + (double)explosionRadius + 1.0);
-            List<Entity> affectedEntities = this.level.getEntities(this.source, new AABB(minX, minY, minZ, maxX, maxY, maxZ));
-            Vec3 explosionCenter = new Vec3(this.x, this.y, this.z);
-
-            for (Entity entity : affectedEntities) {
-                if (!entity.ignoreExplosion()) {
-                    double distancePercent = Math.sqrt(entity.distanceToSqr(explosionCenter)) / (double) explosionRadius;
-                    if (distancePercent <= 1.0) {
-                        double xOffset = entity.getX() - this.x;
-                        double yOffset = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
-                        double zOffset = entity.getZ() - this.z;
-                        double distanceBetween = Math.sqrt(xOffset * xOffset + yOffset * yOffset + zOffset * zOffset);
-                        if (distanceBetween != 0.0) {
-                            xOffset /= distanceBetween;
-                            yOffset /= distanceBetween;
-                            zOffset /= distanceBetween;
-                            double visibilityPercent = Explosion.getSeenPercent(explosionCenter, entity);
-                            double damagePercent = (1.0 - distancePercent) * visibilityPercent;
-                            if (tnt.getOwner() instanceof FestiveCreeper creeper) {
-                                if (creeper.getOwnerUUID() != null && entity instanceof LivingEntity living) {
-                                    LivingEntity owner = this.level.getPlayerByUUID(creeper.getOwnerUUID());
-                                    if (!creeper.isOwnedBy(living) && creeper.wantsToAttack(living, owner)) {
-                                        this.applyDamageAndKnockback(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent);
-                                    }
-                                } else {
-                                    this.applyDamageAndKnockback(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            this.causeExplosion();
+            this.causeDamage(this.source);
 
             ci.cancel();
         }
+    }
+
+    private void causeDamage(Entity source) {
+        float explosionRadius = this.radius * 2.0F;
+        int minX = Mth.floor(this.x - (double)explosionRadius - 1.0);
+        int maxX = Mth.floor(this.x + (double)explosionRadius + 1.0);
+        int minY = Mth.floor(this.y - (double)explosionRadius - 1.0);
+        int maxY = Mth.floor(this.y + (double)explosionRadius + 1.0);
+        int minZ = Mth.floor(this.z - (double)explosionRadius - 1.0);
+        int maxZ = Mth.floor(this.z + (double)explosionRadius + 1.0);
+        List<Entity> affectedEntities = this.level.getEntities(this.source, new AABB(minX, minY, minZ, maxX, maxY, maxZ));
+        Vec3 explosionCenter = new Vec3(this.x, this.y, this.z);
+
+        for (Entity entity : affectedEntities) {
+            if (!entity.ignoreExplosion()) {
+                double distancePercent = Math.sqrt(entity.distanceToSqr(explosionCenter)) / (double) explosionRadius;
+                if (distancePercent <= 1.0) {
+                    double xOffset = entity.getX() - this.x;
+                    double yOffset = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
+                    double zOffset = entity.getZ() - this.z;
+                    double distanceBetween = Math.sqrt(xOffset * xOffset + yOffset * yOffset + zOffset * zOffset);
+                    if (distanceBetween != 0.0) {
+                        xOffset /= distanceBetween;
+                        yOffset /= distanceBetween;
+                        zOffset /= distanceBetween;
+                        double visibilityPercent = Explosion.getSeenPercent(explosionCenter, entity);
+                        double damagePercent = (1.0 - distancePercent) * visibilityPercent;
+
+                        if (source instanceof PrimedFestiveTnt tnt) {
+                            if (tnt.getOwner() instanceof FestiveCreeper creeper) {
+                                applyDamage(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent, creeper);
+                            }
+                        } else if (source instanceof TamableCreeper creeper) {
+                            applyDamage(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent, creeper);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void applyDamage(float explosionRadius, Entity entity, double xOffset, double yOffset, double zOffset, double damagePercent, TamableCreeper creeper) {
+        if (creeper.getOwnerUUID() != null && entity instanceof LivingEntity living) {
+            LivingEntity owner = this.level.getPlayerByUUID(creeper.getOwnerUUID());
+            if (!creeper.isOwnedBy(living) && creeper.wantsToAttack(living, owner)) {
+                this.applyDamageAndKnockback(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent);
+            }
+        } else {
+            this.applyDamageAndKnockback(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent);
+        }
+    }
+
+    private void causeExplosion() {
+        Set<BlockPos> affectedBlocks = Sets.newHashSet();
+
+        for(int xIndex = 0; xIndex < 16; ++xIndex) {
+            for(int yIndex = 0; yIndex < 16; ++yIndex) {
+                for(int zIndex = 0; zIndex < 16; ++zIndex) {
+                    if (xIndex == 0 || xIndex == 15 || yIndex == 0 || yIndex == 15 || zIndex == 0 || zIndex == 15) {
+                        double xNormalized = (float)xIndex / 15.0F * 2.0F - 1.0F;
+                        double yNormalized = (float)yIndex / 15.0F * 2.0F - 1.0F;
+                        double zNormalized = (float)zIndex / 15.0F * 2.0F - 1.0F;
+                        double distance = Math.sqrt(xNormalized * xNormalized + yNormalized * yNormalized + zNormalized * zNormalized);
+                        xNormalized /= distance;
+                        yNormalized /= distance;
+                        zNormalized /= distance;
+                        float explosionPower = this.radius * (0.7F + this.level.random.nextFloat() * 0.6F);
+                        double x = this.x;
+                        double y = this.y;
+                        double z = this.z;
+
+                        for(; explosionPower > 0.0F; explosionPower -= 0.22500001F) {
+                            BlockPos pos = new BlockPos(x, y, z);
+                            BlockState state = this.level.getBlockState(pos);
+                            FluidState fluid = this.level.getFluidState(pos);
+                            if (!this.level.isInWorldBounds(pos)) {
+                                break;
+                            }
+
+                            Optional<Float> resistance = this.damageCalculator.getBlockExplosionResistance((Explosion)(Object)this, this.level, pos, state, fluid);
+                            if (resistance.isPresent()) {
+                                explosionPower -= (resistance.get() + 0.3F) * 0.3F;
+                            }
+
+                            if (explosionPower > 0.0F && this.damageCalculator.shouldBlockExplode((Explosion)(Object)this, this.level, pos, state, explosionPower)) {
+                                affectedBlocks.add(pos);
+                            }
+
+                            x += xNormalized * 0.3F;
+                            y += yNormalized * 0.3F;
+                            z += zNormalized * 0.3F;
+                        }
+                    }
+                }
+            }
+        }
+
+        this.toBlow.addAll(affectedBlocks);
     }
 
     /**
