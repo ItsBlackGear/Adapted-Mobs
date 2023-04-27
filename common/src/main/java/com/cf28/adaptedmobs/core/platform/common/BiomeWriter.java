@@ -19,9 +19,9 @@ public abstract class BiomeWriter {
 
     public abstract BiomeContext context();
 
-    public abstract void feature(GenerationStep.Decoration decoration, Holder<PlacedFeature> feature);
+    public abstract void addFeature(GenerationStep.Decoration decoration, Holder<PlacedFeature> feature);
 
-    public abstract void spawn(MobCategory category, MobSpawnSettings.SpawnerData data);
+    public abstract void addSpawn(MobCategory category, MobSpawnSettings.SpawnerData data);
 
-    public abstract void carver(GenerationStep.Carving carving, Holder<? extends ConfiguredWorldCarver<?>> carver);
+    public abstract void addCarver(GenerationStep.Carving carving, Holder<? extends ConfiguredWorldCarver<?>> carver);
 }

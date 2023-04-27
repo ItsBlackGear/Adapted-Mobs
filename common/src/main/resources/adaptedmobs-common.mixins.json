@@ -7,7 +7,8 @@
   "mixins": [
     "BlockEntityTypeMixin",
     "ExplosionMixin",
-    "access.CreeperAccessor"
+    "access.CreeperAccessor",
+    "access.SpawnPlacementsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -73,21 +73,31 @@ public class BiomeManagerImpl {
                 public boolean is(ResourceKey<Biome> biome) {
                     return ForgeBiomeWriter.this.biome.is(biome);
                 }
+
+                @Override
+                public ResourceKey<Biome> getBiomeKey() {
+                    return ForgeBiomeWriter.this.biome.unwrapKey().get();
+                }
+
+                @Override
+                public Biome getBiome() {
+                    return ForgeBiomeWriter.this.biome.get();
+                }
             };
         }
 
         @Override
-        public void feature(GenerationStep.Decoration decoration, Holder<PlacedFeature> feature) {
+        public void addFeature(GenerationStep.Decoration decoration, Holder<PlacedFeature> feature) {
             this.builder.getGenerationSettings().addFeature(decoration, feature);
         }
 
         @Override
-        public void spawn(MobCategory category, MobSpawnSettings.SpawnerData data) {
+        public void addSpawn(MobCategory category, MobSpawnSettings.SpawnerData data) {
             this.builder.getMobSpawnSettings().addSpawn(category, data);
         }
 
         @Override
-        public void carver(GenerationStep.Carving carving, Holder<? extends ConfiguredWorldCarver<?>> carver) {
+        public void addCarver(GenerationStep.Carving carving, Holder<? extends ConfiguredWorldCarver<?>> carver) {
             this.builder.getGenerationSettings().addCarver(carving, carver);
         }
     }

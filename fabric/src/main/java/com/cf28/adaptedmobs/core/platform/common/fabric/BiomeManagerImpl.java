@@ -50,21 +50,31 @@ public class BiomeManagerImpl {
                 public boolean is(ResourceKey<Biome> biome) {
                     return FabricBiomeWriter.this.selector.getBiomeKey() == biome;
                 }
+
+                @Override
+                public ResourceKey<Biome> getBiomeKey() {
+                    return FabricBiomeWriter.this.selector.getBiomeKey();
+                }
+
+                @Override
+                public Biome getBiome() {
+                    return FabricBiomeWriter.this.selector.getBiome();
+                }
             };
         }
 
         @Override
-        public void feature(GenerationStep.Decoration decoration, Holder<PlacedFeature> feature) {
+        public void addFeature(GenerationStep.Decoration decoration, Holder<PlacedFeature> feature) {
             this.modifier.getGenerationSettings().addBuiltInFeature(decoration, feature.value());
         }
 
         @Override
-        public void spawn(MobCategory category, MobSpawnSettings.SpawnerData data) {
+        public void addSpawn(MobCategory category, MobSpawnSettings.SpawnerData data) {
             this.modifier.getSpawnSettings().addSpawn(category, data);
         }
 
         @Override
-        public void carver(GenerationStep.Carving carving, Holder<? extends ConfiguredWorldCarver<?>> carver) {
+        public void addCarver(GenerationStep.Carving carving, Holder<? extends ConfiguredWorldCarver<?>> carver) {
             this.modifier.getGenerationSettings().addBuiltInCarver(carving, carver.value());
         }
     }
