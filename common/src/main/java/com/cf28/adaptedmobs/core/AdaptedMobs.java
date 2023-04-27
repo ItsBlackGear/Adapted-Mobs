@@ -6,6 +6,7 @@ import com.cf28.adaptedmobs.common.registry.AMBlocks;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registry.AMItems;
+import com.cf28.adaptedmobs.common.resource.AMBiomeTags;
 import com.cf28.adaptedmobs.core.platform.ModInstance;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
@@ -32,5 +33,7 @@ public class AdaptedMobs {
         AMBlocks.BLOCKS.register();
         AMEntityTypes.ENTITIES.register();
         AMEntityDataSerializers.register();
+
+        AMBiomeTags.boostrap();
     }
 }
