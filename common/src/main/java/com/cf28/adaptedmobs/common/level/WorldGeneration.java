@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.common.level;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.core.mixin.access.SpawnPlacementsAccessor;
 import com.cf28.adaptedmobs.core.platform.common.BiomeManager;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -18,9 +19,9 @@ public class WorldGeneration {
 
         BiomeManager.add((writer, context) -> {
             if (context.hasEntity(EntityType.CREEPER)) {
-                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.FESTIVE_CREEPER.get(), 100, 4, 4));
-                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.SUPPORT_CREEPER.get(), 100, 4, 4));
-                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.ROCKET_CREEPER.get(), 100, 4, 4));
+                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.FESTIVE_CREEPER.get(), 100, 4, context.is(BiomeTags.IS_BADLANDS) ? 8 : 4));
+                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.SUPPORT_CREEPER.get(), 100, 4, context.is(BiomeTags.HAS_DESERT_PYRAMID) ? 8 : 4));
+                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.ROCKET_CREEPER.get(), 100, 4, context.is(BiomeTags.SPAWNS_COLD_VARIANT_FROGS) ? 8 : 4));
             }
         });
     }

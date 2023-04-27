@@ -37,12 +37,12 @@ public class ApplyBuffsToTargetGoal extends Goal {
             return this.target != null;
         }
 
-        return !this.mob.isInSittingPose();
+        return !this.mob.isInSittingPose() && this.mob.hasLineOfSight(this.target);
     }
 
     @Override
     public boolean canContinueToUse() {
-        return this.target != null && !this.mob.isInSittingPose() && this.target.isAlive() && this.mob.distanceToSqr(this.target) <= this.range * this.range && !(this.target instanceof SupportCreeper);
+        return this.target != null && !this.mob.isInSittingPose() && this.target.isAlive() && this.mob.distanceToSqr(this.target) <= this.range * this.range && !(this.target instanceof SupportCreeper) && this.mob.hasLineOfSight(this.target);
     }
 
     @Override
