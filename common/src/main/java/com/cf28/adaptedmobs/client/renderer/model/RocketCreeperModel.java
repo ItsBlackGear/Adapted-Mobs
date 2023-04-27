@@ -27,23 +27,14 @@ public class RocketCreeperModel<T extends RocketCreeper> extends AgeableHierarch
     public static LayerDefinition createBodyLayer(CubeDeformation deformation) {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-
-        PartDefinition all = root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-
-        PartDefinition rightlegfront = all.addOrReplaceChild("rightlegfront", CubeListBuilder.create().texOffs(17, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, -2.0F));
-
-        PartDefinition leftlegfront = all.addOrReplaceChild("leftlegfront", CubeListBuilder.create().texOffs(0, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, -2.0F));
-
-        PartDefinition leftlegback = all.addOrReplaceChild("leftlegback", CubeListBuilder.create().texOffs(17, 51).addBox(-6.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, 2.0F));
-
-        PartDefinition rightlegback = all.addOrReplaceChild("rightlegback", CubeListBuilder.create().texOffs(0, 51).addBox(2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, 2.0F));
-
-        PartDefinition upperhalf = all.addOrReplaceChild("upper", CubeListBuilder.create(), PartPose.offset(0.0F, 15.0F, 0.0F));
-
-        PartDefinition body = upperhalf.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 19).addBox(-3.0F, -15.0F, -2.0F, 6.0F, 15.0F, 4.0F, deformation), PartPose.offset(0.0F, 0.0F, 0.0F));
-
-        PartDefinition head = upperhalf.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -11.0F, -4.0F, 8.0F, 11.0F, 8.0F, deformation), PartPose.offset(0.0F, -15.0F, 0.0F));
-
+        PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        body.addOrReplaceChild("rightlegfront", CubeListBuilder.create().texOffs(17, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, -2.0F));
+        body.addOrReplaceChild("leftlegfront", CubeListBuilder.create().texOffs(0, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, -2.0F));
+        body.addOrReplaceChild("leftlegback", CubeListBuilder.create().texOffs(17, 51).addBox(-6.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, 2.0F));
+        body.addOrReplaceChild("rightlegback", CubeListBuilder.create().texOffs(0, 51).addBox(2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, 2.0F));
+        PartDefinition upper = body.addOrReplaceChild("upper", CubeListBuilder.create(), PartPose.offset(0.0F, 15.0F, 0.0F));
+        upper.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 19).addBox(-3.0F, -15.0F, -2.0F, 6.0F, 15.0F, 4.0F, deformation), PartPose.offset(0.0F, 0.0F, 0.0F));
+        upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -11.0F, -4.0F, 8.0F, 11.0F, 8.0F, deformation), PartPose.offset(0.0F, -15.0F, 0.0F));
         return LayerDefinition.create(mesh, 64, 64);
     }
 

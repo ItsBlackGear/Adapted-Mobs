@@ -1,7 +1,6 @@
 package com.cf28.adaptedmobs.common.entity.creeper.ai;
 
 import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
-import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.world.entity.LivingEntity;

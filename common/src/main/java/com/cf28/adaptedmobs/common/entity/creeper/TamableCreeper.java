@@ -302,7 +302,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
             this.level.playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
             if (!this.level.isClientSide) {
                 this.ignite();
-                stack.hurtAndBreak(1, player, playerx -> playerx.broadcastBreakEvent(hand));
+                stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             }
 
             return InteractionResult.sidedSuccess(this.level.isClientSide);

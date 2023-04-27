@@ -5,7 +5,6 @@
   "client": [
   ],
   "mixins": [
-    "BlockEntityTypeMixin",
     "ExplosionMixin",
     "access.CreeperAccessor",
     "access.SpawnPlacementsAccessor"

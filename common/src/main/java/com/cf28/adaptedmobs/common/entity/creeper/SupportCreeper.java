@@ -6,7 +6,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
@@ -16,25 +15,25 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-///**
-// * FEATURES:
-// * - they run away from players and look for other hostile mobs to follow *
-// * - once following a mob, they buff themselves and the mob with potions such as speed and fire resistance *
-// * - when they follow creepers, they will turn them into charged creepers
-// * - if it happens to be charged, the potion effects that it provides will be more powerful *
-// * - they have a rare chance of dropping a yellow Mystery Egg that hatches a tame baby Support Creeper *
-// * - the baby support creeper will start helping you right away and give you several helpful potion effects *
-// * - [additional note] apparently, owners aren't able to hit tamed creepers... *
-// * ADDITIONAL CHANGES:
-// * - runs quickly like an ocelot away from players *
-// * - looks for hostile mobs to follow and buff with strength I and speed I *
-// * - when below 50% health and there is no mob nearby to buff, it will explode like a normal creeper if you get too close *
-// * - when charged, the buffs it gives are tier II and its explosion when at low health is larger and deals more damage *
-// * - the charge applied by support creeper will go away after 5 minutes
-// * LOOT:
-// * - gunpowder [similar to creepers]
-// * - yellow mystery egg [very rare]
-// */
+/**
+ * FEATURES:
+ * - they run away from players and look for other hostile mobs to follow *
+ * - once following a mob, they buff themselves and the mob with potions such as speed and fire resistance *
+ * - when they follow creepers, they will turn them into charged creepers
+ * - if it happens to be charged, the potion effects that it provides will be more powerful *
+ * - they have a rare chance of dropping a yellow Mystery Egg that hatches a tame baby Support Creeper *
+ * - the baby support creeper will start helping you right away and give you several helpful potion effects *
+ * - [additional note] apparently, owners aren't able to hit tamed creepers... *
+ * ADDITIONAL CHANGES:
+ * - runs quickly like an ocelot away from players *
+ * - looks for hostile mobs to follow and buff with strength I and speed I *
+ * - when below 50% health and there is no mob nearby to buff, it will explode like a normal creeper if you get too close *
+ * - when charged, the buffs it gives are tier II and its explosion when at low health is larger and deals more damage *
+ * - the charge applied by support creeper will go away after 5 minutes
+ * LOOT:
+ * - gunpowder [similar to creepers]
+ * - yellow mystery egg [very rare]
+ */
 public class SupportCreeper extends TamableCreeper {
     private static final EntityDataAccessor<Optional<UUID>> SUPPORTED_ENTITY_UUID = SynchedEntityData.defineId(SupportCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
 
@@ -70,10 +69,6 @@ public class SupportCreeper extends TamableCreeper {
 
     public void setSupportedUUID(@Nullable UUID uuid) {
         this.entityData.set(SUPPORTED_ENTITY_UUID, Optional.ofNullable(uuid));
-    }
-
-    public boolean isSupportingTarget(LivingEntity target) {
-        return this.getSupportedUUID() != null && this.getSupportedUUID().equals(target.getUUID());
     }
 
     @Override

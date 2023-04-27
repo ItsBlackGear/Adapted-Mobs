@@ -10,7 +10,6 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 
 import java.util.Arrays;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public interface BiomeContext {
     ResourceKey<Biome> getBiomeKey();

@@ -51,17 +51,6 @@ public class BackOffWithRangeGoal extends Goal {
     @Override
     public void tick() {
         if (this.target != null) {
-//            Vec3 target = this.target.position().subtract(this.mob.position()).normalize();
-//            double offset = -0.7D / (target.x * target.x + target.z * target.z + 0.2D) * 0.5D;
-//            this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
-//            this.mob.getLookControl().tick();
-//            this.mob.setYBodyRot(this.mob.getYHeadRot());
-//            this.mob.setDeltaMovement(target.x * offset, this.mob.getDeltaMovement().y, target.z * offset);
-//
-//            if (this.mob.horizontalCollision) {
-//                this.mob.getJumpControl().jump();
-//            }
-
             double distance = this.mob.distanceToSqr(this.target);
 
             if (distance <= this.maxDistance * this.maxDistance) {
