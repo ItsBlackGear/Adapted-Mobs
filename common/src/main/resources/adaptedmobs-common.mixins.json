@@ -6,7 +6,6 @@
   ],
   "mixins": [
     "BlockEntityTypeMixin",
-    "CreeperMixin",
     "ExplosionMixin",
     "access.CreeperAccessor"
   ],

@@ -14,7 +14,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -33,7 +32,6 @@ import net.minecraft.world.entity.ai.goal.SwellGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.animal.Wolf;
@@ -65,8 +63,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     private int age;
     private int forcedAge;
     private int forcedAgeTimer;
-    private static final int CHARGE_COOLDOWN = 6000;
-    private int cooldownTicks = -1;
 
     public TamableCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
@@ -459,23 +455,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     public void tick() {
         super.tick();
-
-        if (!this.isPowered() && !(this instanceof SupportCreeper)) {
-            SupportCreeper support = this.level.getNearestEntity(SupportCreeper.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().expandTowards(10.0F, 10.0F, 10.0F));
-            if (support != null && support.isSupportingTarget(this) && !this.isDeadOrDying()) {
-                this.cooldownTicks = CHARGE_COOLDOWN;
-                this.entityData.set(CreeperAccessor.getDATA_IS_POWERED(), true);
-                this.level.playSound(null, this.blockPosition(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.HOSTILE, 1.0F, 1.0F);
-            }
-        }
-
-        if (this.cooldownTicks > 0) {
-            this.cooldownTicks--;
-            if (this.cooldownTicks == 0) {
-                this.entityData.set(CreeperAccessor.getDATA_IS_POWERED(), false);
-                this.cooldownTicks = -1;
-            }
-        }
 
         if (this.isBaby()) {
             this.babyTransformationState.startIfStopped(this.tickCount);
