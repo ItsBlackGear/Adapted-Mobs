@@ -91,13 +91,6 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                         )
                         .withPool(
                                 LootPool.lootPool()
-                                        .setRolls(ConstantValue.exactly(1.0F))
-                                        .add(LootItem.lootTableItem(Items.FIREWORK_STAR))
-                                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                        .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.1F, 0.01F))
-                        )
-                        .withPool(
-                                LootPool.lootPool()
                                         .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
                                         .when(LootItemEntityPropertyCondition.hasProperties(
                                                         LootContext.EntityTarget.KILLER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)

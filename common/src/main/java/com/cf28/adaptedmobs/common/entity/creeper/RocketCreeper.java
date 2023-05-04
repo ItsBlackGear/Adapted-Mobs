@@ -14,8 +14,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.apache.commons.compress.utils.Lists;
+
+import java.util.List;
 
 /**
  * FEATURES:
@@ -125,6 +132,21 @@ public class RocketCreeper extends TamableCreeper {
                     this.getZ() + this.random.nextDouble() * this.getBbWidth() * 2.0D - this.getBbWidth(),
                     xSpeed, ySpeed, zSpeed
             );
+        }
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer) {
+        super.dropCustomDeathLoot(damageSource, looting, hitByPlayer);
+
+        if (hitByPlayer && Math.max(this.random.nextFloat() - (float)looting * 0.01F, 0.0F) < 0.1F) {
+            ItemStack stack = new ItemStack(Items.FIREWORK_STAR);
+            CompoundTag tag = stack.getOrCreateTagElement("Explosion");
+            List<Integer> colors = Lists.newArrayList();
+            colors.add(DyeColor.LIGHT_BLUE.getFireworkColor());
+            tag.putIntArray("Colors", colors);
+            tag.putByte("Type", (byte)FireworkRocketItem.Shape.CREEPER.getId());
+            this.spawnAtLocation(stack);
         }
     }
 
