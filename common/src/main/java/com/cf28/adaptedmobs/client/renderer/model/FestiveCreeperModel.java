@@ -51,6 +51,5 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
         this.animate(entity.walkingAnimationState, FestiveCreeperAnimations.WALK, ageInTicks, speed);
         this.animate(entity.attackAnimationState, FestiveCreeperAnimations.FIRE, ageInTicks);
         this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
-//        this.animate(entity.sittingTransformationState, FestiveCreeperAnimations.SITTING_TRANSFORM, ageInTicks);
     }
 }

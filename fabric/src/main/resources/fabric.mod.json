@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "com.cf28.adaptedmobs.core.fabric.AdaptedMobsFabric"
+    ],
+    "fabric-datagen": [
+      "com.cf28.adaptedmobs.core.data.DataGeneration"
     ]
   },
   "mixins": [
