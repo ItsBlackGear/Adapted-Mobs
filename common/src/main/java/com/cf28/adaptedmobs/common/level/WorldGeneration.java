@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.common.level;
 
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.common.resource.AMBiomeTags;
+import com.cf28.adaptedmobs.core.config.ConfigEntries;
 import com.cf28.adaptedmobs.core.mixin.access.SpawnPlacementsAccessor;
 import com.cf28.adaptedmobs.core.platform.common.BiomeManager;
 import net.minecraft.world.entity.EntityType;
@@ -21,19 +22,19 @@ public class WorldGeneration {
             if (context.hasEntity(EntityType.CREEPER)) {
                 writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
                         AMEntityTypes.FESTIVE_CREEPER.get(),
-                        100,
+                        ConfigEntries.FESTIVE_CREEPER_SPAWN_WEIGHT,
                         4,
-                        context.is(AMBiomeTags.SPAWN_EXTRA_FESTIVE_CREEPER) ? 8 : 4));
+                        context.is(AMBiomeTags.SPAWN_EXTRA_FESTIVE_CREEPER) ? 6 : 4));
                 writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
                         AMEntityTypes.SUPPORT_CREEPER.get(),
-                        100,
+                        ConfigEntries.SUPPORT_CREEPER_SPAWN_WEIGHT,
                         4,
-                        context.is(AMBiomeTags.SPAWN_EXTRA_SUPPORT_CREEPER) ? 8 : 4));
+                        context.is(AMBiomeTags.SPAWN_EXTRA_SUPPORT_CREEPER) ? 6 : 4));
                 writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
                         AMEntityTypes.ROCKET_CREEPER.get(),
-                        100,
+                        ConfigEntries.ROCKET_CREEPER_SPAWN_WEIGHT,
                         4,
-                        context.is(AMBiomeTags.SPAWN_EXTRA_ROCKET_CREEPER) ? 8 : 4));
+                        context.is(AMBiomeTags.SPAWN_EXTRA_ROCKET_CREEPER) ? 6 : 4));
             }
         });
     }

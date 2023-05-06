@@ -1,26 +1,27 @@
 modLoader = "javafml"
 loaderVersion = "[43,)"
 #issueTrackerURL = ""
-license = "Insert License Here"
+license = "MIT"
 
 [[mods]]
 modId = "adaptedmobs"
 version = "${version}"
 displayName = "Adapted Mobs"
-authors = "Me!"
+authors = "Cf28"
+credits = "Cf28, BlackGear, Auxiliary, EB Mario, Pee Dog, Daveyx0"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+The Spiritual Successor to Primitive Mobs
 '''
-#logoFile = ""
+logoFile = "icon.png"
 
-[[dependencies.examplemod]]
+[[dependencies.adaptedmobs]]
 modId = "forge"
 mandatory = true
 versionRange = "[43,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.adaptedmobs]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2,)"

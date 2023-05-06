@@ -3,15 +3,23 @@
   "id": "adaptedmobs",
   "version": "${version}",
   "name": "Adapted Mobs",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "The Spiritual Successor to Primitive Mobs",
   "authors": [
-    "Me!"
+    "Cf28"
+  ],
+  "contributors": [
+    "Cf28",
+    "BlackGear",
+    "Auxiliary",
+    "EB Mario",
+    "Pee Dog",
+    "Daveyx0"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://discord.gg/Mctsf64CXP",
+    "sources": "https://github.com/FabricMC/fabric-example-mod",
   },
-  "license": "Insert License Here",
+  "license": "MIT",
   "icon": "assets/adaptedmobs/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -20,6 +28,9 @@
     ],
     "fabric-datagen": [
       "com.cf28.adaptedmobs.core.data.DataGeneration"
+    ],
+    "modmenu": [
+      "com.cf28.adaptedmobs.core.config.fabric.ModMenuImplementation"
     ]
   },
   "mixins": [
