@@ -50,6 +50,9 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
         float speed = Math.min((float)entity.getDeltaMovement().lengthSqr() * 70.0F, 8.0F);
         this.animate(entity.walkingAnimationState, SupportCreeperAnimations.WALK, ageInTicks, speed);
         this.animate(entity.attackAnimationState, SupportCreeperAnimations.BESTOW, ageInTicks);
+        this.animate(entity.sittingDownAnimationState, SupportCreeperAnimations.SITDOWN, ageInTicks);
+        this.animate(entity.sitIdleAnimationState, SupportCreeperAnimations.SITIDLE, ageInTicks);
+        this.animate(entity.standingUpAnimationState, SupportCreeperAnimations.SITUP, ageInTicks);
         this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
     }
 }

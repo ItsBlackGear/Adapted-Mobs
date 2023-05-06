@@ -58,7 +58,9 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public final AnimationState walkingAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState babyTransformationState = new AnimationState();
-    public final AnimationState sittingTransformationState = new AnimationState();
+    public final AnimationState sittingDownAnimationState = new AnimationState();
+    public final AnimationState sitIdleAnimationState = new AnimationState();
+    public final AnimationState standingUpAnimationState = new AnimationState();
     private boolean orderedToSit;
     private int age;
     private int forcedAge;
@@ -461,6 +463,8 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         } else {
             this.babyTransformationState.stop();
         }
+
+        this.performSittingAnimation();
     }
 
     protected void processAnimations() {
@@ -476,12 +480,18 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
             } else {
                 this.attackAnimationState.stop();
             }
+        }
+    }
 
-            if (this.isInSittingPose()) {
-                this.sittingTransformationState.startIfStopped(this.tickCount);
-            } else {
-                this.sittingTransformationState.stop();
-            }
+    protected void performSittingAnimation() {
+        if (this.isInSittingPose()) {
+            this.sittingDownAnimationState.start(this.tickCount);
+            this.sitIdleAnimationState.startIfStopped(this.tickCount);
+            this.standingUpAnimationState.stop();
+        } else {
+            this.standingUpAnimationState.start(this.tickCount);
+            this.sittingDownAnimationState.stop();
+            this.sitIdleAnimationState.stop();
         }
     }
 
