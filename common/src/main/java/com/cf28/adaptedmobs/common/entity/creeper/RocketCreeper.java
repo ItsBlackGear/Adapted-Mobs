@@ -89,6 +89,10 @@ public class RocketCreeper extends TamableCreeper {
     @Override
     public void tick() {
         this.launchTowardsTarget();
+        if (this.level.isClientSide && this.isRocket()) {
+            this.spawnSmokeParticles();
+        }
+
         this.processAnimations();
         super.tick();
     }
@@ -107,32 +111,30 @@ public class RocketCreeper extends TamableCreeper {
             this.timeBeforeJumping = 0;
         }
 
-        if (this.timeBeforeJumping > 15 && (this.isAlive() && target != null)) {
-            if (this.getSwellDir() > 0 && this.onGround && this.hasEnoughVerticalSpace()) {
-                this.spawnSmokeParticles();
+        if (this.shouldRocket() && target != null) {
+            this.setState(CreeperState.ATTACKING);
+            this.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0F, 0.5F);
+            this.setDeltaMovement((target.getX() - this.getX()) / 6.0D, 1.2D, (target.getZ() - this.getZ()) / 6.0D);
 
-                this.setState(CreeperState.ATTACKING);
-                this.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0F, 0.5F);
-                this.setDeltaMovement((target.getX() - this.getX()) / 6.0D, 1.2D, (target.getZ() - this.getZ()) / 6.0D);
-
-                this.setRocket(true);
-                this.fallDistance = 0.0F;
-            }
+            this.setRocket(true);
+            this.fallDistance = 0.0F;
         }
     }
 
+    private boolean shouldRocket() {
+        return this.timeBeforeJumping > 15 && this.isAlive() && this.getSwellDir() > 0 && this.onGround && this.hasEnoughVerticalSpace();
+    }
+
     private void spawnSmokeParticles() {
-        for (int i = 0; i < 10; i++) {
-            double xSpeed = this.random.nextGaussian() * 0.02D;
-            double ySpeed = this.random.nextGaussian() * 0.02D;
-            double zSpeed = this.random.nextGaussian() * 0.02D;
-            this.level.addParticle(ParticleTypes.SMOKE,
-                    this.getX() + this.random.nextDouble() * this.getBbWidth() * 2.0D - this.getBbWidth(),
-                    this.getY() + this.random.nextDouble() * this.getBbHeight(),
-                    this.getZ() + this.random.nextDouble() * this.getBbWidth() * 2.0D - this.getBbWidth(),
-                    xSpeed, ySpeed, zSpeed
-            );
-        }
+        double xSpeed = this.random.nextGaussian() * 0.02D;
+        double ySpeed = this.random.nextGaussian() * 0.02D;
+        double zSpeed = this.random.nextGaussian() * 0.02D;
+        this.level.addParticle(ParticleTypes.SMOKE,
+                this.getX(),
+                this.getY(),
+                this.getZ(),
+                xSpeed, ySpeed, zSpeed
+        );
     }
 
     @Override
