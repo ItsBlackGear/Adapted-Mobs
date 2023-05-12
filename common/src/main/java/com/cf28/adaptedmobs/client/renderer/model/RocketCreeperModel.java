@@ -21,18 +21,18 @@ public class RocketCreeperModel<T extends RocketCreeper> extends AgeableHierarch
     public RocketCreeperModel(ModelPart root) {
         super(0.5F, 24.0F);
         this.root = root;
-        this.head = root.getChild("body").getChild("upper").getChild("head");
+        this.head = root.getChild("all").getChild("upper").getChild("head");
     }
 
     public static LayerDefinition createBodyLayer(CubeDeformation deformation) {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        body.addOrReplaceChild("rightlegfront", CubeListBuilder.create().texOffs(17, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, -2.0F));
-        body.addOrReplaceChild("leftlegfront", CubeListBuilder.create().texOffs(0, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, -2.0F));
-        body.addOrReplaceChild("leftlegback", CubeListBuilder.create().texOffs(17, 51).addBox(-6.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, 2.0F));
-        body.addOrReplaceChild("rightlegback", CubeListBuilder.create().texOffs(0, 51).addBox(2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, 2.0F));
-        PartDefinition upper = body.addOrReplaceChild("upper", CubeListBuilder.create(), PartPose.offset(0.0F, 15.0F, 0.0F));
+        PartDefinition all = root.addOrReplaceChild("all", CubeListBuilder.create(), PartPose.ZERO);
+        all.addOrReplaceChild("rightlegfront", CubeListBuilder.create().texOffs(17, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, -2.0F));
+        all.addOrReplaceChild("leftlegfront", CubeListBuilder.create().texOffs(0, 38).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, -2.0F));
+        all.addOrReplaceChild("leftlegback", CubeListBuilder.create().texOffs(17, 51).addBox(-6.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, 15.0F, 2.0F));
+        all.addOrReplaceChild("rightlegback", CubeListBuilder.create().texOffs(0, 51).addBox(2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, 15.0F, 2.0F));
+        PartDefinition upper = all.addOrReplaceChild("upper", CubeListBuilder.create(), PartPose.offset(0.0F, 15.0F, 0.0F));
         upper.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 19).addBox(-3.0F, -15.0F, -2.0F, 6.0F, 15.0F, 4.0F, deformation), PartPose.offset(0.0F, 0.0F, 0.0F));
         upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -11.0F, -4.0F, 8.0F, 11.0F, 8.0F, deformation), PartPose.offset(0.0F, -15.0F, 0.0F));
         return LayerDefinition.create(mesh, 64, 64);
@@ -52,5 +52,7 @@ public class RocketCreeperModel<T extends RocketCreeper> extends AgeableHierarch
         this.animate(entity.walkingAnimationState, RocketCreeperAnimations.WALK, ageInTicks, speed);
         this.animate(entity.attackAnimationState, RocketCreeperAnimations.ROCKET, ageInTicks);
         this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
+        this.animate(entity.sitDownAnimationState, RocketCreeperAnimations.SITDOWN, ageInTicks);
+        this.animate(entity.sitUpAnimationState, RocketCreeperAnimations.SITUP, ageInTicks);
     }
 }

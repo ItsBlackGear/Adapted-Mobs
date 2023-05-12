@@ -5,6 +5,7 @@ import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Enemy;
@@ -37,12 +38,12 @@ public class ApplyBuffsToTargetGoal extends Goal {
             return this.target != null;
         }
 
-        return !this.mob.isInSittingPose() && this.mob.hasLineOfSight(this.target);
+        return this.mob.hasLineOfSight(this.target);
     }
 
     @Override
     public boolean canContinueToUse() {
-        return this.target != null && !this.mob.isInSittingPose() && this.target.isAlive() && this.mob.distanceToSqr(this.target) <= this.range * this.range && !(this.target instanceof SupportCreeper) && this.mob.hasLineOfSight(this.target);
+        return this.target != null && this.target.isAlive() && this.mob.distanceToSqr(this.target) <= this.range * this.range && !(this.target instanceof SupportCreeper) && this.mob.hasLineOfSight(this.target) && !this.mob.isOrderedToSit();
     }
 
     @Override
@@ -61,18 +62,23 @@ public class ApplyBuffsToTargetGoal extends Goal {
     @Override
     public void tick() {
         if (this.target != null && this.target.isAlive()) {
+            if (this.mob.isOrderedToSit()) {
+                this.mob.getNavigation().stop();
+                return;
+            }
+
             int amplification = this.boosted ? 1 : 0;
             if (!this.target.hasEffect(MobEffects.MOVEMENT_SPEED) || !this.target.hasEffect(MobEffects.DAMAGE_BOOST)) {
                 if (!this.playingAnimation) {
                     this.playingAnimation = true;
-                    this.mob.transitionTo(CreeperState.ATTACKING);
+                    this.mob.setState(CreeperState.ATTACKING);
                     this.animationTimer = 20;
                 }
 
                 if (this.animationTimer == 0) {
                     this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, amplification), this.mob);
                     this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, amplification), this.mob);
-                    this.mob.transitionTo(CreeperState.IDLING);
+                    this.mob.setState(CreeperState.IDLING);
                     this.playingAnimation = false;
                 } else {
                     this.animationTimer--;
@@ -92,13 +98,16 @@ public class ApplyBuffsToTargetGoal extends Goal {
         return this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range / 2, this.range))
                 .stream()
                 .filter(target -> {
+                    boolean shouldTarget;
                     if (this.mob.isTame()) {
-                        return target == this.mob.getOwner();
+                        shouldTarget = target == this.mob.getOwner();
                     } else if (target instanceof TamableCreeper creeper) {
-                        return creeper.getOwner() == null && creeper.isAlive() && !(target instanceof SupportCreeper);
+                        shouldTarget = creeper.getOwner() == null && creeper.isAlive() && !(target instanceof SupportCreeper);
                     } else {
-                        return target instanceof Enemy && target.isAlive();
+                        shouldTarget = target instanceof Enemy && target.isAlive();
                     }
+
+                    return shouldTarget && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && !this.mob.isInSittingPose();
                 })
                 .min(Comparator.comparingDouble(target -> target.distanceTo(this.mob)))
                 .orElse(null);

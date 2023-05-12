@@ -93,7 +93,7 @@ public class RocketCreeper extends TamableCreeper {
             this.spawnSmokeParticles();
         }
 
-        this.processAnimations();
+        this.setupWalkAnimations();
         super.tick();
     }
 

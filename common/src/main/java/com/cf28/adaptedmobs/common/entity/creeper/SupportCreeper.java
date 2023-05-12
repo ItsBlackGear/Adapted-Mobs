@@ -58,7 +58,7 @@ public class SupportCreeper extends TamableCreeper {
 
     @Override
     public void tick() {
-        this.processAnimations();
+        this.setupWalkAnimations();
         super.tick();
     }
 

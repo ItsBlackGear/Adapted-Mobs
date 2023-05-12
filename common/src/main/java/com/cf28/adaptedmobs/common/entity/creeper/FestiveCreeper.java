@@ -46,17 +46,17 @@ public class FestiveCreeper extends TamableCreeper {
 
     @Override
     public void tick() {
-        this.processAnimations();
+        this.setupWalkAnimations();
         super.tick();
     }
 
     @Override
-    public void transitionTo(CreeperState state) {
+    public void setState(CreeperState state) {
         if (state.is(CreeperState.ATTACKING)) {
             this.playSound(SoundEvents.TNT_PRIMED, 1.0F, 1.0F);
-            this.setState(CreeperState.ATTACKING);
+            super.setState(CreeperState.ATTACKING);
         } else {
-            this.setState(state);
+            super.setState(state);
         }
     }
 

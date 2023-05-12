@@ -17,7 +17,7 @@
   ],
   "contact": {
     "homepage": "https://discord.gg/Mctsf64CXP",
-    "sources": "https://github.com/FabricMC/fabric-example-mod",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "MIT",
   "icon": "assets/adaptedmobs/icon.png",

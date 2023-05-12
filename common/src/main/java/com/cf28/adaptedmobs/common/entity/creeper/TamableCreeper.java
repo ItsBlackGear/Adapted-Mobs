@@ -6,6 +6,7 @@ import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperOwnerHurtTargetGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperSitWhenOrderedToGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
+import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.cf28.adaptedmobs.core.mixin.access.CreeperAccessor;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -58,9 +59,8 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public final AnimationState walkingAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState babyTransformationState = new AnimationState();
-    public final AnimationState sittingDownAnimationState = new AnimationState();
-    public final AnimationState sitIdleAnimationState = new AnimationState();
-    public final AnimationState standingUpAnimationState = new AnimationState();
+    public final AnimationState sitDownAnimationState = new AnimationState();
+    public final AnimationState sitUpAnimationState = new AnimationState();
     private boolean orderedToSit;
     private int age;
     private int forcedAge;
@@ -104,10 +104,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     public void setState(CreeperState state) {
         this.entityData.set(DATA_STATE, state);
-    }
-
-    public void transitionTo(CreeperState state) {
-        this.setState(state);
     }
 
     @Override
@@ -217,9 +213,13 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public void setInSittingPose(boolean sitting) {
         byte flag = this.entityData.get(DATA_FLAGS_ID);
         if (sitting) {
+            AdaptedMobs.LOGGER.info("Sitting");
             this.entityData.set(DATA_FLAGS_ID, (byte)(flag | 1));
+            this.setState(CreeperState.SITTING);
         } else {
-            this.entityData.set(DATA_FLAGS_ID, (byte)(flag | 1));
+            AdaptedMobs.LOGGER.info("Standing");
+            this.entityData.set(DATA_FLAGS_ID, (byte)(flag & -2));
+            this.setState(CreeperState.STANDING);
         }
     }
 
@@ -340,7 +340,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     protected boolean shouldDespawnInPeaceful() {
-        return this.getOwner() == null;
+        return this.getOwnerUUID() == null;
     }
 
     @Override
@@ -457,41 +457,45 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     public void tick() {
         super.tick();
-
-        if (this.isBaby()) {
-            this.babyTransformationState.startIfStopped(this.tickCount);
-        } else {
-            this.babyTransformationState.stop();
-        }
-
-        this.performSittingAnimation();
+        this.setupAnimationStates();
     }
 
-    protected void processAnimations() {
-        if (!this.isMoving() && !this.isInWater()) {
-            this.walkingAnimationState.stop();
-        } else {
-            this.walkingAnimationState.startIfStopped(this.tickCount);
-        }
-
+    private void setupAnimationStates() {
         if (this.level.isClientSide) {
+            if (this.isInSittingPose()) {
+                this.sitDownAnimationState.startIfStopped(this.tickCount);
+                this.sitUpAnimationState.stop();
+            } else {
+                if (this.getState().is(CreeperState.STANDING)) {
+                    this.sitUpAnimationState.startIfStopped(this.tickCount);
+                    this.sitDownAnimationState.stop();
+                } else {
+                    this.sitDownAnimationState.stop();
+                    this.sitUpAnimationState.stop();
+                }
+            }
+
+            if (this.isBaby()) {
+                this.babyTransformationState.startIfStopped(this.tickCount);
+            } else {
+                this.babyTransformationState.stop();
+            }
+        }
+    }
+
+    protected void setupWalkAnimations() {
+        if (this.level.isClientSide) {
+            if (!this.isMoving() && !this.isInWater()) {
+                this.walkingAnimationState.stop();
+            } else {
+                this.walkingAnimationState.startIfStopped(this.tickCount);
+            }
+
             if (this.getState().is(CreeperState.ATTACKING)) {
                 this.attackAnimationState.startIfStopped(this.tickCount);
             } else {
                 this.attackAnimationState.stop();
             }
-        }
-    }
-
-    protected void performSittingAnimation() {
-        if (this.isInSittingPose()) {
-            this.sittingDownAnimationState.start(this.tickCount);
-            this.sitIdleAnimationState.startIfStopped(this.tickCount);
-            this.standingUpAnimationState.stop();
-        } else {
-            this.standingUpAnimationState.start(this.tickCount);
-            this.sittingDownAnimationState.stop();
-            this.sitIdleAnimationState.stop();
         }
     }
 

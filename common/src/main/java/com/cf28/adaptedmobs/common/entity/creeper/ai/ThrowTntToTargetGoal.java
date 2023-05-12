@@ -44,7 +44,7 @@ public class ThrowTntToTargetGoal extends Goal {
         --this.attackCooldown;
 
         if (this.target != null && this.attackCooldown == 7) {
-            this.mob.transitionTo(CreeperState.ATTACKING);
+            this.mob.setState(CreeperState.ATTACKING);
         }
 
         if (this.target != null && this.attackCooldown <= 0) {
@@ -56,7 +56,7 @@ public class ThrowTntToTargetGoal extends Goal {
                 this.mob.level.addFreshEntity(tnt);
             }
 
-            this.mob.transitionTo(CreeperState.IDLING);
+            this.mob.setState(CreeperState.IDLING);
             this.attackCooldown = 100;
         }
     }
