@@ -37,14 +37,13 @@ public class SimpleCreeperModel<T extends TamableCreeper> extends AgeableHierarc
     public static LayerDefinition createBodyLayer(CubeDeformation deformation) {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        PartDefinition all = root.addOrReplaceChild("all", CubeListBuilder.create(), PartPose.ZERO);
-        all.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation), PartPose.offset(0.0F, 6.0F, 0.0F));
-        all.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, deformation), PartPose.offset(0.0F, 6.0F, 0.0F));
-        CubeListBuilder legs = CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation);
-        all.addOrReplaceChild("leg1", legs, PartPose.offset(-2.0F, 18.0F, 4.0F));
-        all.addOrReplaceChild("leg2", legs, PartPose.offset(2.0F, 18.0F, 4.0F));
-        all.addOrReplaceChild("leg3", legs, PartPose.offset(-2.0F, 18.0F, -4.0F));
-        all.addOrReplaceChild("leg4", legs, PartPose.offset(2.0F, 18.0F, -4.0F));
+        PartDefinition all = root.addOrReplaceChild("all", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+        all.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation), PartPose.offset(0.0F, -18.0F, 0.0F));
+        all.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, deformation), PartPose.offset(0.0F, -18.0F, 0.0F));
+        all.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, 0.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offset(-2.0F, -6.0F, 2.0F));
+        all.addOrReplaceChild("leg2", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, 0.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offset(2.0F, -6.0F, 2.0F));
+        all.addOrReplaceChild("leg3", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -4.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offset(-2.0F, -6.0F, -2.0F));
+        all.addOrReplaceChild("leg4", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -4.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offset(2.0F, -6.0F, -2.0F));
         return LayerDefinition.create(mesh, 64, 32);
     }
 

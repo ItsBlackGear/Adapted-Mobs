@@ -46,11 +46,6 @@ public class RocketCreeper extends TamableCreeper {
         this.setRocket(false);
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return Creeper.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35D);
-    }
-
-
     @Override
     protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
         return super.calculateFallDamage(fallDistance, damageMultiplier) - 5;

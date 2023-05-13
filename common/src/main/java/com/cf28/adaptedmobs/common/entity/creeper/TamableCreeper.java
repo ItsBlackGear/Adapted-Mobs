@@ -6,7 +6,6 @@ import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperOwnerHurtTargetGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperSitWhenOrderedToGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
-import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.cf28.adaptedmobs.core.mixin.access.CreeperAccessor;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -75,7 +74,8 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SwellGoal(this) {
-            @Override public boolean canUse() {
+            @Override
+            public boolean canUse() {
                 return super.canUse() && TamableCreeper.this.shouldSwell();
             }
         });
@@ -92,7 +92,8 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.targetSelector.addGoal(2, new CreeperOwnerHurtTargetGoal(this, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame() && !this.isBaby()));
         this.targetSelector.addGoal(4, new HurtByTargetGoal(this) {
-            @Override public boolean canUse() {
+            @Override
+            public boolean canUse() {
                 return !TamableCreeper.this.isBaby() && super.canUse();
             }
         });
@@ -171,13 +172,13 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         if (!this.level.isClientSide) {
             Explosion.BlockInteraction interaction = this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && this.getOwner() == null ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor)this).getExplosionRadius() * explosionMultiplier, interaction);
-            if (this.getOwner() != null) {
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float) ((CreeperAccessor) this).getExplosionRadius() * explosionMultiplier, interaction);
+            if (this.isTame()) {
                 this.postExplosion();
             } else {
                 this.dead = true;
                 this.discard();
-                ((CreeperAccessor)this).callSpawnLingeringCloud();
+                ((CreeperAccessor) this).callSpawnLingeringCloud();
             }
         }
     }
@@ -199,10 +200,10 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public void setTame(boolean tame) {
         byte flag = this.entityData.get(DATA_FLAGS_ID);
         if (tame) {
-            this.entityData.set(DATA_FLAGS_ID, (byte)(flag | 4));
+            this.entityData.set(DATA_FLAGS_ID, (byte) (flag | 4));
         } else {
-            this.entityData.set(DATA_FLAGS_ID, (byte)(flag & -5));
-            this.entityData.set(DATA_FLAGS_ID, (byte)(flag & -5));
+            this.entityData.set(DATA_FLAGS_ID, (byte) (flag & -5));
+            this.entityData.set(DATA_FLAGS_ID, (byte) (flag & -5));
         }
     }
 
@@ -213,12 +214,10 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public void setInSittingPose(boolean sitting) {
         byte flag = this.entityData.get(DATA_FLAGS_ID);
         if (sitting) {
-            AdaptedMobs.LOGGER.info("Sitting");
-            this.entityData.set(DATA_FLAGS_ID, (byte)(flag | 1));
+            this.entityData.set(DATA_FLAGS_ID, (byte) (flag | 1));
             this.setState(CreeperState.SITTING);
         } else {
-            AdaptedMobs.LOGGER.info("Standing");
-            this.entityData.set(DATA_FLAGS_ID, (byte)(flag & -2));
+            this.entityData.set(DATA_FLAGS_ID, (byte) (flag & -2));
             this.setState(CreeperState.STANDING);
         }
     }
@@ -263,7 +262,16 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         } else if (target instanceof AbstractChestedHorse horse && horse.isTamed()) {
             return false;
         } else {
-            return !(target instanceof TamableAnimal) || !((TamableAnimal)target).isTame();
+            return !(target instanceof TamableAnimal) || !((TamableAnimal) target).isTame();
+        }
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 14) {
+            this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0.0, 0.0, 0.0);
+        } else {
+            super.handleEntityEvent(id);
         }
     }
 
@@ -276,14 +284,16 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         } else {
             if (this.isTame()) {
                 if (this.isFood(stack) && this.getHealth() < this.getMaxHealth()) {
-                    if (!player.getAbilities().instabuild) stack.shrink(1);
+                    if (!player.getAbilities().instabuild) {
+                        stack.shrink(1);
+                    }
 
                     this.heal(5);
                     return InteractionResult.SUCCESS;
                 }
 
                 InteractionResult result = this.onInteract(player, hand);
-                if ((!result.consumesAction() || this.isBaby()) && this.isOwnedBy(player)) {
+                if ((!result.consumesAction()) && this.isOwnedBy(player)) {
                     this.setOrderedToSit(!this.isOrderedToSit());
                     this.jumping = false;
                     this.navigation.stop();
@@ -292,38 +302,38 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                 }
 
                 return result;
-            }
-        }
+            } else if (stack.is(Items.FLINT_AND_STEEL) && this.detonateOnInteraction()) {
+                this.level.playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+                if (!this.level.isClientSide) {
+                    this.ignite();
+                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+                }
 
-        return this.onInteract(player, hand);
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
+            }
+
+            return this.onInteract(player, hand);
+        }
     }
 
     private InteractionResult onInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.is(Items.FLINT_AND_STEEL) && this.detonateOnInteraction()) {
-            this.level.playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
-            if (!this.level.isClientSide) {
-                this.ignite();
-                stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+        if (this.isFood(stack)) {
+            int age = this.getAge();
+            if (this.isBaby()) {
+                if (!player.getAbilities().instabuild) stack.shrink(1);
+                this.ageUp(this.getSpeedUpSecondsWhenFeeding(-age), true);
+                player.swing(hand, true);
+                this.level.broadcastEntityEvent(this, (byte)14);
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
 
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
-        } else {
-            if (this.isFood(stack)) {
-                int age = this.getAge();
-                if (this.isBaby()) {
-                    if (!player.getAbilities().instabuild) stack.shrink(1);
-                    this.ageUp(this.getSpeedUpSecondsWhenFeeding(-age), true);
-                    return InteractionResult.sidedSuccess(this.level.isClientSide);
-                }
-
-                if (this.level.isClientSide) {
-                    return InteractionResult.CONSUME;
-                }
+            if (this.level.isClientSide) {
+                return InteractionResult.CONSUME;
             }
-
-            return InteractionResult.PASS;
         }
+
+        return InteractionResult.PASS;
     }
 
     public boolean detonateOnInteraction() {
@@ -507,7 +517,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         }
     }
 
-    @SuppressWarnings({"ConstantValue", "PointlessArithmeticExpression", "DataFlowIssue"})
+    @SuppressWarnings({"DataFlowIssue", "ConstantValue", "PointlessArithmeticExpression"})
     public void ageUp(int amount, boolean forced) {
         int i = this.getAge();
         i += amount * 20;

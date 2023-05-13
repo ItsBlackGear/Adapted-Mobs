@@ -102,7 +102,7 @@ public class ApplyBuffsToTargetGoal extends Goal {
                     if (this.mob.isTame()) {
                         shouldTarget = target == this.mob.getOwner();
                     } else if (target instanceof TamableCreeper creeper) {
-                        shouldTarget = creeper.getOwner() == null && creeper.isAlive() && !(target instanceof SupportCreeper);
+                        shouldTarget = !creeper.isTame() && creeper.isAlive() && !(target instanceof SupportCreeper);
                     } else {
                         shouldTarget = target instanceof Enemy && target.isAlive();
                     }

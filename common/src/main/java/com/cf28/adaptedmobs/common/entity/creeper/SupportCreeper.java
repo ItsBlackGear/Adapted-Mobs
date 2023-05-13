@@ -46,7 +46,7 @@ public class SupportCreeper extends TamableCreeper {
         super.registerGoals();
         this.goalSelector.addGoal(2, new ApplyBuffsToTargetGoal(this, 16.0D, 1.25D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Player.class, 16.0F, 1.0F, 1.2F, target -> {
-            return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && this.getOwner() == null;
+            return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && !this.isTame();
         }));
     }
 
