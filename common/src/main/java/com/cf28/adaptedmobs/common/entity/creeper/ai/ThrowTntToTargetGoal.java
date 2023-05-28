@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 public class ThrowTntToTargetGoal extends Goal {
+    private static final int ATTACK_COOLDOWN = 60;
     private final TamableCreeper mob;
     private LivingEntity target;
     private int attackCooldown;
@@ -57,7 +58,7 @@ public class ThrowTntToTargetGoal extends Goal {
             }
 
             this.mob.setState(CreeperState.IDLING);
-            this.attackCooldown = 100;
+            this.attackCooldown = ATTACK_COOLDOWN;
         }
     }
 }

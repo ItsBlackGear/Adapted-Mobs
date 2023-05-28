@@ -37,7 +37,7 @@ public class FestiveCreeper extends TamableCreeper {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(2, new ThrowTntToTargetGoal(this));
-        this.goalSelector.addGoal(3, new BackOffWithRangeGoal(this, 7.5D, 1.0D));
+        this.goalSelector.addGoal(3, new BackOffWithRangeGoal(this, 5.5D, 1.25D));
     }
 
     public static AttributeSupplier.Builder createAttributes() {

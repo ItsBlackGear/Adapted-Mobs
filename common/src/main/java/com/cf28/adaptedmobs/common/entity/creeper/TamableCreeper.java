@@ -94,7 +94,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.targetSelector.addGoal(4, new HurtByTargetGoal(this) {
             @Override
             public boolean canUse() {
-                return !TamableCreeper.this.isBaby() && super.canUse();
+                return TamableCreeper.this.canTarget() && super.canUse();
             }
         });
     }
@@ -156,6 +156,10 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     public void setBaby(boolean baby) {
         this.setAge(baby ? -24000 : 0);
+    }
+
+    public boolean canTarget() {
+        return !this.isBaby();
     }
 
     @Override
@@ -411,12 +415,12 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         }
 
         if (source.getDirectEntity() instanceof PrimedFestiveTnt tnt && source.isExplosion()) {
-            if (tnt.getOwner() instanceof FestiveCreeper creeper) {
+            if (tnt.getOwner() instanceof FestiveCreeper creeper && creeper.getOwner() != null) {
                 return creeper.getOwner() == this.getOwner();
             }
 
             return tnt.getOwner() == this;
-        } else if (entity instanceof TamableCreeper creeper) {
+        } else if (entity instanceof TamableCreeper creeper && creeper.getOwner() != null) {
             return creeper.getOwner() == this.getOwner();
         } else if (entity instanceof LivingEntity living) {
             return this.isOwnedBy(living);

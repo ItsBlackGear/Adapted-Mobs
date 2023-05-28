@@ -22,7 +22,7 @@ public class CreeperOwnerHurtTargetGoal extends TargetGoal {
 
     @Override
     public boolean canUse() {
-        if (this.creature.isTame() && !this.creature.isBaby() && !this.creature.isOrderedToSit()) {
+        if (this.creature.isTame() && this.creature.canTarget() && !this.creature.isOrderedToSit()) {
             LivingEntity owner = this.creature.getOwner();
             if (owner == null) {
                 return false;
