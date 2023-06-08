@@ -64,10 +64,13 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     private int age;
     private int forcedAge;
     private int forcedAgeTimer;
+    private final int explosionCooldown;
+    private int explosionCooldownTimer;
 
     public TamableCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
         this.entityData.define(DATA_STATE, CreeperState.IDLING);
+        this.explosionCooldown = 60;
     }
 
     @Override
@@ -76,7 +79,13 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.goalSelector.addGoal(2, new SwellGoal(this) {
             @Override
             public boolean canUse() {
-                return super.canUse() && TamableCreeper.this.shouldSwell();
+                TamableCreeper creeper = TamableCreeper.this;
+                boolean flag = true;
+                if (creeper.getTarget() != null) {
+                    flag = creeper.getTarget().canBeSeenAsEnemy();
+                }
+
+                return super.canUse() && creeper.shouldSwell() && flag;
             }
         });
         this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
@@ -173,23 +182,22 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     protected void explodeCreeper() {
-        if (!this.level.isClientSide) {
-            Explosion.BlockInteraction interaction = this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && this.getOwner() == null ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-            float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float) ((CreeperAccessor) this).getExplosionRadius() * explosionMultiplier, interaction);
-            if (this.isTame()) {
+        if (this.isTame()) {
+            if (!this.level.isClientSide) {
+                Explosion.BlockInteraction interaction = this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && this.getOwner() == null ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+                float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
+                this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor) this).getExplosionRadius() * explosionMultiplier, interaction);
                 this.postExplosion();
-            } else {
-                this.dead = true;
-                this.discard();
-                ((CreeperAccessor) this).callSpawnLingeringCloud();
             }
+        } else {
+            super.explodeCreeper();
         }
     }
 
     protected void postExplosion() {
         this.hurt(DamageSource.GENERIC, 1);
         this.setSwellDir(-1);
+        this.explosionCooldownTimer = this.explosionCooldown;
     }
 
     @Override
@@ -345,7 +353,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     public boolean shouldSwell() {
-        return true;
+        return this.explosionCooldownTimer == 0;
     }
 
     private boolean isFood(ItemStack stack) {
@@ -471,6 +479,11 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     public void tick() {
         super.tick();
+
+        if (this.explosionCooldownTimer > 0) {
+            this.explosionCooldownTimer--;
+        }
+
         this.setupAnimationStates();
     }
 
