@@ -65,7 +65,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     private int forcedAge;
     private int forcedAgeTimer;
     private final int explosionCooldown;
-    private int explosionCooldownTimer;
+    protected int explosionCooldownTimer;
 
     public TamableCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
@@ -79,13 +79,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.goalSelector.addGoal(2, new SwellGoal(this) {
             @Override
             public boolean canUse() {
-                TamableCreeper creeper = TamableCreeper.this;
-                boolean flag = true;
-                if (creeper.getTarget() != null) {
-                    flag = creeper.getTarget().canBeSeenAsEnemy();
-                }
-
-                return super.canUse() && creeper.shouldSwell() && flag;
+                return super.canUse() && TamableCreeper.this.shouldSwell();
             }
         });
         this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
@@ -182,21 +176,24 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     protected void explodeCreeper() {
-        if (this.isTame()) {
-            if (!this.level.isClientSide) {
-                Explosion.BlockInteraction interaction = this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && this.getOwner() == null ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-                float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
-                this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor) this).getExplosionRadius() * explosionMultiplier, interaction);
-                this.postExplosion();
+        if (this.getTarget() != null && !this.getTarget().isDeadOrDying() && this.shouldSwell()) {
+            if (this.isTame()) {
+                if (!this.level.isClientSide) {
+                    float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
+                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor) this).getExplosionRadius() * explosionMultiplier, Explosion.BlockInteraction.NONE);
+                    this.postExplosion();
+                }
+            } else {
+                super.explodeCreeper();
             }
         } else {
-            super.explodeCreeper();
+            this.postExplosion();
         }
     }
 
     protected void postExplosion() {
-        this.hurt(DamageSource.GENERIC, 1);
         this.setSwellDir(-1);
+        this.setState(CreeperState.IDLING);
         this.explosionCooldownTimer = this.explosionCooldown;
     }
 

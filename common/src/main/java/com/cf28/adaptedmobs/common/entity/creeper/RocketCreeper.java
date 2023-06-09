@@ -11,9 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.ItemStack;
@@ -48,14 +45,13 @@ public class RocketCreeper extends TamableCreeper {
 
     @Override
     protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
-        return super.calculateFallDamage(fallDistance, damageMultiplier) - 5;
+        return super.calculateFallDamage(fallDistance, damageMultiplier) - 10;
     }
 
     @Override
     protected void postExplosion() {
         super.postExplosion();
         this.setRocket(false);
-        this.setState(CreeperState.IDLING);
     }
 
     @Override
@@ -83,13 +79,18 @@ public class RocketCreeper extends TamableCreeper {
 
     @Override
     public void tick() {
+        super.tick();
+
         this.launchTowardsTarget();
         if (this.level.isClientSide && this.isRocket()) {
             this.spawnSmokeParticles();
         }
 
         this.setupWalkAnimations();
-        super.tick();
+
+        if (this.isInWaterOrBubble() && this.getState().is(CreeperState.ATTACKING)) {
+            this.setState(CreeperState.IDLING);
+        }
     }
 
     private void launchTowardsTarget() {
