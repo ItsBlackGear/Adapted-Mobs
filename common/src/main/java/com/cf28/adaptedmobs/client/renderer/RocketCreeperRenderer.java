@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.client.renderer;
 
 import com.cf28.adaptedmobs.client.AMModelLayers;
+import com.cf28.adaptedmobs.client.renderer.layer.CreeperClothLayer;
 import com.cf28.adaptedmobs.client.renderer.layer.RocketCreeperPowerLayer;
 import com.cf28.adaptedmobs.client.renderer.model.RocketCreeperModel;
 import com.cf28.adaptedmobs.common.entity.creeper.RocketCreeper;
@@ -20,6 +21,7 @@ public class RocketCreeperRenderer extends MobRenderer<RocketCreeper, RocketCree
     public RocketCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new RocketCreeperModel<>(context.bakeLayer(AMModelLayers.ROCKET_CREEPER)), 0.5F);
         this.addLayer(new RocketCreeperPowerLayer(this, context.getModelSet()));
+        this.addLayer(new CreeperClothLayer<>(this));
     }
 
     @Override

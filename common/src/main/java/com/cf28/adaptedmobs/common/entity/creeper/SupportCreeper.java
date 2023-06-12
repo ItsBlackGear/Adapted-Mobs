@@ -80,4 +80,9 @@ public class SupportCreeper extends TamableCreeper {
     public boolean canTarget() {
         return false;
     }
+
+    @Override
+    public ClothType getClothType() {
+        return ClothType.SUPPORT;
+    }
 }

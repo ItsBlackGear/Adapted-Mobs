@@ -143,7 +143,7 @@ public class RocketCreeper extends TamableCreeper {
             List<Integer> colors = Lists.newArrayList();
             colors.add(DyeColor.LIGHT_BLUE.getFireworkColor());
             tag.putIntArray("Colors", colors);
-            tag.putByte("Type", (byte)FireworkRocketItem.Shape.CREEPER.getId());
+            tag.putByte("ClothType", (byte)FireworkRocketItem.Shape.CREEPER.getId());
             this.spawnAtLocation(stack);
         }
     }
@@ -172,5 +172,10 @@ public class RocketCreeper extends TamableCreeper {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.setRocket(tag.getBoolean("Rocket"));
+    }
+
+    @Override
+    public ClothType getClothType() {
+        return ClothType.ROCKET;
     }
 }

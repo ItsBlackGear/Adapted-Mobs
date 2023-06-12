@@ -39,6 +39,9 @@ import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
@@ -55,6 +58,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BYTE);
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final EntityDataAccessor<CreeperState> DATA_STATE = SynchedEntityData.defineId(TamableCreeper.class, AMEntityDataSerializers.CREEPER_STATE);
+    protected static final EntityDataAccessor<Integer> DATA_CLOTH_COLOR = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.INT);
     public final AnimationState walkingAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState babyTransformationState = new AnimationState();
@@ -116,6 +120,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.entityData.define(DATA_BABY_ID, false);
         this.entityData.define(DATA_FLAGS_ID, (byte)0);
         this.entityData.define(DATA_OWNER_UUID, Optional.empty());
+        this.entityData.define(DATA_CLOTH_COLOR, DyeColor.RED.getId());
     }
 
     @Override
@@ -128,6 +133,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         tag.putBoolean("Sitting", this.orderedToSit);
         tag.putInt("Age", this.getAge());
         tag.putInt("ForcedAge", this.forcedAge);
+        tag.putByte("ClothColor", (byte)this.getClothColor().getId());
     }
 
     @Override
@@ -149,6 +155,9 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.setAge(tag.getInt("Age"));
         this.forcedAge = tag.getInt("ForcedAge");
 
+        if (tag.contains("ClothColor", 99)) {
+            this.setClothColor(DyeColor.byId(tag.getInt("ClothColor")));
+        }
     }
 
     @Override
@@ -287,6 +296,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        Item item = stack.getItem();
         if (this.level.isClientSide) {
             boolean isTamed = this.isOwnedBy(player) || this.isTame();
             return isTamed ? InteractionResult.CONSUME : InteractionResult.PASS;
@@ -301,16 +311,28 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                     return InteractionResult.SUCCESS;
                 }
 
-                InteractionResult result = this.onInteract(player, hand);
-                if ((!result.consumesAction()) && this.isOwnedBy(player)) {
-                    this.setOrderedToSit(!this.isOrderedToSit());
-                    this.jumping = false;
-                    this.navigation.stop();
-                    this.setTarget(null);
-                    return InteractionResult.SUCCESS;
+                if (!(item instanceof DyeItem)) {
+                    InteractionResult result = this.onInteract(player, hand);
+                    if ((!result.consumesAction()) && this.isOwnedBy(player)) {
+                        this.setOrderedToSit(!this.isOrderedToSit());
+                        this.jumping = false;
+                        this.navigation.stop();
+                        this.setTarget(null);
+                        return InteractionResult.SUCCESS;
+                    }
+
+                    return result;
                 }
 
-                return result;
+                DyeColor color = ((DyeItem)item).getDyeColor();
+                if (color != this.getClothColor()) {
+                    this.setClothColor(color);
+                    if (!player.getAbilities().instabuild) {
+                        stack.shrink(1);
+                    }
+
+                    return InteractionResult.SUCCESS;
+                }
             } else if (stack.is(Items.FLINT_AND_STEEL) && this.detonateOnInteraction()) {
                 this.level.playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
                 if (!this.level.isClientSide) {
@@ -576,5 +598,34 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         }
 
         super.onSyncedDataUpdated(key);
+    }
+
+    public DyeColor getClothColor() {
+        return DyeColor.byId(this.entityData.get(DATA_CLOTH_COLOR));
+    }
+
+    public void setClothColor(DyeColor color) {
+        this.entityData.set(DATA_CLOTH_COLOR, color.getId());
+    }
+
+    public ClothType getClothType() {
+        return ClothType.DEFAULT;
+    }
+
+    public enum ClothType {
+        DEFAULT("default"),
+        FESTIVE("festive"),
+        ROCKET("rocket"),
+        SUPPORT("support");
+
+        public final String id;
+
+        ClothType(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return this.id;
+        }
     }
 }

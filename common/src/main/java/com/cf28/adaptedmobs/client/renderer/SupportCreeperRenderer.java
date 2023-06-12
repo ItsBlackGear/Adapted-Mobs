@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.client.renderer;
 
 import com.cf28.adaptedmobs.client.AMModelLayers;
+import com.cf28.adaptedmobs.client.renderer.layer.CreeperClothLayer;
 import com.cf28.adaptedmobs.client.renderer.layer.SupportCreeperPowerLayer;
 import com.cf28.adaptedmobs.client.renderer.model.SupportCreeperModel;
 import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
@@ -20,6 +21,7 @@ public class SupportCreeperRenderer extends MobRenderer<SupportCreeper, SupportC
     public SupportCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new SupportCreeperModel<>(context.bakeLayer(AMModelLayers.SUPPORT_CREEPER)), 0.5F);
         this.addLayer(new SupportCreeperPowerLayer(this, context.getModelSet()));
+        this.addLayer(new CreeperClothLayer<>(this));
     }
 
     @Override

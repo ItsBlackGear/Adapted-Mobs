@@ -1,14 +1,13 @@
 package com.cf28.adaptedmobs.client.renderer;
 
 import com.cf28.adaptedmobs.client.AMModelLayers;
+import com.cf28.adaptedmobs.client.renderer.layer.CreeperClothLayer;
 import com.cf28.adaptedmobs.client.renderer.layer.FestiveCreeperPowerLayer;
 import com.cf28.adaptedmobs.client.renderer.model.FestiveCreeperModel;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -20,6 +19,7 @@ public class FestiveCreeperRenderer extends MobRenderer<FestiveCreeper, FestiveC
     public FestiveCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new FestiveCreeperModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPER)), 0.5F);
         this.addLayer(new FestiveCreeperPowerLayer(this, context.getModelSet()));
+        this.addLayer(new CreeperClothLayer<>(this));
     }
 
     @Override

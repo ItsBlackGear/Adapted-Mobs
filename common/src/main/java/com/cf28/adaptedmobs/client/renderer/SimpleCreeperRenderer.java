@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.client.renderer;
 
 import com.cf28.adaptedmobs.client.AMModelLayers;
+import com.cf28.adaptedmobs.client.renderer.layer.CreeperClothLayer;
 import com.cf28.adaptedmobs.client.renderer.layer.SimpleCreeperPowerLayer;
 import com.cf28.adaptedmobs.client.renderer.model.SimpleCreeperModel;
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
@@ -19,6 +20,7 @@ public class SimpleCreeperRenderer extends MobRenderer<TamableCreeper, SimpleCre
     public SimpleCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new SimpleCreeperModel<>(context.bakeLayer(AMModelLayers.CREEPER)), 0.5F);
         this.addLayer(new SimpleCreeperPowerLayer(this, context.getModelSet()));
+        this.addLayer(new CreeperClothLayer<>(this));
     }
 
     @Override

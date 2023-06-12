@@ -69,4 +69,9 @@ public class FestiveCreeper extends TamableCreeper {
     public boolean shouldSwell() {
         return false;
     }
+
+    @Override
+    public ClothType getClothType() {
+        return ClothType.FESTIVE;
+    }
 }
