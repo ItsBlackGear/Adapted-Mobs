@@ -7,14 +7,10 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 
 public class AdaptedMobsFabric implements ModInitializer {
-    private static final ConfigEntriesImpl CONFIG = AutoConfig.register(ConfigEntriesImpl.class, GsonConfigSerializer::new).getConfig();
+    public static final ConfigEntriesImpl CONFIG = AutoConfig.register(ConfigEntriesImpl.class, GsonConfigSerializer::new).getConfig();
 
     @Override
     public void onInitialize() {
         AdaptedMobs.bootstrap();
-    }
-
-    public static ConfigEntriesImpl getConfig() {
-        return CONFIG;
     }
 }

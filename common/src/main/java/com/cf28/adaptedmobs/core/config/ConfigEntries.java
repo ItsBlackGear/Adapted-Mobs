@@ -21,4 +21,19 @@ public class ConfigEntries {
     public static int getRocketCreeperSpawnWeight() {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static boolean spawnFestiveCreepers() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean spawnSupportCreepers() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean spawnRocketCreepers() {
+        throw new AssertionError();
+    }
 }

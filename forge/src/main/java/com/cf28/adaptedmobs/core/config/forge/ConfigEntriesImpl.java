@@ -22,15 +22,33 @@ public class ConfigEntriesImpl {
         return COMMON.rocketCreeperSpawnWeight.get();
     }
 
+    public static boolean spawnFestiveCreepers() {
+        return COMMON.spawnFestiveCreeper.get();
+    }
+
+    public static boolean spawnSupportCreepers() {
+        return COMMON.spawnSupportCreeper.get();
+    }
+
+    public static boolean spawnRocketCreepers() {
+        return COMMON.spawnRocketCreeper.get();
+    }
+
     public static class Common {
         public final ForgeConfigSpec.ConfigValue<Integer> festiveCreeperSpawnWeight;
         public final ForgeConfigSpec.ConfigValue<Integer> supportCreeperSpawnWeight;
         public final ForgeConfigSpec.ConfigValue<Integer> rocketCreeperSpawnWeight;
+        public final ForgeConfigSpec.ConfigValue<Boolean> spawnFestiveCreeper;
+        public final ForgeConfigSpec.ConfigValue<Boolean> spawnSupportCreeper;
+        public final ForgeConfigSpec.ConfigValue<Boolean> spawnRocketCreeper;
 
         protected Common(ForgeConfigSpec.Builder builder) {
             builder.push("spawns");
+            spawnFestiveCreeper = builder.comment("Determines if Festive Creepers should spawn").define("Spawn Festive Creepers", true);
             festiveCreeperSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn").defineInRange("Festive Creeper Spawn Weight", 100, 0, 100);
+            spawnSupportCreeper = builder.comment("Determines if Support Creepers should spawn").define("Spawn Support Creepers", true);
             supportCreeperSpawnWeight = builder.comment("Determines how often do Support Creepers spawn").defineInRange("Support Creeper Spawn Weight", 100, 0, 100);
+            spawnRocketCreeper = builder.comment("Determines if Rocket Creepers should spawn").define("Spawn Rocket Creepers", true);
             rocketCreeperSpawnWeight = builder.comment("Determines how often do Rocket Creepers spawn").defineInRange("Rocket Creeper Spawn Weight", 100, 0, 100);
             builder.pop();
         }

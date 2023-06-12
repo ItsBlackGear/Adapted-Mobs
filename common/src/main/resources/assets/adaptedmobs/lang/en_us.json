@@ -12,10 +12,16 @@
   "item.adaptedmobs.green_mystery_egg": "Green Mystery Egg",
   "text.autoconfig.adaptedmobs.option.spawns": "Spawns",
   "text.autoconfig.adaptedmobs.title": "Adapted Mobs",
+  "text.autoconfig.adaptedmobs.option.spawns.spawn_festive_creeper": "Spawn Festive Creepers",
+  "text.autoconfig.adaptedmobs.option.spawns.spawn_festive_creeper.@Tooltip": "Determines if Festive Creepers spawn",
   "text.autoconfig.adaptedmobs.option.spawns.festive_creeper_spawn_weight": "Festive Creeper Spawn Weight",
-  "text.autoconfig.adaptedmobs.option.spawns.festive_creeper_spawn_weight.@Tooltip": "Determines how often do Festive Creepers spawn: 0 - 100",
+  "text.autoconfig.adaptedmobs.option.spawns.festive_creeper_spawn_weight.@Tooltip": "Determines how often do Festive Creepers spawn",
+  "text.autoconfig.adaptedmobs.option.spawns.spawn_support_creeper": "Spawn Support Creepers",
+  "text.autoconfig.adaptedmobs.option.spawns.spawn_support_creeper.@Tooltip": "Determines if Support Creepers spawn",
   "text.autoconfig.adaptedmobs.option.spawns.support_creeper_spawn_weight": "Support Creeper Spawn Weight",
-  "text.autoconfig.adaptedmobs.option.spawns.support_creeper_spawn_weight.@Tooltip": "Determines how often do Support Creepers spawn: 0 - 100",
+  "text.autoconfig.adaptedmobs.option.spawns.support_creeper_spawn_weight.@Tooltip": "Determines how often do Support Creepers spawn",
+  "text.autoconfig.adaptedmobs.option.spawns.spawn_rocket_creeper": "Spawn Rocket Creepers",
+  "text.autoconfig.adaptedmobs.option.spawns.spawn_rocket_creeper.@Tooltip": "Determines if Rocket Creepers spawn",
   "text.autoconfig.adaptedmobs.option.spawns.rocket_creeper_spawn_weight": "Rocket Creeper Spawn Weight",
-  "text.autoconfig.adaptedmobs.option.spawns.rocket_creeper_spawn_weight.@Tooltip": "Determines how often do Rocket Creepers spawn: 0 - 100"
+  "text.autoconfig.adaptedmobs.option.spawns.rocket_creeper_spawn_weight.@Tooltip": "Determines how often do Rocket Creepers spawn"
 }
