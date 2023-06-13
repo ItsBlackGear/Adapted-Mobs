@@ -613,7 +613,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     public enum ClothType {
-        DEFAULT("default"),
+        DEFAULT("creeper"),
         FESTIVE("festive"),
         ROCKET("rocket"),
         SUPPORT("support");
