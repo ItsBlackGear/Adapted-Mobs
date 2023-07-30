@@ -348,6 +348,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
                 // Ignites the creeper and causes damage into the flint and steel item.
                 if (!this.level.isClientSide) {
                     this.ignite();
+                    player.swing(hand, true);
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
                 }
 
@@ -389,7 +390,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     }
 
     public boolean shouldSwell() {
-        return this.explosionCooldownTimer == 0;
+        return this.explosionCooldownTimer == 0 || this.isIgnited();
     }
 
     private boolean isFood(ItemStack stack) {
@@ -548,7 +549,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
 
     protected void causeExplosion() {
         CreeperAccessor access = (CreeperAccessor)this;
-        if (this.getTarget() != null && !this.getTarget().isDeadOrDying() && this.shouldSwell()) {
+        if (this.shouldSwell()) {
             if (this.isTame()) {
                 if (!this.level.isClientSide) {
                     float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
