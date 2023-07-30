@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
+    "CreeperMixin",
     "ExplosionMixin",
     "access.CreeperAccessor",
     "access.SpawnPlacementsAccessor"

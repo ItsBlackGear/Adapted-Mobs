@@ -4,6 +4,7 @@ import com.cf28.adaptedmobs.common.entity.creeper.ai.BackOffWithRangeGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.ThrowTntToTargetGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -36,12 +37,12 @@ public class FestiveCreeper extends TamableCreeper {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new ThrowTntToTargetGoal(this));
+        this.goalSelector.addGoal(2, new ThrowTntToTargetGoal(this, UniformInt.of(10, 20)));
         this.goalSelector.addGoal(3, new BackOffWithRangeGoal(this, 5.5D, 1.25D));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Creeper.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.3D);
+        return Creeper.createAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.MOVEMENT_SPEED, 0.3D);
     }
 
     @Override

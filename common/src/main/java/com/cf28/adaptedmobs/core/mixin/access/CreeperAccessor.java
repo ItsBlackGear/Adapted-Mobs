@@ -10,6 +10,18 @@ public interface CreeperAccessor {
     @Accessor
     int getExplosionRadius();
 
+    @Accessor
+    void setOldSwell(int oldSwell);
+
+    @Accessor
+    int getSwell();
+
+    @Accessor
+    void setSwell(int swell);
+
+    @Accessor
+    int getMaxSwell();
+
     @Invoker
-    void callSpawnLingeringCloud();
+    void callExplodeCreeper();
 }

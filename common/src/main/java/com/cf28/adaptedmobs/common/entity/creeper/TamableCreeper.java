@@ -47,27 +47,34 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class TamableCreeper extends Creeper implements OwnableEntity {
+public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAccess {
+    private static final int AGE_UP_EVENT_ID = 14;
+
+    // Entity Data
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Integer> DATA_CLOTH_COLOR = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<CreeperState> DATA_STATE = SynchedEntityData.defineId(TamableCreeper.class, AMEntityDataSerializers.CREEPER_STATE);
     protected static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BYTE);
-    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.OPTIONAL_UUID);
-    protected static final EntityDataAccessor<CreeperState> DATA_STATE = SynchedEntityData.defineId(TamableCreeper.class, AMEntityDataSerializers.CREEPER_STATE);
-    protected static final EntityDataAccessor<Integer> DATA_CLOTH_COLOR = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.INT);
+
+    // Entity Animations
+    public final AnimationState babyTransformationState = new AnimationState();
     public final AnimationState walkingAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
-    public final AnimationState babyTransformationState = new AnimationState();
-    public final AnimationState sitDownAnimationState = new AnimationState();
     public final AnimationState sitUpAnimationState = new AnimationState();
+    public final AnimationState sitDownAnimationState = new AnimationState();
+
+    // Entity Variables
     private boolean orderedToSit;
     private int age;
     private int forcedAge;
-    private int forcedAgeTimer;
     private final int explosionCooldown;
     protected int explosionCooldownTimer;
 
@@ -183,23 +190,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         return (this.onGround || this.isInWaterOrBubble()) && this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6;
     }
 
-    @Override
-    protected void explodeCreeper() {
-        if (this.getTarget() != null && !this.getTarget().isDeadOrDying() && this.shouldSwell()) {
-            if (this.isTame()) {
-                if (!this.level.isClientSide) {
-                    float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
-                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)((CreeperAccessor) this).getExplosionRadius() * explosionMultiplier, Explosion.BlockInteraction.NONE);
-                    this.postExplosion();
-                }
-            } else {
-                super.explodeCreeper();
-            }
-        } else {
-            this.postExplosion();
-        }
-    }
-
     protected void postExplosion() {
         this.setSwellDir(-1);
         this.setState(CreeperState.IDLING);
@@ -220,7 +210,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         if (tame) {
             this.entityData.set(DATA_FLAGS_ID, (byte) (flag | 4));
         } else {
-            this.entityData.set(DATA_FLAGS_ID, (byte) (flag & -5));
             this.entityData.set(DATA_FLAGS_ID, (byte) (flag & -5));
         }
     }
@@ -286,8 +275,16 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     public void handleEntityEvent(byte id) {
-        if (id == 14) {
-            this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0.0, 0.0, 0.0);
+        if (id == AGE_UP_EVENT_ID) {
+            this.level.addParticle(
+                    ParticleTypes.HAPPY_VILLAGER,
+                    this.getRandomX(1.0),
+                    this.getRandomY() + 0.5,
+                    this.getRandomZ(1.0),
+                    0.0,
+                    0.0,
+                    0.0
+            );
         } else {
             super.handleEntityEvent(id);
         }
@@ -302,6 +299,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
             return isTamed ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else {
             if (this.isTame()) {
+                // Heal Entity if health is lower than max health.
                 if (this.isFood(stack) && this.getHealth() < this.getMaxHealth()) {
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(1);
@@ -311,9 +309,22 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (!(item instanceof DyeItem)) {
+                // Update the Cloth color for the Entity.
+                if (item instanceof DyeItem dye) {
+                    DyeColor color = dye.getDyeColor();
+                    if (color != this.getClothColor() && this.isOwnedBy(player)) {
+                        this.setClothColor(color);
+
+                        if (!player.getAbilities().instabuild) {
+                            stack.shrink(1);
+                        }
+
+                        return InteractionResult.SUCCESS;
+                    }
+                } else {
+                    // Sit the Entity if ordered to.
                     InteractionResult result = this.onInteract(player, hand);
-                    if ((!result.consumesAction()) && this.isOwnedBy(player)) {
+                    if (!result.consumesAction() && this.isOwnedBy(player)) {
                         this.setOrderedToSit(!this.isOrderedToSit());
                         this.jumping = false;
                         this.navigation.stop();
@@ -323,18 +334,18 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
                     return result;
                 }
-
-                DyeColor color = ((DyeItem)item).getDyeColor();
-                if (color != this.getClothColor()) {
-                    this.setClothColor(color);
-                    if (!player.getAbilities().instabuild) {
-                        stack.shrink(1);
-                    }
-
-                    return InteractionResult.SUCCESS;
-                }
             } else if (stack.is(Items.FLINT_AND_STEEL) && this.detonateOnInteraction()) {
-                this.level.playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+                this.level.playSound(player,
+                        this.getX(),
+                        this.getY(),
+                        this.getZ(),
+                        SoundEvents.FLINTANDSTEEL_USE,
+                        this.getSoundSource(),
+                        1.0F,
+                        this.random.nextFloat() * 0.4F + 0.8F
+                );
+
+                // Ignites the creeper and causes damage into the flint and steel item.
                 if (!this.level.isClientSide) {
                     this.ignite();
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
@@ -352,10 +363,16 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         if (this.isFood(stack)) {
             int age = this.getAge();
             if (this.isBaby()) {
-                if (!player.getAbilities().instabuild) stack.shrink(1);
-                this.ageUp(this.getSpeedUpSecondsWhenFeeding(-age), true);
+                // Shrink the current stack if allowed to
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
+
+                this.ageUp(this.getSpeedUpSecondsWhenFeeding(-age));
                 player.swing(hand, true);
-                this.level.broadcastEntityEvent(this, (byte)14);
+
+                // Display aging up particles
+                this.level.broadcastEntityEvent(this, (byte)AGE_UP_EVENT_ID);
                 return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
 
@@ -381,6 +398,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     protected boolean shouldDespawnInPeaceful() {
+        // Prevent the Entity from de-spawning if it has an owner
         return this.getOwnerUUID() == null;
     }
 
@@ -391,6 +409,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Nullable @Override
     public Team getTeam() {
+        // Any tamed creepers shall join the team of its owner.
         if (this.isTame()) {
             LivingEntity entity = this.getOwner();
             if (entity != null) {
@@ -419,6 +438,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     public void die(DamageSource source) {
+        // Display death message if tame
         if (!this.level.isClientSide && this.level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
             this.getOwner().sendSystemMessage(this.getCombatTracker().getDeathMessage());
         }
@@ -477,15 +497,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        if (this.level.isClientSide) {
-            if (this.forcedAgeTimer > 0) {
-                if (this.forcedAgeTimer % 4 == 0) {
-                    this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0.0, 0.0, 0.0);
-                }
-
-                --this.forcedAgeTimer;
-            }
-        } else if (this.isAlive()) {
+        if (!this.level.isClientSide && this.isAlive()) {
             int i = this.getAge();
             if (i < 0) {
                 this.setAge(++i);
@@ -497,6 +509,30 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     public void tick() {
+        if (this.isAlive() && this.shouldExplode()) {
+            CreeperAccessor access = (CreeperAccessor)this;
+            access.setOldSwell(access.getSwell());
+            if (this.isIgnited()) {
+                this.setSwellDir(1);
+            }
+
+            int i = this.getSwellDir();
+            if (i > 0 && access.getSwell() == 0) {
+                this.playSound(SoundEvents.CREEPER_PRIMED, 1.0F, 0.5F);
+                this.gameEvent(GameEvent.PRIME_FUSE);
+            }
+
+            access.setSwell(access.getSwell() + i);
+            if (access.getSwell() < 0) {
+                access.setSwell(0);
+            }
+
+            if (access.getSwell() >= access.getMaxSwell()) {
+                access.setSwell(access.getMaxSwell());
+                this.causeExplosion();
+            }
+        }
+
         super.tick();
 
         if (this.explosionCooldownTimer > 0) {
@@ -504,6 +540,34 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         }
 
         this.setupAnimationStates();
+    }
+
+    private boolean shouldExplode() {
+        return true;
+    }
+
+    protected void causeExplosion() {
+        CreeperAccessor access = (CreeperAccessor)this;
+        if (this.getTarget() != null && !this.getTarget().isDeadOrDying() && this.shouldSwell()) {
+            if (this.isTame()) {
+                if (!this.level.isClientSide) {
+                    float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
+                    this.level.explode(this,
+                            this.getX(),
+                            this.getY(),
+                            this.getZ(),
+                            (float) access.getExplosionRadius() * explosionMultiplier,
+                            Explosion.BlockInteraction.NONE
+                    );
+
+                    this.postExplosion();
+                }
+            } else {
+                access.callExplodeCreeper();
+            }
+        } else {
+            this.postExplosion();
+        }
     }
 
     private void setupAnimationStates() {
@@ -553,22 +617,14 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         }
     }
 
-    @SuppressWarnings({"DataFlowIssue", "ConstantValue", "PointlessArithmeticExpression"})
-    public void ageUp(int amount, boolean forced) {
+    public void ageUp(int amount) {
         int i = this.getAge();
         i += amount * 20;
         if (i > 0) {
             i = 0;
         }
 
-        int k = i - i;
         this.setAge(i);
-        if (forced) {
-            this.forcedAge += k;
-            if (this.forcedAgeTimer == 0) {
-                this.forcedAgeTimer = 40;
-            }
-        }
 
         if (this.getAge() == 0) {
             this.setAge(this.forcedAge);
@@ -580,11 +636,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.age = age;
         if (i < 0 && age >= 0 || i >= 0 && age < 0) {
             this.entityData.set(DATA_BABY_ID, age < 0);
-            this.ageBoundaryReached();
         }
-    }
-
-    protected void ageBoundaryReached() {
     }
 
     public int getSpeedUpSecondsWhenFeeding(int seconds) {

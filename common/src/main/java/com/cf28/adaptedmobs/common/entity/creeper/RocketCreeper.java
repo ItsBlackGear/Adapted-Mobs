@@ -58,7 +58,7 @@ public class RocketCreeper extends TamableCreeper {
     public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
         if (this.isRocket()) {
             this.setSwellDir(-1);
-            this.explodeCreeper();
+            this.causeExplosion();
         }
 
         return super.causeFallDamage(fallDistance, multiplier, source);
@@ -74,6 +74,7 @@ public class RocketCreeper extends TamableCreeper {
 
             pos = pos.above();
         }
+
         return true;
     }
 

@@ -7,9 +7,12 @@ architectury {
     fabric()
 }
 
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
+def generatedResources = file("src/generated/resources")
+def accessWidenerFile = project(":common").file("src/main/resources/adaptedmobs.accesswidener")
+
+//loom {
+//    accessWidenerPath = project(":common").loom.accessWidenerPath
+//}
 
 sourceSets.main.resources.srcDirs += project(":common").file(project.output_datagen)
 
@@ -19,7 +22,6 @@ sourceSets {
         runtimeClasspath += main.runtimeClasspath
     }
 }
-
 
 configurations {
     common
@@ -44,6 +46,8 @@ dependencies {
 }
 
 loom {
+    accessWidenerPath.set(accessWidenerFile)
+
     runs {
         datagen {
             name "Data Generation"
@@ -59,7 +63,14 @@ loom {
     }
 }
 
+task copyAccessWidener(type: Copy) {
+    from(accessWidenerFile)
+    into(generatedResources)
+}
+
 processResources {
+    dependsOn(copyAccessWidener)
+
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
@@ -78,6 +89,7 @@ remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
+
 }
 
 jar {

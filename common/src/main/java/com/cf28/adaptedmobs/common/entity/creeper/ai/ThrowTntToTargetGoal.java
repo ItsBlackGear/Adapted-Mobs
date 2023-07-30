@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.common.entity.creeper.ai;
 import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
+import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -12,9 +13,9 @@ public class ThrowTntToTargetGoal extends Goal {
     private LivingEntity target;
     private int attackCooldown;
 
-    public ThrowTntToTargetGoal(TamableCreeper mob) {
+    public ThrowTntToTargetGoal(TamableCreeper mob, IntProvider cooldown) {
         this.mob = mob;
-        this.attackCooldown = 20;
+        this.attackCooldown = cooldown.sample(mob.level.random);
     }
 
     @Override

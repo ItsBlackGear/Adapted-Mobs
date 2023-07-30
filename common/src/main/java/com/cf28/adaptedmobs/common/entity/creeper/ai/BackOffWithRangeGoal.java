@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.common.entity.creeper.ai;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +49,16 @@ public class BackOffWithRangeGoal extends Goal {
         this.target = null;
     }
 
+    private double getSpeedModifier() {
+        if (this.target != null && this.target instanceof Player player) {
+            if (player.isSprinting()) {
+                return this.speedModifier * 1.25D;
+            }
+        }
+
+        return this.speedModifier;
+    }
+
     @Override
     public void tick() {
         if (this.target != null) {
@@ -59,10 +70,10 @@ public class BackOffWithRangeGoal extends Goal {
                 Vec3 diff = source.subtract(target).normalize();
                 double moveDistance = this.maxDistance - Math.sqrt(distance);
                 Vec3 pos = source.add(diff.scale(moveDistance));
-                this.mob.getNavigation().moveTo(pos.x, pos.y, pos.z, this.speedModifier);
+                this.mob.getNavigation().moveTo(pos.x, pos.y, pos.z, this.getSpeedModifier());
                 this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
             } else {
-                this.mob.getNavigation().moveTo(this.target, this.speedModifier);
+                this.mob.getNavigation().moveTo(this.target, this.getSpeedModifier());
             }
 
             if (this.mob.horizontalCollision) {

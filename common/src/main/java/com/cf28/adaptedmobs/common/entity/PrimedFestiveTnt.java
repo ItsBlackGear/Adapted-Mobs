@@ -93,7 +93,7 @@ public class PrimedFestiveTnt extends Entity {
      */
     private void explode() {
         Explosion.BlockInteraction interaction = this.isCharged() && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE;
-        this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), this.isCharged() ? 4.0F : 2.0F, interaction);
+        this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 3 * (this.isCharged() ? 2.0F : 1.0F), interaction);
     }
 
     @Override
