@@ -51,7 +51,7 @@ public class FestiveTntRenderer extends EntityRenderer<PrimedFestiveTnt> {
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
     }
 
-    @Override
+    @Override @SuppressWarnings("deprecation")
     public ResourceLocation getTextureLocation(PrimedFestiveTnt entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }

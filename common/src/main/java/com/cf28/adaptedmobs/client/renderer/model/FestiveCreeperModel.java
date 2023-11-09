@@ -48,11 +48,15 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.head.yRot = netHeadYaw * (float)(Math.PI / 180.0F);
         this.head.xRot = headPitch * (float)(Math.PI / 180.0F);
-        float speed = Math.min((float)entity.getDeltaMovement().lengthSqr() * 70.0F, 8.0F);
-        this.animate(entity.walkingAnimationState, FestiveCreeperAnimations.WALK, ageInTicks, speed);
+
+        this.animateWalk(FestiveCreeperAnimations.WALK, limbSwing, limbSwingAmount, 2.0F, 100.0F);
+
         this.animate(entity.attackAnimationState, FestiveCreeperAnimations.FIRE, ageInTicks);
         this.animate(entity.sitDownAnimationState, FestiveCreeperAnimations.SITDOWN, ageInTicks);
         this.animate(entity.sitUpAnimationState, FestiveCreeperAnimations.SITUP, ageInTicks);
-        this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
+
+        if (this.young) {
+            this.applyStatic(EntityTransformations.BABY_TRANSFORM);
+        }
     }
 }

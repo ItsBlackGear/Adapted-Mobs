@@ -12,15 +12,7 @@ public class EntityTransformations {
                     "head",
                     new AnimationChannel(
                             AnimationChannel.Targets.SCALE,
-                            new Keyframe(
-                                    0.0F,
-                                    KeyframeAnimations.scaleVec(
-                                            1.5F,
-                                            1.5F,
-                                            1.5F
-                                    ),
-                                    AnimationChannel.Interpolations.LINEAR
-                            )
+                            new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.5F, 1.5F, 1.5F), AnimationChannel.Interpolations.LINEAR)
                     )
             ).build();
 }

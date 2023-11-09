@@ -596,11 +596,11 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
 
     protected void setupWalkAnimations() {
         if (this.level.isClientSide) {
-            if (!this.isMoving() && !this.isInWater()) {
-                this.walkingAnimationState.stop();
-            } else {
-                this.walkingAnimationState.startIfStopped(this.tickCount);
-            }
+//            if (!this.isMoving() && !this.isInWater()) {
+//                this.walkingAnimationState.stop();
+//            } else {
+//                this.walkingAnimationState.startIfStopped(this.tickCount);
+//            }
 
             if (this.getState().is(CreeperState.ATTACKING)) {
                 this.attackAnimationState.startIfStopped(this.tickCount);
