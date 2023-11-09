@@ -1,6 +1,5 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
-import com.cf28.adaptedmobs.common.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperFollowOwnerGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperOwnerHurtTargetGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperSitWhenOrderedToGoal;
@@ -21,6 +20,7 @@ import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
@@ -34,7 +34,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Ocelot;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
@@ -48,7 +47,6 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -186,6 +184,25 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
         super.setTarget(target);
     }
 
+    @Override
+    public boolean shouldDropExperience() {
+        return !this.isBaby();
+    }
+
+    @Override
+    protected boolean shouldDropLoot() {
+        return !this.isBaby();
+    }
+
+    @Override
+    protected void onOffspringSpawnedFromEgg(Player player, Mob child) {
+        super.onOffspringSpawnedFromEgg(player, child);
+        if (child instanceof TamableCreeper creeper && this.getOwner() != null) {
+            creeper.setOwnerUUID(this.getOwnerUUID());
+            creeper.setTame(true);
+        }
+    }
+
     public boolean isMoving() {
         return (this.onGround || this.isInWaterOrBubble()) && this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6;
     }
@@ -250,7 +267,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        return !this.isOwnedBy(target) && !(target instanceof Creeper) && super.canAttack(target);
+        return !this.isOwnedBy(target) && super.canAttack(target);
     }
 
     public boolean isOwnedBy(LivingEntity target) {
@@ -259,18 +276,17 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
 
     public boolean wantsToAttack(LivingEntity target, LivingEntity owner) {
         if (target instanceof Ghast) {
+            // Will not try to attack ghasts!
             return false;
         } else if (target instanceof TamableCreeper creeper) {
+            // Will try to hurt creepers if they're wild or their owner is different of self.
             return !creeper.isTame() || creeper.getOwner() != owner;
-        } else if (target instanceof Wolf wolf) {
-            return !wolf.isTame() || wolf.getOwner() != owner;
-        } else if (target instanceof Player targetP && owner instanceof Player ownerP && !ownerP.canHarmPlayer(targetP)) {
+        } else if (target instanceof TamableAnimal animal) {
+            // Will try to hurt domestic animals if they're wild or their owner is different of self.
+            return !animal.isTame() || animal.getOwner() != owner;
+        } else if (target instanceof Player targetPlayer && owner instanceof Player ownerPlayer && !ownerPlayer.canHarmPlayer(targetPlayer)) {
             return false;
-        } else if (target instanceof AbstractChestedHorse horse && horse.isTamed()) {
-            return false;
-        } else {
-            return !(target instanceof TamableAnimal) || !((TamableAnimal) target).isTame();
-        }
+        } else return !(target instanceof AbstractChestedHorse horse) || !horse.isTamed();
     }
 
     @Override
@@ -408,18 +424,18 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
         return !this.isPersistenceRequired();
     }
 
-    @Nullable @Override
-    public Team getTeam() {
-        // Any tamed creepers shall join the team of its owner.
-        if (this.isTame()) {
-            LivingEntity entity = this.getOwner();
-            if (entity != null) {
-                return entity.getTeam();
-            }
-        }
-
-        return super.getTeam();
-    }
+//    @Nullable @Override
+//    public Team getTeam() {
+//        // Any tamed creepers shall join the team of its owner.
+//        if (this.isTame()) {
+//            LivingEntity entity = this.getOwner();
+//            if (entity != null) {
+//                return entity.getTeam();
+//            }
+//        }
+//
+//        return super.getTeam();
+//    }
 
     @Override
     public boolean isAlliedTo(Entity target) {
@@ -457,21 +473,12 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        Entity entity = source.getEntity();
-        if (source.isExplosion() && source.getDirectEntity() == this) {
+        if (source.isExplosion() && source.getEntity() == this) {
             return false;
         }
 
-        if (source.getDirectEntity() instanceof PrimedFestiveTnt tnt && source.isExplosion()) {
-            if (tnt.getOwner() instanceof FestiveCreeper creeper && creeper.getOwner() != null) {
-                return creeper.getOwner() == this.getOwner();
-            }
-
-            return tnt.getOwner() == this;
-        } else if (entity instanceof TamableCreeper creeper && creeper.getOwner() != null) {
-            return creeper.getOwner() == this.getOwner();
-        } else if (entity instanceof LivingEntity living) {
-            return this.isOwnedBy(living);
+        if (source.getEntity() instanceof TamableCreeper creeper) {
+            return creeper.getOwner() == this.getOwner() && creeper.getOwner() != null;
         }
 
         return super.isInvulnerableTo(source);

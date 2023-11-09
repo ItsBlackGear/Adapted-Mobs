@@ -108,6 +108,10 @@ public class PrimedFestiveTnt extends Entity {
         this.setCharged(tag.getBoolean("Charged"));
     }
 
+    public void setOwner(@Nullable LivingEntity owner) {
+        this.owner = owner;
+    }
+
     @Nullable
     public LivingEntity getOwner() {
         return this.owner;

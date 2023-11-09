@@ -52,6 +52,7 @@ public class ThrowTntToTargetGoal extends Goal {
         if (this.target != null && this.attackCooldown <= 0) {
             if (!this.mob.level.isClientSide && this.attackCooldown == 0) {
                 PrimedFestiveTnt tnt = new PrimedFestiveTnt(this.mob.level, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob);
+                tnt.setOwner(this.mob);
                 tnt.setFuse(30);
                 tnt.setCharged(this.mob.isPowered());
                 tnt.setDeltaMovement((this.target.getX() - tnt.getX()) / 18D, (this.target.getY() - tnt.getY()) / 18D + 0.5D, (this.target.getZ() - tnt.getZ()) / 18D);

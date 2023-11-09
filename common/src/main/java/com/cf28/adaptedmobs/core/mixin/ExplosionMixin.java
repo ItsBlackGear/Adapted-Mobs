@@ -50,6 +50,8 @@ public abstract class ExplosionMixin {
 
     @Shadow public abstract DamageSource getDamageSource();
 
+    @Shadow @javax.annotation.Nullable public abstract LivingEntity getSourceMob();
+
     /**
      * returns the message "[target] was blown up by [attacker]" when using Festive TNT
      */
@@ -68,14 +70,15 @@ public abstract class ExplosionMixin {
     private void am$explode(CallbackInfo ci) {
         if (this.source instanceof PrimedFestiveTnt || this.source instanceof TamableCreeper) {
             this.level.gameEvent(this.source, GameEvent.EXPLODE, new Vec3(this.x, this.y, this.z));
-            this.causeExplosion();
-            this.causeDamage(this.source);
+            this.am$causeExplosion();
+            this.am$causeDamage(this.source);
 
             ci.cancel();
         }
     }
 
-    private void causeDamage(Entity source) {
+    @Unique
+    private void am$causeDamage(Entity source) {
         float explosionRadius = this.radius * 2.0F;
         int minX = Mth.floor(this.x - (double)explosionRadius - 1.0);
         int maxX = Mth.floor(this.x + (double)explosionRadius + 1.0);
@@ -103,10 +106,10 @@ public abstract class ExplosionMixin {
 
                         if (source instanceof PrimedFestiveTnt tnt) {
                             if (tnt.getOwner() instanceof FestiveCreeper creeper) {
-                                applyDamage(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent, creeper);
+                                am$applyDamage(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent, creeper);
                             }
                         } else if (source instanceof TamableCreeper creeper) {
-                            applyDamage(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent, creeper);
+                            am$applyDamage(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent, creeper);
                         }
                     }
                 }
@@ -114,18 +117,25 @@ public abstract class ExplosionMixin {
         }
     }
 
-    private void applyDamage(float explosionRadius, Entity entity, double xOffset, double yOffset, double zOffset, double damagePercent, TamableCreeper creeper) {
-        if (creeper.getOwnerUUID() != null && entity instanceof LivingEntity living) {
-            LivingEntity owner = this.level.getPlayerByUUID(creeper.getOwnerUUID());
-            if (!creeper.isOwnedBy(living) && creeper.wantsToAttack(living, owner)) {
-                this.applyDamageAndKnockback(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent);
+    @Unique
+    private void am$applyDamage(float explosionRadius, Entity target, double xOffset, double yOffset, double zOffset, double damagePercent, TamableCreeper self) {
+        // checks if the owner is not null
+        if (self.getOwnerUUID() != null && target instanceof LivingEntity living) {
+            LivingEntity owner = this.level.getPlayerByUUID(self.getOwnerUUID());
+            // will check if the entity is not owned by the target, and if it wants to attack any other mobs
+            if (!self.isOwnedBy(living) && self.wantsToAttack(living, owner)) {
+                this.am$applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
             }
         } else {
-            this.applyDamageAndKnockback(explosionRadius, entity, xOffset, yOffset, zOffset, damagePercent);
+            // checks if the target is not itself
+            if (target != self) {
+                this.am$applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
+            }
         }
     }
 
-    private void causeExplosion() {
+    @Unique
+    private void am$causeExplosion() {
         Set<BlockPos> affectedBlocks = Sets.newHashSet();
 
         for(int xIndex = 0; xIndex < 16; ++xIndex) {
@@ -177,7 +187,7 @@ public abstract class ExplosionMixin {
      * damages the entity upon explosion and applies the calculated knockback
      */
     @Unique
-    private void applyDamageAndKnockback(double explosionRadius, Entity entity, double x, double y, double z, double damagePercent) {
+    private void am$applyDamageAndKnockback(double explosionRadius, Entity entity, double x, double y, double z, double damagePercent) {
         entity.hurt(this.getDamageSource(), (float)((int)((damagePercent * damagePercent + damagePercent) / 2.0 * 7.0 * explosionRadius + 1.0)));
 
         double knockbackPercent = damagePercent;
