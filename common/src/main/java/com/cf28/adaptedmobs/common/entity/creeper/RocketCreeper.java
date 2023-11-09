@@ -87,8 +87,6 @@ public class RocketCreeper extends TamableCreeper {
             this.spawnSmokeParticles();
         }
 
-        this.setupWalkAnimations();
-
         if (this.isInWaterOrBubble() && this.getState().is(CreeperState.ATTACKING)) {
             this.setState(CreeperState.IDLING);
         }
@@ -138,13 +136,13 @@ public class RocketCreeper extends TamableCreeper {
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer) {
         super.dropCustomDeathLoot(damageSource, looting, hitByPlayer);
 
-        if (hitByPlayer && Math.max(this.random.nextFloat() - (float)looting * 0.01F, 0.0F) < 0.1F) {
+        if (hitByPlayer && Math.max(this.random.nextFloat() - (float)looting * 0.01F, 0.0F) < 0.2F) {
             ItemStack stack = new ItemStack(Items.FIREWORK_STAR);
             CompoundTag tag = stack.getOrCreateTagElement("Explosion");
             List<Integer> colors = Lists.newArrayList();
             colors.add(DyeColor.LIGHT_BLUE.getFireworkColor());
             tag.putIntArray("Colors", colors);
-            tag.putByte("ClothType", (byte)FireworkRocketItem.Shape.CREEPER.getId());
+            tag.putByte("Type", (byte)FireworkRocketItem.Shape.CREEPER.getId());
             this.spawnAtLocation(stack);
         }
     }

@@ -56,7 +56,7 @@ public class RocketCreeperModel<T extends RocketCreeper> extends AgeableHierarch
         this.animate(entity.sitUpAnimationState, RocketCreeperAnimations.SITUP, ageInTicks);
 
         if (this.young) {
-            this.applyStatic(EntityTransformations.BABY_TRANSFORM);
+            this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
         }
     }
 }

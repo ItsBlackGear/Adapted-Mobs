@@ -415,7 +415,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
 
     @Override
     protected boolean shouldDespawnInPeaceful() {
-        // Prevent the Entity from de-spawning if it has an owner
         return this.getOwnerUUID() == null;
     }
 
@@ -423,19 +422,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return !this.isPersistenceRequired();
     }
-
-//    @Nullable @Override
-//    public Team getTeam() {
-//        // Any tamed creepers shall join the team of its owner.
-//        if (this.isTame()) {
-//            LivingEntity entity = this.getOwner();
-//            if (entity != null) {
-//                return entity.getTeam();
-//            }
-//        }
-//
-//        return super.getTeam();
-//    }
 
     @Override
     public boolean isAlliedTo(Entity target) {
@@ -603,11 +589,11 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
 
     protected void setupWalkAnimations() {
         if (this.level.isClientSide) {
-//            if (!this.isMoving() && !this.isInWater()) {
-//                this.walkingAnimationState.stop();
-//            } else {
-//                this.walkingAnimationState.startIfStopped(this.tickCount);
-//            }
+            if (!this.isMoving() && !this.isInWater()) {
+                this.walkingAnimationState.stop();
+            } else {
+                this.walkingAnimationState.startIfStopped(this.tickCount);
+            }
 
             if (this.getState().is(CreeperState.ATTACKING)) {
                 this.attackAnimationState.startIfStopped(this.tickCount);

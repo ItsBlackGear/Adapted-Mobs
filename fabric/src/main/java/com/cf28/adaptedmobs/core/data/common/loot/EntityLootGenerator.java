@@ -59,7 +59,7 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                                         .setRolls(ConstantValue.exactly(1.0F))
                                         .add(LootItem.lootTableItem(Items.TNT))
                                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                        .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.1F, 0.01F))
+                                        .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.2F, 0.01F))
                         )
                         .withPool(
                                 LootPool.lootPool()

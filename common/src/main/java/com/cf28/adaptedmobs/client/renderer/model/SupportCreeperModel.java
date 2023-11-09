@@ -1,7 +1,6 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
 import com.cf28.adaptedmobs.client.renderer.animation.EntityTransformations;
-import com.cf28.adaptedmobs.client.renderer.animation.RocketCreeperAnimations;
 import com.cf28.adaptedmobs.client.renderer.animation.SupportCreeperAnimations;
 import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
 import net.fabricmc.api.EnvType;
@@ -56,7 +55,7 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
         this.animate(entity.sitUpAnimationState, SupportCreeperAnimations.SITUP, ageInTicks);
 
         if (this.young) {
-            this.applyStatic(EntityTransformations.BABY_TRANSFORM);
+            this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
         }
     }
 }

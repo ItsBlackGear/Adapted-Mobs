@@ -56,12 +56,6 @@ public class SupportCreeper extends TamableCreeper {
         this.entityData.define(SUPPORTED_ENTITY_UUID, Optional.empty());
     }
 
-    @Override
-    public void tick() {
-        this.setupWalkAnimations();
-        super.tick();
-    }
-
     @Nullable
     public UUID getSupportedUUID() {
         return this.entityData.get(SUPPORTED_ENTITY_UUID).orElse(null);
