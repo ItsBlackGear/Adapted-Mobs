@@ -32,8 +32,8 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
         body.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(17, 41).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, -9.0F, 2.0F));
         body.addOrReplaceChild("leg2", CubeListBuilder.create().texOffs(0, 28).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(-2.0F, -9.0F, -2.0F));
         body.addOrReplaceChild("leg3", CubeListBuilder.create().texOffs(17, 28).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation), PartPose.offset(2.0F, -9.0F, -2.0F));
-        PartDefinition upper = body.addOrReplaceChild("upper", CubeListBuilder.create().texOffs(0, 16).addBox(-3.0F, -8.0F, -2.0F, 6.0F, 8.0F, 4.0F, deformation), PartPose.offset(0.0F, -9.0F, 0.0F));
-        upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation), PartPose.offset(0.0F, -8.0F, 0.0F));
+        PartDefinition upper = body.addOrReplaceChild("upper", CubeListBuilder.create().texOffs(0, 16).addBox(-3.0F, -8.0F, -2.0F, 6.0F, 8.0F, 4.0F, deformation).texOffs(32, 5).addBox(0.0F, -6.0F, 2.0F, 0.0F, 6.0F, 5.0F), PartPose.offset(0.0F, -9.0F, 0.0F));
+        upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation).texOffs(32, 0).addBox(-4.0F, -5.0F, -9.0F, 8.0F, 5.0F, 5.0F, deformation), PartPose.offset(0.0F, -8.0F, 0.0F));
         return LayerDefinition.create(mesh, 64, 64);
     }
 

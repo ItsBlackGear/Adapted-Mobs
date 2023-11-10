@@ -21,27 +21,44 @@ public class WorldGeneration {
         BiomeManager.add((writer, context) -> {
             if (context.hasEntity(EntityType.CREEPER)) {
                 if (ConfigEntries.spawnFestiveCreepers()) {
-                    writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
-                        AMEntityTypes.FESTIVE_CREEPER.get(),
-                        ConfigEntries.FESTIVE_CREEPER_SPAWN_WEIGHT,
-                        4,
-                        context.is(AMBiomeTags.SPAWN_EXTRA_FESTIVE_CREEPER) ? 6 : 4));
+                        writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
+                                AMEntityTypes.FESTIVE_CREEPER.get(),
+                                context.is(AMBiomeTags.SPAWN_EXTRA_FESTIVE_CREEPER)
+                                        ? ConfigEntries.getFestiveCreeperExtraSpawnWeight()
+                                        : ConfigEntries.getFestiveCreeperSpawnWeight()
+                                ,
+                                // min cluster size
+                                1,
+                                // max cluster size
+                                1
+                        ));
                 }
 
                 if (ConfigEntries.spawnSupportCreepers()) {
-                    writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
-                        AMEntityTypes.SUPPORT_CREEPER.get(),
-                        ConfigEntries.SUPPORT_CREEPER_SPAWN_WEIGHT,
-                        4,
-                        context.is(AMBiomeTags.SPAWN_EXTRA_SUPPORT_CREEPER) ? 6 : 4));
+                        writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
+                                AMEntityTypes.SUPPORT_CREEPER.get(),
+                                context.is(AMBiomeTags.SPAWN_EXTRA_SUPPORT_CREEPER)
+                                        ? ConfigEntries.getSupportCreeperExtraSpawnWeight()
+                                        : ConfigEntries.getSupportCreeperSpawnWeight()
+                                ,
+                                // min cluster size
+                                1,
+                                // max cluster size
+                                2
+                        ));
                 }
-
                 if (ConfigEntries.spawnRocketCreepers()) {
-                    writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
-                        AMEntityTypes.ROCKET_CREEPER.get(),
-                        ConfigEntries.ROCKET_CREEPER_SPAWN_WEIGHT,
-                        4,
-                        context.is(AMBiomeTags.SPAWN_EXTRA_ROCKET_CREEPER) ? 6 : 4));
+                        writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(
+                                AMEntityTypes.ROCKET_CREEPER.get(),
+                                context.is(AMBiomeTags.SPAWN_EXTRA_ROCKET_CREEPER)
+                                        ? ConfigEntries.getRocketCreeperExtraSpawnWeight()
+                                        : ConfigEntries.getRocketCreeperSpawnWeight()
+                                ,
+                                // min cluster size
+                                1,
+                                // max cluster size
+                                3
+                        ));
                 }
             }
         });

@@ -9,6 +9,7 @@ import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +17,8 @@ import net.minecraft.util.Mth;
 
 @Environment(EnvType.CLIENT)
 public class SupportCreeperRenderer extends MobRenderer<SupportCreeper, SupportCreeperModel<SupportCreeper>> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/support_creeper.png");
+    private static final ResourceLocation SUPPORT_TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/support_creeper.png");
+    private static final ResourceLocation PEEPER_TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/peeper_creeper.png");
 
     public SupportCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new SupportCreeperModel<>(context.bakeLayer(AMModelLayers.SUPPORT_CREEPER)), 0.5F);
@@ -44,6 +46,16 @@ public class SupportCreeperRenderer extends MobRenderer<SupportCreeper, SupportC
 
     @Override
     public ResourceLocation getTextureLocation(SupportCreeper entity) {
-        return TEXTURE;
+        String string = ChatFormatting.stripFormatting(entity.getName().getString());
+        if (string != null &&
+                (
+                        string.equals("Pee Dog") || string.equals("PeeingDog") || string.equals("Peeper") ||
+                        string.equals("pee dog") || string.equals("peeingdog") || string.equals("peeper")
+                )
+        ) {
+            return PEEPER_TEXTURE;
+        } else {
+            return SUPPORT_TEXTURE;
+        }
     }
 }

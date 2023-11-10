@@ -12,12 +12,24 @@ public class ConfigEntriesImpl implements ConfigData {
         return AdaptedMobsFabric.CONFIG.spawns.festive_creeper_spawn_weight;
     }
 
+    public static int getFestiveCreeperExtraSpawnWeight() {
+        return AdaptedMobsFabric.CONFIG.spawns.festive_creeper_extra_spawn_weight;
+    }
+
     public static int getSupportCreeperSpawnWeight() {
         return AdaptedMobsFabric.CONFIG.spawns.support_creeper_spawn_weight;
     }
 
+    public static int getSupportCreeperExtraSpawnWeight() {
+        return AdaptedMobsFabric.CONFIG.spawns.support_creeper_extra_spawn_weight;
+    }
+
     public static int getRocketCreeperSpawnWeight() {
         return AdaptedMobsFabric.CONFIG.spawns.rocket_creeper_spawn_weight;
+    }
+
+    public static int getRocketCreeperExtraSpawnWeight() {
+        return AdaptedMobsFabric.CONFIG.spawns.rocket_creeper_extra_spawn_weight;
     }
 
     public static boolean spawnFestiveCreepers() {
@@ -41,20 +53,32 @@ public class ConfigEntriesImpl implements ConfigData {
 
         @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
-        public int festive_creeper_spawn_weight = 100;
+        public int festive_creeper_spawn_weight = 25;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int festive_creeper_extra_spawn_weight = 50;
 
         @ConfigEntry.Gui.Tooltip
         public boolean spawn_support_creeper = true;
 
         @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
-        public int support_creeper_spawn_weight = 100;
+        public int support_creeper_spawn_weight = 25;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int support_creeper_extra_spawn_weight = 50;
 
         @ConfigEntry.Gui.Tooltip
         public boolean spawn_rocket_creeper = true;
 
         @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
-        public int rocket_creeper_spawn_weight = 100;
+        public int rocket_creeper_spawn_weight = 25;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int rocket_creeper_extra_spawn_weight = 50;
     }
 }
