@@ -18,12 +18,16 @@ public class ClientSetup {
     public static void onInstance() {
         RenderRegistry.entity(AMEntityTypes.FESTIVE_CREEPER, FestiveCreeperRenderer::new, AMModelLayers.FESTIVE_CREEPER, () -> FestiveCreeperModel.createBodyLayer(CubeDeformation.NONE));
         RenderRegistry.layerDefinition(AMModelLayers.FESTIVE_CREEPER_ARMOR, () -> FestiveCreeperModel.createBodyLayer(new CubeDeformation(2.0F)));
+        RenderRegistry.layerDefinition(AMModelLayers.FESTIVE_CREEPER_CLOTH, () -> FestiveCreeperModel.createBodyLayer(new CubeDeformation(0.25F)));
         RenderRegistry.entity(AMEntityTypes.SUPPORT_CREEPER, SupportCreeperRenderer::new, AMModelLayers.SUPPORT_CREEPER, () -> SupportCreeperModel.createBodyLayer(CubeDeformation.NONE));
         RenderRegistry.layerDefinition(AMModelLayers.SUPPORT_CREEPER_ARMOR, () -> SupportCreeperModel.createBodyLayer(new CubeDeformation(2.0F)));
+        RenderRegistry.layerDefinition(AMModelLayers.SUPPORT_CREEPER_CLOTH, () -> SupportCreeperModel.createBodyLayer(new CubeDeformation(0.25F)));
         RenderRegistry.entity(AMEntityTypes.ROCKET_CREEPER, RocketCreeperRenderer::new, AMModelLayers.ROCKET_CREEPER, () -> RocketCreeperModel.createBodyLayer(CubeDeformation.NONE));
         RenderRegistry.layerDefinition(AMModelLayers.ROCKET_CREEPER_ARMOR, () -> RocketCreeperModel.createBodyLayer(new CubeDeformation(2.0F)));
+        RenderRegistry.layerDefinition(AMModelLayers.ROCKET_CREEPER_CLOTH, () -> RocketCreeperModel.createBodyLayer(new CubeDeformation(0.25F)));
         RenderRegistry.entity(AMEntityTypes.CREEPER, SimpleCreeperRenderer::new, AMModelLayers.CREEPER, () -> SimpleCreeperModel.createBodyLayer(CubeDeformation.NONE));
         RenderRegistry.layerDefinition(AMModelLayers.CREEPER_ARMOR, () -> SimpleCreeperModel.createBodyLayer(new CubeDeformation(2.0F)));
+        RenderRegistry.layerDefinition(AMModelLayers.CREEPER_CLOTH, () -> SimpleCreeperModel.createBodyLayer(new CubeDeformation(0.25F)));
 
         RenderRegistry.renderer(AMEntityTypes.FESTIVE_TNT, FestiveTntRenderer::new);
         RenderRegistry.renderer(AMEntityTypes.MYSTERY_EGG, ThrownItemRenderer::new);

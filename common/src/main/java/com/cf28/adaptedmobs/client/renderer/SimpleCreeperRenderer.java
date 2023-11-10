@@ -20,7 +20,7 @@ public class SimpleCreeperRenderer extends MobRenderer<TamableCreeper, SimpleCre
     public SimpleCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new SimpleCreeperModel<>(context.bakeLayer(AMModelLayers.CREEPER)), 0.5F);
         this.addLayer(new SimpleCreeperPowerLayer(this, context.getModelSet()));
-        this.addLayer(new CreeperClothLayer<>(this));
+        this.addLayer(new CreeperClothLayer<>(this, new SimpleCreeperModel<>(context.bakeLayer(AMModelLayers.CREEPER_CLOTH))));
     }
 
     @Override

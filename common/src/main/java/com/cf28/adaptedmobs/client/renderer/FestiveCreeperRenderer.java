@@ -19,7 +19,7 @@ public class FestiveCreeperRenderer extends MobRenderer<FestiveCreeper, FestiveC
     public FestiveCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new FestiveCreeperModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPER)), 0.5F);
         this.addLayer(new FestiveCreeperPowerLayer(this, context.getModelSet()));
-        this.addLayer(new CreeperClothLayer<>(this));
+        this.addLayer(new CreeperClothLayer<>(this, new FestiveCreeperModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPER_CLOTH))));
     }
 
     @Override

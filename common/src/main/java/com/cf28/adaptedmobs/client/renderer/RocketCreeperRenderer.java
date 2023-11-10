@@ -21,7 +21,7 @@ public class RocketCreeperRenderer extends MobRenderer<RocketCreeper, RocketCree
     public RocketCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new RocketCreeperModel<>(context.bakeLayer(AMModelLayers.ROCKET_CREEPER)), 0.5F);
         this.addLayer(new RocketCreeperPowerLayer(this, context.getModelSet()));
-        this.addLayer(new CreeperClothLayer<>(this));
+        this.addLayer(new CreeperClothLayer<>(this, new RocketCreeperModel<>(context.bakeLayer(AMModelLayers.ROCKET_CREEPER_CLOTH))));
     }
 
     @Override

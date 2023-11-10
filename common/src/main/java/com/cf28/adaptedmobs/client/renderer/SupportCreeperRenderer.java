@@ -21,7 +21,7 @@ public class SupportCreeperRenderer extends MobRenderer<SupportCreeper, SupportC
     public SupportCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new SupportCreeperModel<>(context.bakeLayer(AMModelLayers.SUPPORT_CREEPER)), 0.5F);
         this.addLayer(new SupportCreeperPowerLayer(this, context.getModelSet()));
-        this.addLayer(new CreeperClothLayer<>(this));
+        this.addLayer(new CreeperClothLayer<>(this, new SupportCreeperModel<>(context.bakeLayer(AMModelLayers.SUPPORT_CREEPER_CLOTH))));
     }
 
     @Override
