@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.core;
 
 import com.cf28.adaptedmobs.client.ClientSetup;
+import com.cf28.adaptedmobs.client.registry.AMSoundEvents;
 import com.cf28.adaptedmobs.common.CommonSetup;
 import com.cf28.adaptedmobs.common.registry.AMBlocks;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
@@ -32,6 +33,7 @@ public class AdaptedMobs {
         AMItems.ITEMS.register();
         AMBlocks.BLOCKS.register();
         AMEntityTypes.ENTITIES.register();
+        AMSoundEvents.SOUND_EVENTS.register();
         AMEntityDataSerializers.register();
 
         AMBiomeTags.boostrap();

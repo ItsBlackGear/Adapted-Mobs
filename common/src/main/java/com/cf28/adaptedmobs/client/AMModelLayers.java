@@ -17,6 +17,7 @@ public class AMModelLayers {
     public static final ModelLayerLocation CREEPER = create("creeper");
     public static final ModelLayerLocation CREEPER_ARMOR = create("creeper", "armor");
     public static final ModelLayerLocation CREEPER_CLOTH = create("creeper", "cloth");
+    public static final ModelLayerLocation ERRANT = create("errant");
 
     private static ModelLayerLocation create(String key) {
         return create(key, "main");

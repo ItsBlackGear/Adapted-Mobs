@@ -1,10 +1,12 @@
 package com.cf28.adaptedmobs.client;
 
+import com.cf28.adaptedmobs.client.renderer.ErrantRenderer;
 import com.cf28.adaptedmobs.client.renderer.FestiveCreeperRenderer;
 import com.cf28.adaptedmobs.client.renderer.FestiveTntRenderer;
 import com.cf28.adaptedmobs.client.renderer.RocketCreeperRenderer;
 import com.cf28.adaptedmobs.client.renderer.SimpleCreeperRenderer;
 import com.cf28.adaptedmobs.client.renderer.SupportCreeperRenderer;
+import com.cf28.adaptedmobs.client.renderer.model.ErrantModel;
 import com.cf28.adaptedmobs.client.renderer.model.FestiveCreeperModel;
 import com.cf28.adaptedmobs.client.renderer.model.RocketCreeperModel;
 import com.cf28.adaptedmobs.client.renderer.model.SimpleCreeperModel;
@@ -28,6 +30,8 @@ public class ClientSetup {
         RenderRegistry.entity(AMEntityTypes.CREEPER, SimpleCreeperRenderer::new, AMModelLayers.CREEPER, () -> SimpleCreeperModel.createBodyLayer(CubeDeformation.NONE));
         RenderRegistry.layerDefinition(AMModelLayers.CREEPER_ARMOR, () -> SimpleCreeperModel.createBodyLayer(new CubeDeformation(2.0F)));
         RenderRegistry.layerDefinition(AMModelLayers.CREEPER_CLOTH, () -> SimpleCreeperModel.createBodyLayer(new CubeDeformation(0.25F)));
+
+        RenderRegistry.entity(AMEntityTypes.ERRANT, ErrantRenderer::new, AMModelLayers.ERRANT, ErrantModel::createBodyLayer);
 
         RenderRegistry.renderer(AMEntityTypes.FESTIVE_TNT, FestiveTntRenderer::new);
         RenderRegistry.renderer(AMEntityTypes.MYSTERY_EGG, ThrownItemRenderer::new);

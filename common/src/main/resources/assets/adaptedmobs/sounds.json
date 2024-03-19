@@ -1,0 +1,20 @@
+{
+  "entity.errant.ambient": {
+    "sounds": [
+      "adaptedmobs:mob/errant/idle1",
+      "adaptedmobs:mob/errant/idle2",
+      "adaptedmobs:mob/errant/idle3",
+      "adaptedmobs:mob/errant/idle4"
+    ],
+    "subtitle": "subtitles.entity.errant.ambient"
+  },
+  "entity.errant.hurt": {
+    "sounds": [
+      "adaptedmobs:mob/errant/hurt1",
+      "adaptedmobs:mob/errant/hurt2",
+      "adaptedmobs:mob/errant/hurt3",
+      "adaptedmobs:mob/errant/hurt4"
+    ],
+    "subtitle": "subtitles.entity.errant.hurt"
+  }
+}

@@ -4,6 +4,7 @@ import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.entity.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
+import com.cf28.adaptedmobs.common.entity.errant.Errant;
 import com.cf28.adaptedmobs.common.level.WorldGeneration;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registry.AMItems;
@@ -24,6 +25,7 @@ public class CommonSetup {
         EntityRegistry.attributes(AMEntityTypes.SUPPORT_CREEPER, SupportCreeper::createAttributes);
         EntityRegistry.attributes(AMEntityTypes.ROCKET_CREEPER, RocketCreeper::createAttributes);
         EntityRegistry.attributes(AMEntityTypes.CREEPER, TamableCreeper::createAttributes);
+        EntityRegistry.attributes(AMEntityTypes.ERRANT, Errant::createAttributes);
     }
 
     public static void postInstance() {
