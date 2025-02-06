@@ -86,10 +86,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SwellGoal(this) {
-            @Override
-            public boolean canUse() {
-                return super.canUse() && TamableCreeper.this.shouldSwell();
-            }
+            @Override public boolean canUse() { return super.canUse() && TamableCreeper.this.shouldSwell(); }
         });
         this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0F, 1.2F));
@@ -293,13 +290,13 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     public void handleEntityEvent(byte id) {
         if (id == AGE_UP_EVENT_ID) {
             this.level.addParticle(
-                    ParticleTypes.HAPPY_VILLAGER,
-                    this.getRandomX(1.0),
-                    this.getRandomY() + 0.5,
-                    this.getRandomZ(1.0),
-                    0.0,
-                    0.0,
-                    0.0
+                ParticleTypes.HAPPY_VILLAGER,
+                this.getRandomX(1.0),
+                this.getRandomY() + 0.5,
+                this.getRandomZ(1.0),
+                0.0,
+                0.0,
+                0.0
             );
         } else {
             super.handleEntityEvent(id);
@@ -351,14 +348,15 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
                     return result;
                 }
             } else if (stack.is(Items.FLINT_AND_STEEL) && this.detonateOnInteraction()) {
-                this.level.playSound(player,
-                        this.getX(),
-                        this.getY(),
-                        this.getZ(),
-                        SoundEvents.FLINTANDSTEEL_USE,
-                        this.getSoundSource(),
-                        1.0F,
-                        this.random.nextFloat() * 0.4F + 0.8F
+                this.level.playSound(
+                    player,
+                    this.getX(),
+                    this.getY(),
+                    this.getZ(),
+                    SoundEvents.FLINTANDSTEEL_USE,
+                    this.getSoundSource(),
+                    1.0F,
+                    this.random.nextFloat() * 0.4F + 0.8F
                 );
 
                 // Ignites the creeper and causes damage into the flint and steel item.
@@ -492,11 +490,11 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     public void aiStep() {
         super.aiStep();
         if (!this.level.isClientSide && this.isAlive()) {
-            int i = this.getAge();
-            if (i < 0) {
-                this.setAge(++i);
-            } else if (i > 0) {
-                this.setAge(--i);
+            int age = this.getAge();
+            if (age < 0) {
+                this.setAge(++age);
+            } else if (age > 0) {
+                this.setAge(--age);
             }
         }
     }
@@ -504,19 +502,19 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     @Override
     public void tick() {
         if (this.isAlive() && this.shouldExplode()) {
-            CreeperAccessor access = (CreeperAccessor)this;
+            CreeperAccessor access = (CreeperAccessor) this;
             access.setOldSwell(access.getSwell());
             if (this.isIgnited()) {
                 this.setSwellDir(1);
             }
 
-            int i = this.getSwellDir();
-            if (i > 0 && access.getSwell() == 0) {
+            int swell = this.getSwellDir();
+            if (swell > 0 && access.getSwell() == 0) {
                 this.playSound(SoundEvents.CREEPER_PRIMED, 1.0F, 0.5F);
                 this.gameEvent(GameEvent.PRIME_FUSE);
             }
 
-            access.setSwell(access.getSwell() + i);
+            access.setSwell(access.getSwell() + swell);
             if (access.getSwell() < 0) {
                 access.setSwell(0);
             }
@@ -547,11 +545,11 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
                 if (!this.level.isClientSide) {
                     float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
                     this.level.explode(this,
-                            this.getX(),
-                            this.getY(),
-                            this.getZ(),
-                            (float) access.getExplosionRadius() * explosionMultiplier,
-                            Explosion.BlockInteraction.NONE
+                        this.getX(),
+                        this.getY(),
+                        this.getZ(),
+                        (float) access.getExplosionRadius() * explosionMultiplier,
+                        Explosion.BlockInteraction.NONE
                     );
 
                     this.postExplosion();
@@ -634,7 +632,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     }
 
     public int getSpeedUpSecondsWhenFeeding(int seconds) {
-        return (int)((float)(seconds / 20) * 0.1F);
+        return (int) ((float) (seconds / 20) * 0.1F);
     }
 
     @Override

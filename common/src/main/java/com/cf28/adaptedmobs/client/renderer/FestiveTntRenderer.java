@@ -26,29 +26,32 @@ public class FestiveTntRenderer extends EntityRenderer<PrimedFestiveTnt> {
         this.blockRenderer = context.getBlockRenderDispatcher();
     }
 
-    public void render(PrimedFestiveTnt entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-        matrixStack.pushPose();
-        matrixStack.translate(0.0, 0.5, 0.0);
-        int i = entity.getFuse();
-        if ((float)i - partialTicks + 1.0F < 10.0F) {
-            float f = 1.0F - ((float)i - partialTicks + 1.0F) / 10.0F;
-            f = Mth.clamp(f, 0.0F, 1.0F);
-            f *= f;
-            f *= f;
-            float g = 1.0F + f * 0.3F;
-            matrixStack.scale(g, g, g);
+    @Override
+    public void render(PrimedFestiveTnt entity, float entityYaw, float partialTicks, PoseStack matrices, MultiBufferSource buffer, int packedLight) {
+        matrices.pushPose();
+        matrices.translate(0.0, 0.5, 0.0);
+        int fuseTicks = entity.getFuse();
+        if ((float) fuseTicks - partialTicks + 1.0F < 10.0F) {
+            float progress = 1.0F - ((float) fuseTicks - partialTicks + 1.0F) / 10.0F;
+            progress = Mth.clamp(progress, 0.0F, 1.0F);
+            progress *= progress;
+            progress *= progress;
+            float scale = 1.0F + progress * 0.3F;
+            matrices.scale(scale, scale, scale);
         }
 
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
-        matrixStack.translate(-0.5, -0.5, 0.5);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+        matrices.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+        matrices.translate(-0.5, -0.5, 0.5);
+        matrices.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+
         if (entity.isCharged()) {
-            TntMinecartRenderer.renderWhiteSolidBlock(this.blockRenderer, Blocks.TNT.defaultBlockState(), matrixStack, buffer, packedLight, i / 5 % 2 == 0);
+            TntMinecartRenderer.renderWhiteSolidBlock(this.blockRenderer, Blocks.TNT.defaultBlockState(), matrices, buffer, packedLight, fuseTicks / 5 % 2 == 0);
         } else {
-            TntMinecartRenderer.renderWhiteSolidBlock(this.blockRenderer, AMBlocks.FESTIVE_TNT.get().defaultBlockState(), matrixStack, buffer, packedLight, i / 5 % 2 == 0);
+            TntMinecartRenderer.renderWhiteSolidBlock(this.blockRenderer, AMBlocks.FESTIVE_TNT.get().defaultBlockState(), matrices, buffer, packedLight, fuseTicks / 5 % 2 == 0);
         }
-        matrixStack.popPose();
-        super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+
+        matrices.popPose();
+        super.render(entity, entityYaw, partialTicks, matrices, buffer, packedLight);
     }
 
     @Override @SuppressWarnings("deprecation")

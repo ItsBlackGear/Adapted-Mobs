@@ -35,8 +35,8 @@ public class PrimedFestiveTnt extends Entity {
     public PrimedFestiveTnt(Level level, double x, double y, double z, @Nullable LivingEntity owner) {
         this(AMEntityTypes.FESTIVE_TNT.get(), level);
         this.setPos(x, y, z);
-        double offset = level.random.nextDouble() * (float)(Math.PI * 2);
-        this.setDeltaMovement(-Math.sin(offset) * 0.02D, 0.2F, -Math.cos(offset) * 0.02D);
+        double offset = level.random.nextDouble() * (float) (Math.PI * 2);
+        this.setDeltaMovement(-Math.sin(offset) * 0.02, 0.2F, -Math.cos(offset) * 0.02);
         this.xo = x;
         this.yo = y;
         this.zo = z;
@@ -62,13 +62,13 @@ public class PrimedFestiveTnt extends Entity {
     @Override
     public void tick() {
         if (!this.isNoGravity()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
 
         this.move(MoverType.SELF, this.getDeltaMovement());
-        this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
+        this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
         if (this.onGround) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
         }
 
         int fuse = this.getFuse() - 1;
@@ -81,7 +81,7 @@ public class PrimedFestiveTnt extends Entity {
         } else {
             this.updateInWaterStateAndDoFluidPushing();
             if (this.level.isClientSide) {
-                this.level.addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5D, this.getZ(), 0.0D, 0.0D, 0.0D);
+                this.level.addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5, this.getZ(), 0.0, 0.0, 0.0);
             }
         }
     }
@@ -92,8 +92,10 @@ public class PrimedFestiveTnt extends Entity {
      * - when charged, it breaks blocks on radius as long as the rule doMobGriefing is set to true
      */
     private void explode() {
-        Explosion.BlockInteraction interaction = this.isCharged() && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE;
-        this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 3 * (this.isCharged() ? 2.0F : 1.0F), interaction);
+        Explosion.BlockInteraction interaction = this.isCharged() && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)
+            ? Explosion.BlockInteraction.BREAK
+            : Explosion.BlockInteraction.NONE;
+        this.level.explode(this, this.getX(), this.getY(0.0625), this.getZ(), 3 * (this.isCharged() ? 2.0F : 1.0F), interaction);
     }
 
     @Override

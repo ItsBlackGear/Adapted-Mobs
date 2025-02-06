@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.core.mixin;
 
-import com.cf28.adaptedmobs.common.entity.creeper.CreeperAccess;
+import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
@@ -16,9 +16,13 @@ public abstract class CreeperMixin extends Monster {
         super(entityType, level);
     }
 
-    @Inject(method = "tick", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(
+        method = "tick",
+        at = @At(value = "HEAD"),
+        cancellable = true
+    )
     private void tick(CallbackInfo ci) {
-        if (this instanceof CreeperAccess) {
+        if ((Object) this instanceof TamableCreeper) {
             super.tick();
             ci.cancel();
         }

@@ -7,9 +7,7 @@
   "mixins": [
     "CreeperMixin",
     "ExplosionMixin",
-    "access.CreeperAccessor",
-    "access.HierarchicalModelAccessor",
-    "access.SpawnPlacementsAccessor"
+    "access.CreeperAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

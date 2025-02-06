@@ -1,5 +1,7 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
+import com.blackgear.platform.client.AnimationHelper;
+import com.blackgear.platform.client.model.AgeableHierarchicalModel;
 import com.cf28.adaptedmobs.client.renderer.animation.CreeperAnimations;
 import com.cf28.adaptedmobs.client.renderer.animation.EntityTransformations;
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
@@ -61,8 +63,8 @@ public class SimpleCreeperModel<T extends TamableCreeper> extends AgeableHierarc
         this.leftHindLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         this.rightFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         this.leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
-        this.animate(entity.sitUpAnimationState, CreeperAnimations.SITUP, ageInTicks);
-        this.animate(entity.sitDownAnimationState, CreeperAnimations.SITDOWN, ageInTicks);
+        AnimationHelper.animate(this, entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
+        AnimationHelper.animate(this, entity.sitUpAnimationState, CreeperAnimations.SIT_UP, ageInTicks);
+        AnimationHelper.animate(this, entity.sitDownAnimationState, CreeperAnimations.SIT_DOWN, ageInTicks);
     }
 }

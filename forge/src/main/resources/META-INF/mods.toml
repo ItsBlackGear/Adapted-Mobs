@@ -5,7 +5,7 @@ license = "MIT"
 
 [[mods]]
 modId = "adaptedmobs"
-version = "${version}"
+version = "1.0.0"
 displayName = "Adapted Mobs"
 authors = "Cf28"
 credits = "Cf28, BlackGear, Auxiliary, EB Mario, Pee Dog, Daveyx0"

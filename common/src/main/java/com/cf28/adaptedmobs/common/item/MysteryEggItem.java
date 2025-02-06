@@ -31,7 +31,7 @@ public class MysteryEggItem extends Item {
         if (!level.isClientSide) {
             ThrownMysteryEgg egg = new ThrownMysteryEgg(level, player);
             egg.setItem(stack);
-            egg.setCreeper((Supplier<EntityType<? extends TamableCreeper>>)this.entity);
+            egg.setCreeper((Supplier<EntityType<? extends TamableCreeper>>) this.entity);
             egg.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
             level.addFreshEntity(egg);
         }

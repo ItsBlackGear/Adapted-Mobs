@@ -99,32 +99,34 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                         )
         );
         this.add(
-                AMEntityTypes.SUPPORT_CREEPER,
-                exporter,
-                LootTable.lootTable()
-                        .withPool(
-                                LootPool.lootPool()
-                                        .setRolls(ConstantValue.exactly(1.0F))
-                                        .add(LootItem.lootTableItem(Items.GUNPOWDER)
-                                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
-                                                .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))
-                                        )
+            AMEntityTypes.SUPPORT_CREEPER,
+            exporter,
+            LootTable.lootTable()
+                .withPool(
+                    LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(
+                            LootItem.lootTableItem(Items.GUNPOWDER)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))
                         )
-                        .withPool(
-                                LootPool.lootPool()
-                                        .setRolls(ConstantValue.exactly(1.0F))
-                                        .add(LootItem.lootTableItem(AMItems.YELLOW_MYSTERY_EGG.get()))
-                                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                        .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.025F, 0.01F))
+                )
+                .withPool(
+                    LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(AMItems.YELLOW_MYSTERY_EGG.get()))
+                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
+                        .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.025F, 0.01F))
+                )
+                .withPool(
+                    LootPool.lootPool()
+                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
+                        .when(
+                            LootItemEntityPropertyCondition.hasProperties(
+                                LootContext.EntityTarget.KILLER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)
+                            )
                         )
-                        .withPool(
-                                LootPool.lootPool()
-                                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
-                                        .when(LootItemEntityPropertyCondition.hasProperties(
-                                                        LootContext.EntityTarget.KILLER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)
-                                                )
-                                        )
-                        )
+                )
         );
     }
 

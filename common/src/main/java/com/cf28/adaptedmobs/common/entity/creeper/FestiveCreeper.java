@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
-import com.cf28.adaptedmobs.common.entity.creeper.ai.BackOffWithRangeGoal;
+import com.cf28.adaptedmobs.common.entity.creeper.ai.StrafeGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.ThrowTntToTargetGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.sounds.SoundEvents;
@@ -38,7 +38,7 @@ public class FestiveCreeper extends TamableCreeper {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(2, new ThrowTntToTargetGoal(this, UniformInt.of(10, 20)));
-        this.goalSelector.addGoal(3, new BackOffWithRangeGoal(this, 5.5D, 1.25D));
+        this.goalSelector.addGoal(3, new StrafeGoal(this, 5.5, 1.25));
     }
 
     public static AttributeSupplier.Builder createAttributes() {

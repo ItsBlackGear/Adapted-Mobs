@@ -9,8 +9,8 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Enemy;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.EnumSet;
 
@@ -24,11 +24,11 @@ public class ApplyBuffsToTargetGoal extends Goal {
     private final boolean boosted;
 
     public ApplyBuffsToTargetGoal(SupportCreeper mob, double range, double speed) {
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         this.mob = mob;
         this.range = range;
         this.speed = speed;
         this.boosted = mob.isPowered();
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     @Override

@@ -21,18 +21,14 @@ public class CreeperSitWhenOrderedToGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!this.mob.isTame()) {
-            return false;
-        } else if (this.mob.isInWaterOrBubble()) {
-            return false;
-        } else if (!this.mob.isOnGround()) {
+        if (!this.mob.isTame() || this.mob.isInWaterOrBubble() || !this.mob.isOnGround()) {
             return false;
         } else {
             LivingEntity owner = this.mob.getOwner();
             if (owner == null) {
-                return true;
+                return true; // if the owner is not present in the world, the creeper should remain seated.
             } else {
-                return (!(this.mob.distanceToSqr(owner) < 144.0D) || owner.getLastHurtByMob() == null) && this.mob.isOrderedToSit();
+                return (this.mob.distanceToSqr(owner) >= 144.0 || owner.getLastHurtByMob() == null) && this.mob.isOrderedToSit();
             }
         }
     }

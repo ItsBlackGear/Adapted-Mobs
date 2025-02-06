@@ -2,7 +2,7 @@ package com.cf28.adaptedmobs.client.renderer;
 
 import com.cf28.adaptedmobs.client.AMModelLayers;
 import com.cf28.adaptedmobs.client.renderer.layer.CreeperClothLayer;
-import com.cf28.adaptedmobs.client.renderer.layer.FestiveCreeperPowerLayer;
+import com.cf28.adaptedmobs.client.renderer.layer.EntityPowerLayer;
 import com.cf28.adaptedmobs.client.renderer.model.FestiveCreeperModel;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
@@ -14,16 +14,14 @@ import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class FestiveCreeperRenderer extends MobRenderer<FestiveCreeper, FestiveCreeperModel<FestiveCreeper>> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AdaptedMobs.MOD_ID, "textures/entity/creeper/festive_creeper.png");
-
     public FestiveCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new FestiveCreeperModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPER)), 0.5F);
-        this.addLayer(new FestiveCreeperPowerLayer(this, context.getModelSet()));
+        this.addLayer(new EntityPowerLayer<>(this, new FestiveCreeperModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPER_ARMOR))));
         this.addLayer(new CreeperClothLayer<>(this, new FestiveCreeperModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPER_CLOTH))));
     }
 
     @Override
     public ResourceLocation getTextureLocation(FestiveCreeper entity) {
-        return TEXTURE;
+        return AdaptedMobs.resource("textures/entity/creeper/festive_creeper.png");
     }
 }

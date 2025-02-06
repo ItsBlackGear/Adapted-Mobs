@@ -28,9 +28,6 @@
     ],
     "fabric-datagen": [
       "com.cf28.adaptedmobs.core.data.DataGeneration"
-    ],
-    "modmenu": [
-      "com.cf28.adaptedmobs.core.config.fabric.ModMenuImplementation"
     ]
   },
   "mixins": [

@@ -50,8 +50,6 @@ public abstract class ExplosionMixin {
 
     @Shadow public abstract DamageSource getDamageSource();
 
-    @Shadow @javax.annotation.Nullable public abstract LivingEntity getSourceMob();
-
     /**
      * returns the message "[target] was blown up by [attacker]" when using Festive TNT
      */
@@ -124,23 +122,24 @@ public abstract class ExplosionMixin {
             LivingEntity owner = this.level.getPlayerByUUID(self.getOwnerUUID());
             // will check if the entity is not owned by the target, and if it wants to attack any other mobs
             if (!self.isOwnedBy(living) && self.wantsToAttack(living, owner)) {
-                this.am$applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
+                this.applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
             }
         } else {
             // checks if the target is not itself
             if (target != self) {
-                this.am$applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
+                this.applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
             }
         }
     }
 
     @Unique
     private void am$causeExplosion() {
+        Explosion explosion = (Explosion)(Object) this;
         Set<BlockPos> affectedBlocks = Sets.newHashSet();
 
-        for(int xIndex = 0; xIndex < 16; ++xIndex) {
-            for(int yIndex = 0; yIndex < 16; ++yIndex) {
-                for(int zIndex = 0; zIndex < 16; ++zIndex) {
+        for (int xIndex = 0; xIndex < 16; ++xIndex) {
+            for (int yIndex = 0; yIndex < 16; ++yIndex) {
+                for (int zIndex = 0; zIndex < 16; ++zIndex) {
                     if (xIndex == 0 || xIndex == 15 || yIndex == 0 || yIndex == 15 || zIndex == 0 || zIndex == 15) {
                         double xNormalized = (float)xIndex / 15.0F * 2.0F - 1.0F;
                         double yNormalized = (float)yIndex / 15.0F * 2.0F - 1.0F;
@@ -162,12 +161,12 @@ public abstract class ExplosionMixin {
                                 break;
                             }
 
-                            Optional<Float> resistance = this.damageCalculator.getBlockExplosionResistance((Explosion)(Object)this, this.level, pos, state, fluid);
+                            Optional<Float> resistance = this.damageCalculator.getBlockExplosionResistance(explosion, this.level, pos, state, fluid);
                             if (resistance.isPresent()) {
                                 explosionPower -= (resistance.get() + 0.3F) * 0.3F;
                             }
 
-                            if (explosionPower > 0.0F && this.damageCalculator.shouldBlockExplode((Explosion)(Object)this, this.level, pos, state, explosionPower)) {
+                            if (explosionPower > 0.0F && this.damageCalculator.shouldBlockExplode(explosion, this.level, pos, state, explosionPower)) {
                                 affectedBlocks.add(pos);
                             }
 
@@ -187,7 +186,7 @@ public abstract class ExplosionMixin {
      * damages the entity upon explosion and applies the calculated knockback
      */
     @Unique
-    private void am$applyDamageAndKnockback(double explosionRadius, Entity entity, double x, double y, double z, double damagePercent) {
+    private void applyDamageAndKnockback(double explosionRadius, Entity entity, double x, double y, double z, double damagePercent) {
         entity.hurt(this.getDamageSource(), (float)((int)((damagePercent * damagePercent + damagePercent) / 2.0 * 7.0 * explosionRadius + 1.0)));
 
         double knockbackPercent = damagePercent;

@@ -1,5 +1,7 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
+import com.blackgear.platform.client.AnimationHelper;
+import com.blackgear.platform.client.model.AgeableHierarchicalModel;
 import com.cf28.adaptedmobs.client.renderer.animation.EntityTransformations;
 import com.cf28.adaptedmobs.client.renderer.animation.RocketCreeperAnimations;
 import com.cf28.adaptedmobs.common.entity.creeper.RocketCreeper;
@@ -49,14 +51,14 @@ public class RocketCreeperModel<T extends RocketCreeper> extends AgeableHierarch
         this.head.yRot = netHeadYaw * (float)(Math.PI / 180F);
         this.head.xRot = headPitch * (float)(Math.PI / 180F);
 
-        this.animateWalk(RocketCreeperAnimations.WALK, limbSwing, limbSwingAmount, 2.0F, 100.0F);
+        AnimationHelper.animateWalk(this, RocketCreeperAnimations.WALK, limbSwing, limbSwingAmount, 2.0F, 100.0F);
 
-        this.animate(entity.attackAnimationState, RocketCreeperAnimations.ROCKET, ageInTicks);
-        this.animate(entity.sitDownAnimationState, RocketCreeperAnimations.SITDOWN, ageInTicks);
-        this.animate(entity.sitUpAnimationState, RocketCreeperAnimations.SITUP, ageInTicks);
+        AnimationHelper.animate(this, entity.attackAnimationState, RocketCreeperAnimations.ROCKET, ageInTicks);
+        AnimationHelper.animate(this, entity.sitDownAnimationState, RocketCreeperAnimations.SIT_DOWN, ageInTicks);
+        AnimationHelper.animate(this, entity.sitUpAnimationState, RocketCreeperAnimations.SIT_UP, ageInTicks);
 
         if (this.young) {
-            this.animate(entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
+            AnimationHelper.animate(this, entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.cf28.adaptedmobs.core;
 
+import com.blackgear.platform.core.Environment;
+import com.blackgear.platform.core.ModInstance;
+import com.blackgear.platform.core.util.config.ModConfig;
 import com.cf28.adaptedmobs.client.ClientSetup;
 import com.cf28.adaptedmobs.common.CommonSetup;
 import com.cf28.adaptedmobs.common.registry.AMBlocks;
@@ -7,8 +10,8 @@ import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registry.AMItems;
 import com.cf28.adaptedmobs.common.resource.AMBiomeTags;
-import com.cf28.adaptedmobs.core.platform.ModInstance;
 import com.mojang.logging.LogUtils;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 
 /**
@@ -23,17 +26,26 @@ import org.slf4j.Logger;
 public class AdaptedMobs {
     public static final String MOD_ID = "adaptedmobs";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final ModInstance INSTANCE = ModInstance.create(MOD_ID).common(CommonSetup::onInstance).postCommon(CommonSetup::postInstance).client(ClientSetup::onInstance).postClient(ClientSetup::postInstance).build();
+    public static final CommonConfig CONFIG = Environment.registerSafeConfig(MOD_ID, ModConfig.Type.COMMON, CommonConfig::new);
+    public static final ModInstance INSTANCE = ModInstance.create(MOD_ID)
+        .common(CommonSetup::onInstance)
+        .postCommon(CommonSetup::postInstance)
+        .client(ClientSetup::onInstance)
+        .postClient(ClientSetup::postInstance)
+        .build();
 
     public static void bootstrap() {
-        LOGGER.info("Initializing Adapted Mobs");
         INSTANCE.bootstrap();
 
+        AMEntityTypes.ENTITIES.register();
         AMItems.ITEMS.register();
         AMBlocks.BLOCKS.register();
-        AMEntityTypes.ENTITIES.register();
         AMEntityDataSerializers.register();
 
-        AMBiomeTags.boostrap();
+        AMBiomeTags.TAGS.register();
+    }
+
+    public static ResourceLocation resource(String path) {
+        return new ResourceLocation(MOD_ID, path);
     }
 }
