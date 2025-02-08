@@ -101,7 +101,7 @@ public class SupportCreeper extends TamableCreeper {
 
     @Override
     public boolean shouldSwell() {
-        return this.getSupportedUUID() == null && this.getHealth() <= this.getMaxHealth() / 2;
+        return (this.getSupportedUUID() == null && this.getHealth() <= this.getMaxHealth() / 2) || this.isIgnited();
     }
 
     @Override

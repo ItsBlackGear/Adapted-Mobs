@@ -17,9 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.commons.compress.utils.Lists;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * FEATURES:
@@ -117,18 +116,22 @@ public class RocketCreeper extends TamableCreeper {
     }
 
     private boolean shouldRocket() {
-        return this.timeBeforeJumping > 15 && this.isAlive() && this.getSwellDir() > 0 && this.onGround && this.hasEnoughVerticalSpace();
+        return this.timeBeforeJumping > 15
+            && this.isAlive()
+            && this.getSwellDir() > 0
+            && this.onGround
+            && this.hasEnoughVerticalSpace();
     }
 
     private void spawnSmokeParticles() {
-        double xSpeed = this.random.nextGaussian() * 0.02D;
-        double ySpeed = this.random.nextGaussian() * 0.02D;
-        double zSpeed = this.random.nextGaussian() * 0.02D;
-        this.level.addParticle(ParticleTypes.SMOKE,
-                this.getX(),
-                this.getY(),
-                this.getZ(),
-                xSpeed, ySpeed, zSpeed
+        this.level.addParticle(
+            ParticleTypes.SMOKE,
+            this.getX(),
+            this.getY(),
+            this.getZ(),
+            this.random.nextGaussian() * 0.02,
+            this.random.nextGaussian() * 0.02,
+            this.random.nextGaussian() * 0.02
         );
     }
 
@@ -136,13 +139,11 @@ public class RocketCreeper extends TamableCreeper {
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer) {
         super.dropCustomDeathLoot(damageSource, looting, hitByPlayer);
 
-        if (hitByPlayer && Math.max(this.random.nextFloat() - (float)looting * 0.01F, 0.0F) < 0.2F) {
+        if (hitByPlayer && Math.max(this.random.nextFloat() - (float) looting * 0.01F, 0.0F) < 0.2F) {
             ItemStack stack = new ItemStack(Items.FIREWORK_STAR);
             CompoundTag tag = stack.getOrCreateTagElement("Explosion");
-            List<Integer> colors = Lists.newArrayList();
-            colors.add(DyeColor.LIGHT_BLUE.getFireworkColor());
-            tag.putIntArray("Colors", colors);
-            tag.putByte("Type", (byte)FireworkRocketItem.Shape.CREEPER.getId());
+            tag.putIntArray("Colors", Collections.singletonList(DyeColor.LIGHT_BLUE.getFireworkColor()));
+            tag.putByte("Type", (byte) FireworkRocketItem.Shape.CREEPER.getId());
             this.spawnAtLocation(stack);
         }
     }

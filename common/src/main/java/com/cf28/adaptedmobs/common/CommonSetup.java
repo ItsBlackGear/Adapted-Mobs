@@ -19,7 +19,6 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public class CommonSetup {
     public static void onInstance() {
-        // Attributes
         EntityHandler.addAttributes(AMEntityTypes.FESTIVE_CREEPER, FestiveCreeper::createAttributes);
         EntityHandler.addAttributes(AMEntityTypes.SUPPORT_CREEPER, SupportCreeper::createAttributes);
         EntityHandler.addAttributes(AMEntityTypes.ROCKET_CREEPER, RocketCreeper::createAttributes);

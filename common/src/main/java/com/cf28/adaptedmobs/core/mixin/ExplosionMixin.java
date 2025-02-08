@@ -67,23 +67,23 @@ public abstract class ExplosionMixin {
     @Inject(method = "explode", at = @At("HEAD"), cancellable = true)
     private void am$explode(CallbackInfo ci) {
         if (this.source instanceof PrimedFestiveTnt || this.source instanceof TamableCreeper) {
+            ci.cancel();
+
             this.level.gameEvent(this.source, GameEvent.EXPLODE, new Vec3(this.x, this.y, this.z));
             this.am$causeExplosion();
             this.am$causeDamage(this.source);
-
-            ci.cancel();
         }
     }
 
     @Unique
     private void am$causeDamage(Entity source) {
         float explosionRadius = this.radius * 2.0F;
-        int minX = Mth.floor(this.x - (double)explosionRadius - 1.0);
-        int maxX = Mth.floor(this.x + (double)explosionRadius + 1.0);
-        int minY = Mth.floor(this.y - (double)explosionRadius - 1.0);
-        int maxY = Mth.floor(this.y + (double)explosionRadius + 1.0);
-        int minZ = Mth.floor(this.z - (double)explosionRadius - 1.0);
-        int maxZ = Mth.floor(this.z + (double)explosionRadius + 1.0);
+        int minX = Mth.floor(this.x - (double) explosionRadius - 1.0);
+        int maxX = Mth.floor(this.x + (double) explosionRadius + 1.0);
+        int minY = Mth.floor(this.y - (double) explosionRadius - 1.0);
+        int maxY = Mth.floor(this.y + (double) explosionRadius + 1.0);
+        int minZ = Mth.floor(this.z - (double) explosionRadius - 1.0);
+        int maxZ = Mth.floor(this.z + (double) explosionRadius + 1.0);
         List<Entity> affectedEntities = this.level.getEntities(this.source, new AABB(minX, minY, minZ, maxX, maxY, maxZ));
         Vec3 explosionCenter = new Vec3(this.x, this.y, this.z);
 
@@ -116,17 +116,25 @@ public abstract class ExplosionMixin {
     }
 
     @Unique
-    private void am$applyDamage(float explosionRadius, Entity target, double xOffset, double yOffset, double zOffset, double damagePercent, TamableCreeper self) {
+    private void am$applyDamage(
+        float explosionRadius,
+        Entity target,
+        double xOffset,
+        double yOffset,
+        double zOffset,
+        double damagePercent,
+        TamableCreeper source
+    ) {
         // checks if the owner is not null
-        if (self.getOwnerUUID() != null && target instanceof LivingEntity living) {
-            LivingEntity owner = this.level.getPlayerByUUID(self.getOwnerUUID());
+        if (source.getOwnerUUID() != null && target instanceof LivingEntity living) {
+            LivingEntity owner = this.level.getPlayerByUUID(source.getOwnerUUID());
             // will check if the entity is not owned by the target, and if it wants to attack any other mobs
-            if (!self.isOwnedBy(living) && self.wantsToAttack(living, owner)) {
+            if (!source.isOwnedBy(living) && source.wantsToAttack(living, owner)) {
                 this.applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
             }
         } else {
             // checks if the target is not itself
-            if (target != self) {
+            if (target != source) {
                 this.applyDamageAndKnockback(explosionRadius, target, xOffset, yOffset, zOffset, damagePercent);
             }
         }
@@ -187,7 +195,7 @@ public abstract class ExplosionMixin {
      */
     @Unique
     private void applyDamageAndKnockback(double explosionRadius, Entity entity, double x, double y, double z, double damagePercent) {
-        entity.hurt(this.getDamageSource(), (float)((int)((damagePercent * damagePercent + damagePercent) / 2.0 * 7.0 * explosionRadius + 1.0)));
+        entity.hurt(this.getDamageSource(), (float) ((int) ((damagePercent * damagePercent + damagePercent) / 2.0 * 7.0 * explosionRadius + 1.0)));
 
         double knockbackPercent = damagePercent;
         if (entity instanceof LivingEntity living) {

@@ -13,20 +13,33 @@ public class AMItems {
 
     public static final Supplier<Item> RED_MYSTERY_EGG = ITEMS.register(
         "red_mystery_egg",
-        () -> new MysteryEggItem(AMEntityTypes.FESTIVE_CREEPER, new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS))
+        () -> new MysteryEggItem(
+            AMEntityTypes.FESTIVE_CREEPER,
+            new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS)
+        )
     );
     public static final Supplier<Item> YELLOW_MYSTERY_EGG = ITEMS.register(
         "yellow_mystery_egg",
-        () -> new MysteryEggItem(AMEntityTypes.SUPPORT_CREEPER, new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS))
+        () -> new MysteryEggItem(
+            AMEntityTypes.SUPPORT_CREEPER,
+            new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS)
+        )
     );
     public static final Supplier<Item> BLUE_MYSTERY_EGG = ITEMS.register(
         "blue_mystery_egg",
-        () -> new MysteryEggItem(AMEntityTypes.ROCKET_CREEPER, new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS))
+        () -> new MysteryEggItem(
+            AMEntityTypes.ROCKET_CREEPER,
+            new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS)
+        )
     );
     public static final Supplier<Item> GREEN_MYSTERY_EGG = ITEMS.register(
         "green_mystery_egg",
-        () -> new MysteryEggItem(AMEntityTypes.CREEPER, new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS))
+        () -> new MysteryEggItem(
+            AMEntityTypes.CREEPER,
+            new Item.Properties().stacksTo(16).tab(CreativeModeTab.TAB_MATERIALS)
+        )
     );
+
     public static final Supplier<Item> FESTIVE_CREEPER_SPAWN_EGG = ITEMS.spawnEgg(
         "festive_creeper_spawn_egg",
         AMEntityTypes.FESTIVE_CREEPER,

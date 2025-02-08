@@ -5,10 +5,7 @@ import com.blackgear.platform.core.ModInstance;
 import com.blackgear.platform.core.util.config.ModConfig;
 import com.cf28.adaptedmobs.client.ClientSetup;
 import com.cf28.adaptedmobs.common.CommonSetup;
-import com.cf28.adaptedmobs.common.registry.AMBlocks;
-import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
-import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
-import com.cf28.adaptedmobs.common.registry.AMItems;
+import com.cf28.adaptedmobs.common.registry.*;
 import com.cf28.adaptedmobs.common.resource.AMBiomeTags;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -37,9 +34,10 @@ public class AdaptedMobs {
     public static void bootstrap() {
         INSTANCE.bootstrap();
 
-        AMEntityTypes.ENTITIES.register();
         AMItems.ITEMS.register();
         AMBlocks.BLOCKS.register();
+        AMEntityTypes.ENTITIES.register();
+        AMBlockEntities.BLOCK_ENTITIES.register();
         AMEntityDataSerializers.register();
 
         AMBiomeTags.TAGS.register();

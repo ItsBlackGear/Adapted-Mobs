@@ -52,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAccess {
+public class TamableCreeper extends Creeper implements OwnableEntity {
     private static final int AGE_UP_EVENT_ID = 14;
 
     // Entity Data
@@ -86,7 +86,9 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SwellGoal(this) {
-            @Override public boolean canUse() { return super.canUse() && TamableCreeper.this.shouldSwell(); }
+            @Override public boolean canUse() {
+                return super.canUse() && TamableCreeper.this.shouldSwell();
+            }
         });
         this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0F, 1.2F));
@@ -101,8 +103,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
         this.targetSelector.addGoal(2, new CreeperOwnerHurtTargetGoal(this, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, entity -> !this.isTame() && !this.isBaby()));
         this.targetSelector.addGoal(4, new HurtByTargetGoal(this) {
-            @Override
-            public boolean canUse() {
+            @Override public boolean canUse() {
                 return TamableCreeper.this.canTarget() && super.canUse();
             }
         });
@@ -307,6 +308,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity, CreeperAcc
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
+
         if (this.level.isClientSide) {
             boolean isTamed = this.isOwnedBy(player) || this.isTame();
             return isTamed ? InteractionResult.CONSUME : InteractionResult.PASS;
