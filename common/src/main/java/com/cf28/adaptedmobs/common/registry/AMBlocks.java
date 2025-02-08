@@ -1,8 +1,8 @@
 package com.cf28.adaptedmobs.common.registry;
 
+import com.blackgear.platform.common.block.PlatformSkullBlock;
+import com.blackgear.platform.common.block.PlatformWallSkullBlock;
 import com.blackgear.platform.core.helper.BlockRegistry;
-import com.cf28.adaptedmobs.common.block.PlatformSkullBlock;
-import com.cf28.adaptedmobs.common.block.PlatformWallSkullBlock;
 import com.cf28.adaptedmobs.common.blockentity.Skulls;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.world.item.CreativeModeTab;
