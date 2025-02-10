@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
+import com.cf28.adaptedmobs.common.registry.AMBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -79,6 +80,7 @@ public class RocketCreeper extends TamableCreeper {
 
     @Override
     public void tick() {
+        this.setupAnimations();
         super.tick();
 
         this.launchTowardsTarget();
@@ -133,6 +135,11 @@ public class RocketCreeper extends TamableCreeper {
             this.random.nextGaussian() * 0.02,
             this.random.nextGaussian() * 0.02
         );
+    }
+
+    @Override
+    protected ItemStack getSkull() {
+        return new ItemStack(AMBlocks.ROCKET_CREEPER_HEAD.get());
     }
 
     @Override

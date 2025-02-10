@@ -5,7 +5,7 @@ import com.blackgear.platform.common.worldgen.modifier.BiomeContext;
 import com.blackgear.platform.common.worldgen.modifier.BiomeManager;
 import com.blackgear.platform.common.worldgen.modifier.BiomeWriter;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
-import com.cf28.adaptedmobs.common.resource.AMBiomeTags;
+import com.cf28.adaptedmobs.core.tags.AMBiomeTags;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

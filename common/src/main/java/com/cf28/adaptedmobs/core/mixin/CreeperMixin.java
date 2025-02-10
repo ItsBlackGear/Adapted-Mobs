@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.core.mixin;
 
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
@@ -24,6 +25,18 @@ public abstract class CreeperMixin extends Monster {
     private void tick(CallbackInfo ci) {
         if ((Object) this instanceof TamableCreeper) {
             super.tick();
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+        method = "dropCustomDeathLoot",
+        at = @At(value = "HEAD"),
+        cancellable = true
+    )
+    private void dropCustomDeathLoot(DamageSource source, int looting, boolean hitByPlayer, CallbackInfo ci) {
+        if ((Object) this instanceof TamableCreeper) {
+            super.dropCustomDeathLoot(source, looting, hitByPlayer);
             ci.cancel();
         }
     }

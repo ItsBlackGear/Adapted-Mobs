@@ -1,0 +1,5 @@
+// 1.19.2	2025-02-09T00:31:14.775881	Block Loot Tables
+de93fabc9fe9f8c2f5fbebc7e10334b393459a93 data\adaptedmobs\loot_tables\blocks\support_creeper_head.json
+c0b413f90f11def2bc1fd317b26dfb627a3ad539 data\adaptedmobs\loot_tables\blocks\festive_creeper_head.json
+162cb2c8ba561a1c122251d576555e60915b6fb8 data\adaptedmobs\loot_tables\blocks\rocket_creeper_head.json
+9e03fc7a2f6457e22d7edd0792a2f0422df33894 data\adaptedmobs\loot_tables\blocks\peeper_creeper_head.json

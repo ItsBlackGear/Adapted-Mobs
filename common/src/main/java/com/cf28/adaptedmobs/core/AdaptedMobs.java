@@ -6,7 +6,7 @@ import com.blackgear.platform.core.util.config.ModConfig;
 import com.cf28.adaptedmobs.client.ClientSetup;
 import com.cf28.adaptedmobs.common.CommonSetup;
 import com.cf28.adaptedmobs.common.registry.*;
-import com.cf28.adaptedmobs.common.resource.AMBiomeTags;
+import com.cf28.adaptedmobs.core.tags.AMBiomeTags;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;

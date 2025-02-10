@@ -3,12 +3,14 @@ package com.cf28.adaptedmobs.common.entity.creeper;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.StrafeGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.ThrowTntToTargetGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
+import com.cf28.adaptedmobs.common.registry.AMBlocks;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /**
@@ -47,7 +49,7 @@ public class FestiveCreeper extends TamableCreeper {
 
     @Override
     public void tick() {
-        this.setupWalkAnimations();
+        this.setupAnimations();
         super.tick();
     }
 
@@ -59,6 +61,16 @@ public class FestiveCreeper extends TamableCreeper {
         } else {
             super.setState(state);
         }
+    }
+
+    @Override
+    protected ItemStack getSkull() {
+        return new ItemStack(AMBlocks.FESTIVE_CREEPER_HEAD.get());
+    }
+
+    @Override
+    public boolean canDropMobsSkull() {
+        return false;
     }
 
     @Override

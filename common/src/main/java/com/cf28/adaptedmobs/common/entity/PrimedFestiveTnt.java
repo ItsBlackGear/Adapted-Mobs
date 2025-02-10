@@ -15,7 +15,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,15 +85,8 @@ public class PrimedFestiveTnt extends Entity {
         }
     }
 
-    /**
-     * Triggers the explosion behavior for the Festive TNT
-     * - when charged, it has a radius of 4 blocks, otherwise it has a radius of 2 blocks
-     * - when charged, it breaks blocks on radius as long as the rule doMobGriefing is set to true
-     */
     private void explode() {
-        Explosion.BlockInteraction interaction = this.isCharged() && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)
-            ? Explosion.BlockInteraction.BREAK
-            : Explosion.BlockInteraction.NONE;
+        Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
         this.level.explode(this, this.getX(), this.getY(0.0625), this.getZ(), 3 * (this.isCharged() ? 2.0F : 1.0F), interaction);
     }
 

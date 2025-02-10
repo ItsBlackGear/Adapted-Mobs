@@ -183,6 +183,25 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer) {
+        super.dropCustomDeathLoot(damageSource, looting, hitByPlayer);
+        Entity entity = damageSource.getEntity();
+        if (entity != this && entity instanceof Creeper creeper && creeper.canDropMobsSkull()) {
+            creeper.increaseDroppedSkulls();
+            this.spawnAtLocation(this.getSkull());
+        }
+    }
+
+    @Override
+    public boolean canDropMobsSkull() {
+        return super.canDropMobsSkull() && !this.isTame();
+    }
+
+    protected ItemStack getSkull() {
+        return new ItemStack(Items.CREEPER_HEAD);
+    }
+
+    @Override
     public boolean shouldDropExperience() {
         return !this.isBaby();
     }
@@ -587,7 +606,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         }
     }
 
-    protected void setupWalkAnimations() {
+    protected void setupAnimations() {
         if (this.level.isClientSide) {
             if (!this.isMoving() && !this.isInWater()) {
                 this.walkingAnimationState.stop();

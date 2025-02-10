@@ -5,7 +5,6 @@ import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Enemy;
@@ -43,7 +42,12 @@ public class ApplyBuffsToTargetGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.target != null && this.target.isAlive() && this.mob.distanceToSqr(this.target) <= this.range * this.range && !(this.target instanceof SupportCreeper) && this.mob.hasLineOfSight(this.target) && !this.mob.isOrderedToSit();
+        return this.target != null
+            && this.target.isAlive()
+            && this.mob.distanceToSqr(this.target) <= this.range * this.range
+            && !(this.target instanceof SupportCreeper)
+            && this.mob.hasLineOfSight(this.target)
+            && !this.mob.isOrderedToSit();
     }
 
     @Override
@@ -89,27 +93,33 @@ public class ApplyBuffsToTargetGoal extends Goal {
                 this.mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED));
             }
 
-            this.mob.getNavigation().moveTo(this.target, this.speed);
+            // Dynamic speed adjustment based on distance
+            double distance = this.mob.distanceToSqr(this.target);
+            double adjustedSpeed = this.speed * (distance < 4.0 ? 0.5 : 1.0);
+            this.mob.getNavigation().moveTo(this.target, adjustedSpeed);
+        } else {
+            // Idle behavior
+            this.mob.getNavigation().stop();
+            this.mob.setState(CreeperState.IDLING);
         }
     }
 
     @Nullable
     private LivingEntity findTarget() {
-        return this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range / 2, this.range))
-                .stream()
-                .filter(target -> {
-                    boolean shouldTarget;
-                    if (this.mob.isTame()) {
-                        shouldTarget = target == this.mob.getOwner();
-                    } else if (target instanceof TamableCreeper creeper) {
-                        shouldTarget = !creeper.isTame() && creeper.isAlive() && !(target instanceof SupportCreeper);
-                    } else {
-                        shouldTarget = target instanceof Enemy && target.isAlive();
-                    }
+        return this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range, this.range))
+            .stream()
+            .filter(this::shouldTarget)
+            .min(Comparator.comparingDouble(target -> target.distanceTo(this.mob)))
+            .orElse(null);
+    }
 
-                    return shouldTarget && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target) && !this.mob.isInSittingPose();
-                })
-                .min(Comparator.comparingDouble(target -> target.distanceTo(this.mob)))
-                .orElse(null);
+    private boolean shouldTarget(LivingEntity target) {
+        if (this.mob.isTame()) {
+            return target == this.mob.getOwner();
+        } else if (target instanceof TamableCreeper creeper) {
+            return !creeper.isTame() && creeper.isAlive() && !(target instanceof SupportCreeper);
+        } else {
+            return target instanceof Enemy && target.isAlive();
+        }
     }
 }

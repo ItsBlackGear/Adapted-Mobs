@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.entity.creeper;
 
 import com.cf28.adaptedmobs.common.entity.creeper.ai.ApplyBuffsToTargetGoal;
+import com.cf28.adaptedmobs.common.registry.AMBlocks;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,6 +76,17 @@ public class SupportCreeper extends TamableCreeper {
                 this.setVariant(Variant.NORMAL);
             }
         }
+    }
+
+    @Override
+    public void tick() {
+        this.setupAnimations();
+        super.tick();
+    }
+
+    @Override
+    protected ItemStack getSkull() {
+        return new ItemStack(this.getVariant() == Variant.PEEPER ? AMBlocks.PEEPER_CREEPER_HEAD.get() : AMBlocks.SUPPORT_CREEPER_HEAD.get());
     }
 
     @Nullable

@@ -1,4 +1,4 @@
-package com.cf28.adaptedmobs.common.resource;
+package com.cf28.adaptedmobs.core.tags;
 
 import com.blackgear.platform.common.data.TagRegistry;
 import com.cf28.adaptedmobs.core.AdaptedMobs;

@@ -12,28 +12,32 @@ import com.cf28.adaptedmobs.client.renderer.model.*;
 import com.cf28.adaptedmobs.client.renderer.model.blockentity.FestiveCreeperSkullModel;
 import com.cf28.adaptedmobs.client.renderer.model.blockentity.PeeperCreeperSkullModel;
 import com.cf28.adaptedmobs.client.renderer.model.blockentity.RocketCreeperSkullModel;
-import com.cf28.adaptedmobs.common.blockentity.Skulls;
+import com.cf28.adaptedmobs.common.registry.AMBlocks;
+import com.cf28.adaptedmobs.common.resource.SkullTypes;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 
 public class ClientSetup {
     public static void onInstance() {
+        RendererRegistry.addBlockRenderType(RenderType.cutout(), AMBlocks.FESTIVE_TNT.get());
+
         setupEntityRenderers();
         setupLayerDefinitions();
     }
 
     public static void postInstance(ParallelDispatch dispatch) {
-        SkullRegistry.registerSkullModel(Skulls.FESTIVE_CREEPER, FestiveCreeperSkullModel::new, AMModelLayers.FESTIVE_CREEPER_SKULL);
-        SkullRegistry.registerSkullTexture(Skulls.FESTIVE_CREEPER, AdaptedMobs.resource("textures/entity/creeper/festive_creeper.png"));
-        SkullRegistry.registerSkullModel(Skulls.SUPPORT_CREEPER, SkullModel::new, AMModelLayers.SUPPORT_CREEPER_SKULL);
-        SkullRegistry.registerSkullTexture(Skulls.SUPPORT_CREEPER, AdaptedMobs.resource("textures/entity/creeper/support_creeper.png"));
-        SkullRegistry.registerSkullModel(Skulls.ROCKET_CREEPER, RocketCreeperSkullModel::new, AMModelLayers.ROCKET_CREEPER_SKULL);
-        SkullRegistry.registerSkullTexture(Skulls.ROCKET_CREEPER, AdaptedMobs.resource("textures/entity/creeper/rocket_creeper.png"));
-        SkullRegistry.registerSkullModel(Skulls.PEEPER_CREEPER, PeeperCreeperSkullModel::new, AMModelLayers.PEEPER_CREEPER_SKULL);
-        SkullRegistry.registerSkullTexture(Skulls.PEEPER_CREEPER, AdaptedMobs.resource("textures/entity/creeper/peeper_creeper.png"));
+        SkullRegistry.registerSkullModel(SkullTypes.FESTIVE_CREEPER, FestiveCreeperSkullModel::new, AMModelLayers.FESTIVE_CREEPER_SKULL);
+        SkullRegistry.registerSkullTexture(SkullTypes.FESTIVE_CREEPER, AdaptedMobs.resource("textures/entity/creeper/festive_creeper.png"));
+        SkullRegistry.registerSkullModel(SkullTypes.SUPPORT_CREEPER, SkullModel::new, AMModelLayers.SUPPORT_CREEPER_SKULL);
+        SkullRegistry.registerSkullTexture(SkullTypes.SUPPORT_CREEPER, AdaptedMobs.resource("textures/entity/creeper/support_creeper.png"));
+        SkullRegistry.registerSkullModel(SkullTypes.ROCKET_CREEPER, RocketCreeperSkullModel::new, AMModelLayers.ROCKET_CREEPER_SKULL);
+        SkullRegistry.registerSkullTexture(SkullTypes.ROCKET_CREEPER, AdaptedMobs.resource("textures/entity/creeper/rocket_creeper.png"));
+        SkullRegistry.registerSkullModel(SkullTypes.PEEPER_CREEPER, PeeperCreeperSkullModel::new, AMModelLayers.PEEPER_CREEPER_SKULL);
+        SkullRegistry.registerSkullTexture(SkullTypes.PEEPER_CREEPER, AdaptedMobs.resource("textures/entity/creeper/peeper_creeper.png"));
     }
 
     private static void setupEntityRenderers() {
