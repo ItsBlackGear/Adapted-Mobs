@@ -1,13 +1,11 @@
 package com.cf28.adaptedmobs.common.registry;
 
+import com.blackgear.platform.core.helper.DataSerializerRegistry;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.network.syncher.EntityDataSerializers;
 
 public class AMEntityDataSerializers {
-    public static final EntityDataSerializer<CreeperState> CREEPER_STATE = EntityDataSerializer.simpleEnum(CreeperState.class);
+    public static final DataSerializerRegistry DATA_SERIALIZERS = DataSerializerRegistry.create();
 
-    public static void register() {
-        EntityDataSerializers.registerSerializer(CREEPER_STATE);
-    }
+    public static final EntityDataSerializer<CreeperState> CREEPER_STATE = DATA_SERIALIZERS.register(EntityDataSerializer.simpleEnum(CreeperState.class));
 }

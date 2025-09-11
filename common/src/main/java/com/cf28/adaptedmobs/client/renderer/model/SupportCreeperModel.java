@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
-import com.blackgear.platform.client.AnimationHelper;
+import com.blackgear.platform.client.animator.KeyframeAnimator;
 import com.blackgear.platform.client.model.AgeableHierarchicalModel;
 import com.cf28.adaptedmobs.client.renderer.animation.EntityTransformations;
 import com.cf28.adaptedmobs.client.renderer.animation.SupportCreeperAnimations;
@@ -90,14 +90,14 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
         this.head.yRot = netHeadYaw * (float)(Math.PI / 180.0F);
         this.head.xRot = headPitch * (float)(Math.PI / 180.0F);
 
-        AnimationHelper.animateWalk(this, SupportCreeperAnimations.WALK, limbSwing, limbSwingAmount, 2.0F, 100.0F);
+        KeyframeAnimator.animateWalk(this, SupportCreeperAnimations.WALK, limbSwing, limbSwingAmount, 2.0F, 100.0F);
 
-        AnimationHelper.animate(this, entity.attackAnimationState, SupportCreeperAnimations.BESTOW, ageInTicks);
-        AnimationHelper.animate(this, entity.sitDownAnimationState, SupportCreeperAnimations.SIT_DOWN, ageInTicks);
-        AnimationHelper.animate(this, entity.sitUpAnimationState, SupportCreeperAnimations.SIT_UP, ageInTicks);
+        KeyframeAnimator.animate(this, entity.attackAnimationState, SupportCreeperAnimations.BESTOW, ageInTicks);
+        KeyframeAnimator.animate(this, entity.sitDownAnimationState, SupportCreeperAnimations.SIT_DOWN, ageInTicks);
+        KeyframeAnimator.animate(this, entity.sitUpAnimationState, SupportCreeperAnimations.SIT_UP, ageInTicks);
 
         if (this.young) {
-            AnimationHelper.animate(this, entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
+            KeyframeAnimator.animate(this, entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
         }
     }
 }

@@ -37,9 +37,9 @@ public class FestiveCreeperSkullModel extends SkullModelBase {
     }
 
     @Override
-    public void setupAnim(float f, float g, float h) {
-        this.head.yRot = g * (float) (Math.PI / 180.0);
-        this.head.xRot = h * (float) (Math.PI / 180.0);
+    public void setupAnim(float animation, float yRot, float xRot) {
+        this.head.yRot = yRot * (float) (Math.PI / 180.0);
+        this.head.xRot = xRot * (float) (Math.PI / 180.0);
     }
 
     @Override

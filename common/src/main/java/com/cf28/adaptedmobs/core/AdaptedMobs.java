@@ -37,7 +37,8 @@ public class AdaptedMobs {
         AMItems.ITEMS.register();
         AMBlocks.BLOCKS.register();
         AMEntityTypes.ENTITIES.register();
-        AMEntityDataSerializers.register();
+        AMBlockEntityTypes.BLOCK_ENTITIES.register();
+        AMEntityDataSerializers.DATA_SERIALIZERS.register();
 
         AMBiomeTags.TAGS.register();
     }

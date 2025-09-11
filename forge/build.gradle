@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.github.johnrengelman.shadow"
 }
 
 loom {
@@ -12,6 +12,8 @@ loom {
         mixinConfig "adaptedmobs.mixins.json"
     }
 }
+
+sourceSets.main.resources.srcDirs += project(":common").file("src/main/generated")
 
 architectury {
     platformSetupLoomIde()
@@ -38,7 +40,7 @@ configurations {
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    modApi "flatDir:Platform-forge-1.19.2-1.2.0"
+    modApi "flatDir:Platform-forge-1.19.2-1.2.8"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')

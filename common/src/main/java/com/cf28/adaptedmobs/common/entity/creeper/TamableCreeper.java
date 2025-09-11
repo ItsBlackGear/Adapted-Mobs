@@ -5,7 +5,6 @@ import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperOwnerHurtTargetGoal;
 import com.cf28.adaptedmobs.common.entity.creeper.ai.CreeperSitWhenOrderedToGoal;
 import com.cf28.adaptedmobs.common.entity.resource.CreeperState;
 import com.cf28.adaptedmobs.common.registry.AMEntityDataSerializers;
-import com.cf28.adaptedmobs.core.mixin.access.CreeperAccessor;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -46,7 +45,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -93,7 +91,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.goalSelector.addGoal(2, new CreeperSitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0F, 1.2F));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Cat.class, 6.0F, 1.0F, 1.2F));
-        this.goalSelector.addGoal(3, new CreeperFollowOwnerGoal(this, 1.25D, 10.0F, 2.0F));
+        this.goalSelector.addGoal(3, new CreeperFollowOwnerGoal(this, 1.25, 10.0F, 2.0F));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0F, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8F));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -522,30 +520,6 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     public void tick() {
-        if (this.isAlive() && this.shouldExplode()) {
-            CreeperAccessor access = (CreeperAccessor) this;
-            access.setOldSwell(access.getSwell());
-            if (this.isIgnited()) {
-                this.setSwellDir(1);
-            }
-
-            int swell = this.getSwellDir();
-            if (swell > 0 && access.getSwell() == 0) {
-                this.playSound(SoundEvents.CREEPER_PRIMED, 1.0F, 0.5F);
-                this.gameEvent(GameEvent.PRIME_FUSE);
-            }
-
-            access.setSwell(access.getSwell() + swell);
-            if (access.getSwell() < 0) {
-                access.setSwell(0);
-            }
-
-            if (access.getSwell() >= access.getMaxSwell()) {
-                access.setSwell(access.getMaxSwell());
-                this.causeExplosion();
-            }
-        }
-
         super.tick();
 
         if (this.explosionCooldownTimer > 0) {
@@ -555,12 +529,8 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         this.setupAnimationStates();
     }
 
-    private boolean shouldExplode() {
-        return true;
-    }
-
-    protected void causeExplosion() {
-        CreeperAccessor access = (CreeperAccessor)this;
+    @Override
+    protected void explodeCreeper() {
         if (this.shouldSwell()) {
             if (this.isTame()) {
                 if (!this.level.isClientSide) {
@@ -569,14 +539,14 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                         this.getX(),
                         this.getY(),
                         this.getZ(),
-                        (float) access.getExplosionRadius() * explosionMultiplier,
+                        (float) this.explosionRadius * explosionMultiplier,
                         Explosion.BlockInteraction.NONE
                     );
 
                     this.postExplosion();
                 }
             } else {
-                access.callExplodeCreeper();
+                super.explodeCreeper();
             }
         } else {
             this.postExplosion();

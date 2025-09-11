@@ -1,15 +1,13 @@
 package com.cf28.adaptedmobs.common;
 
-import com.blackgear.platform.client.event.SkullRegistry;
 import com.blackgear.platform.common.data.LootModifier;
-import com.blackgear.platform.common.entity.EntityHandler;
+import com.blackgear.platform.common.entity.EntityFactory;
 import com.blackgear.platform.core.ParallelDispatch;
 import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.entity.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
 import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.level.WorldGeneration;
-import com.cf28.adaptedmobs.common.registry.AMBlocks;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registry.AMItems;
 import net.minecraft.world.entity.EntityType;
@@ -21,17 +19,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public class CommonSetup {
     public static void onInstance() {
-        EntityHandler.addAttributes(AMEntityTypes.FESTIVE_CREEPER, FestiveCreeper::createAttributes);
-        EntityHandler.addAttributes(AMEntityTypes.SUPPORT_CREEPER, SupportCreeper::createAttributes);
-        EntityHandler.addAttributes(AMEntityTypes.ROCKET_CREEPER, RocketCreeper::createAttributes);
-        EntityHandler.addAttributes(AMEntityTypes.CREEPER, TamableCreeper::createAttributes);
-
-        SkullRegistry.registerSkullBlocks(
-            AMBlocks.FESTIVE_CREEPER_HEAD, AMBlocks.FESTIVE_CREEPER_WALL_HEAD,
-            AMBlocks.SUPPORT_CREEPER_HEAD, AMBlocks.SUPPORT_CREEPER_WALL_HEAD,
-            AMBlocks.ROCKET_CREEPER_HEAD, AMBlocks.ROCKET_CREEPER_WALL_HEAD,
-            AMBlocks.PEEPER_CREEPER_HEAD, AMBlocks.PEEPER_CREEPER_WALL_HEAD
-        );
+        EntityFactory.registerMobAttributes(CommonSetup::registerMobAttributes);
     }
 
     public static void postInstance(ParallelDispatch dispatch) {
@@ -48,5 +36,12 @@ public class CommonSetup {
                 );
             }
         });
+    }
+
+    private static void registerMobAttributes(EntityFactory.EntityAttributesEvent event) {
+        event.register(AMEntityTypes.FESTIVE_CREEPER, FestiveCreeper::createAttributes);
+        event.register(AMEntityTypes.SUPPORT_CREEPER, SupportCreeper::createAttributes);
+        event.register(AMEntityTypes.ROCKET_CREEPER, RocketCreeper::createAttributes);
+        event.register(AMEntityTypes.CREEPER, TamableCreeper::createAttributes);
     }
 }

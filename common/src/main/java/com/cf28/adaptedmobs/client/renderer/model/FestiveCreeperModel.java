@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.client.renderer.model;
 
-import com.blackgear.platform.client.AnimationHelper;
+import com.blackgear.platform.client.animator.KeyframeAnimator;
 import com.blackgear.platform.client.model.AgeableHierarchicalModel;
 import com.cf28.adaptedmobs.client.renderer.animation.FestiveCreeperAnimations;
 import com.cf28.adaptedmobs.client.renderer.animation.EntityTransformations;
@@ -52,14 +52,14 @@ public class FestiveCreeperModel<T extends FestiveCreeper> extends AgeableHierar
         this.head.xRot = headPitch * (float)(Math.PI / 180.0F);
 
         float speed = Math.min((float)entity.getDeltaMovement().lengthSqr() * 70.0F, 8.0F);
-        AnimationHelper.animate(this, entity.walkingAnimationState, FestiveCreeperAnimations.WALK, ageInTicks, speed);
+        KeyframeAnimator.animate(this, entity.walkingAnimationState, FestiveCreeperAnimations.WALK, ageInTicks, speed);
 
-        AnimationHelper.animate(this, entity.attackAnimationState, FestiveCreeperAnimations.FIRE, ageInTicks);
-        AnimationHelper.animate(this, entity.sitDownAnimationState, FestiveCreeperAnimations.SIT_DOWN, ageInTicks);
-        AnimationHelper.animate(this, entity.sitUpAnimationState, FestiveCreeperAnimations.SITUP, ageInTicks);
+        KeyframeAnimator.animate(this, entity.attackAnimationState, FestiveCreeperAnimations.FIRE, ageInTicks);
+        KeyframeAnimator.animate(this, entity.sitDownAnimationState, FestiveCreeperAnimations.SIT_DOWN, ageInTicks);
+        KeyframeAnimator.animate(this, entity.sitUpAnimationState, FestiveCreeperAnimations.SITUP, ageInTicks);
 
         if (this.young) {
-            AnimationHelper.animate(this, entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
+            KeyframeAnimator.animate(this, entity.babyTransformationState, EntityTransformations.BABY_TRANSFORM, ageInTicks);
         }
     }
 }

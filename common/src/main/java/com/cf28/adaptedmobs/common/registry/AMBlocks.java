@@ -1,8 +1,8 @@
 package com.cf28.adaptedmobs.common.registry;
 
-import com.blackgear.platform.common.block.PlatformSkullBlock;
-import com.blackgear.platform.common.block.PlatformWallSkullBlock;
 import com.blackgear.platform.core.helper.BlockRegistry;
+import com.cf28.adaptedmobs.common.block.AMSkullBlock;
+import com.cf28.adaptedmobs.common.block.AMWallSkullBlock;
 import com.cf28.adaptedmobs.common.block.FestiveTntBlock;
 import com.cf28.adaptedmobs.common.resource.SkullTypes;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
@@ -29,13 +29,13 @@ public class AMBlocks {
 
     public static final Supplier<Block> FESTIVE_CREEPER_WALL_HEAD = BLOCKS.registerNoItem(
         "festive_creeper_wall_head",
-        properties -> new PlatformWallSkullBlock(SkullTypes.FESTIVE_CREEPER, properties),
+        properties -> new AMWallSkullBlock(SkullTypes.FESTIVE_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F)
     );
     public static final Supplier<Block> FESTIVE_CREEPER_HEAD = BLOCKS.register(
         "festive_creeper_head",
-        properties -> new PlatformSkullBlock(SkullTypes.FESTIVE_CREEPER, properties),
+        properties -> new AMSkullBlock(SkullTypes.FESTIVE_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F),
         "festive_creeper_head",
@@ -47,13 +47,13 @@ public class AMBlocks {
 
     public static final Supplier<Block> SUPPORT_CREEPER_WALL_HEAD = BLOCKS.registerNoItem(
         "support_creeper_wall_head",
-        properties -> new PlatformWallSkullBlock(SkullTypes.SUPPORT_CREEPER, properties),
+        properties -> new AMWallSkullBlock(SkullTypes.SUPPORT_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F)
     );
     public static final Supplier<Block> SUPPORT_CREEPER_HEAD = BLOCKS.register(
         "support_creeper_head",
-        properties -> new PlatformSkullBlock(SkullTypes.SUPPORT_CREEPER, properties),
+        properties -> new AMSkullBlock(SkullTypes.SUPPORT_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F),
         "support_creeper_head",
@@ -65,13 +65,13 @@ public class AMBlocks {
 
     public static final Supplier<Block> ROCKET_CREEPER_WALL_HEAD = BLOCKS.registerNoItem(
         "rocket_creeper_wall_head",
-        properties -> new PlatformWallSkullBlock(SkullTypes.ROCKET_CREEPER, properties),
+        properties -> new AMWallSkullBlock(SkullTypes.ROCKET_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F)
     );
     public static final Supplier<Block> ROCKET_CREEPER_HEAD = BLOCKS.register(
         "rocket_creeper_head",
-        properties -> new PlatformSkullBlock(SkullTypes.ROCKET_CREEPER, properties),
+        properties -> new AMSkullBlock(SkullTypes.ROCKET_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F),
         "rocket_creeper_head",
@@ -83,13 +83,13 @@ public class AMBlocks {
 
     public static final Supplier<Block> PEEPER_CREEPER_WALL_HEAD = BLOCKS.registerNoItem(
         "peeper_creeper_wall_head",
-        properties -> new PlatformWallSkullBlock(SkullTypes.PEEPER_CREEPER, properties),
+        properties -> new AMWallSkullBlock(SkullTypes.PEEPER_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F)
     );
     public static final Supplier<Block> PEEPER_CREEPER_HEAD = BLOCKS.register(
         "peeper_creeper_head",
-        properties -> new PlatformSkullBlock(SkullTypes.PEEPER_CREEPER, properties),
+        properties -> new AMSkullBlock(SkullTypes.PEEPER_CREEPER, properties),
         BlockBehaviour.Properties.of(Material.DECORATION)
             .strength(1.0F),
         "peeper_creeper_head",
