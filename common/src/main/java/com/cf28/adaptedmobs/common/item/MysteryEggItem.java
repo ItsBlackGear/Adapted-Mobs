@@ -41,6 +41,6 @@ public class MysteryEggItem extends Item {
             stack.shrink(1);
         }
 
-        return super.use(level, player, hand);
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 }

@@ -45,6 +45,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -71,13 +72,11 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     private boolean orderedToSit;
     private int age;
     private int forcedAge;
-    private final int explosionCooldown;
-    protected int explosionCooldownTimer;
+    protected int explosionCooldown;
 
     public TamableCreeper(EntityType<? extends Creeper> entityType, Level level) {
         super(entityType, level);
         this.entityData.define(DATA_STATE, CreeperState.IDLING);
-        this.explosionCooldown = 60;
     }
 
     @Override
@@ -225,7 +224,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     protected void postExplosion() {
         this.setSwellDir(-1);
         this.setState(CreeperState.IDLING);
-        this.explosionCooldownTimer = this.explosionCooldown;
+        this.explosionCooldown = 60;
     }
 
     @Override
@@ -423,7 +422,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     public boolean shouldSwell() {
-        return this.explosionCooldownTimer == 0 || this.isIgnited();
+        return this.explosionCooldown == 0 || this.isIgnited();
     }
 
     private boolean isFood(ItemStack stack) {
@@ -520,12 +519,34 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
 
     @Override
     public void tick() {
-        super.tick();
-
-        if (this.explosionCooldownTimer > 0) {
-            this.explosionCooldownTimer--;
+        if (this.explosionCooldown > 0) {
+            this.explosionCooldown--;
         }
 
+        if (this.isAlive()) {
+            this.oldSwell = this.swell;
+            if (this.isIgnited()) {
+                this.setSwellDir(1);
+            }
+
+            int i = this.getSwellDir();
+            if (i > 0 && this.swell == 0) {
+                this.playSound(SoundEvents.CREEPER_PRIMED, 1.0F, 0.5F);
+                this.gameEvent(GameEvent.PRIME_FUSE);
+            }
+
+            this.swell += i;
+            if (this.swell < 0) {
+                this.swell = 0;
+            }
+
+            if (this.swell >= this.maxSwell) {
+                this.swell = this.maxSwell;
+                this.explodeCreeper();
+            }
+        }
+
+        super.tick();
         this.setupAnimationStates();
     }
 
