@@ -95,7 +95,6 @@ public class AMBlocks {
         "peeper_creeper_head",
         (block, properties) -> new StandingAndWallBlockItem(block, PEEPER_CREEPER_WALL_HEAD.get(), properties),
         new Item.Properties()
-            .tab(CreativeModeTab.TAB_DECORATIONS)
             .rarity(Rarity.UNCOMMON)
     );
 }
