@@ -19,12 +19,12 @@ public class CommonConfig {
         builder.push("mobs");
             builder.push("Festive Creeper");
             this.spawnFestiveCreepers = builder.comment("Determines if Festive Creepers should spawn").define("Spawn Festive Creepers", true);
-            this.festiveCreeperSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn").defineInRange("Festive Creeper Spawn Weight", 25, 0, 100);
-            this.festiveCreeperExtraSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn in extra biomes").defineInRange("Festive Creeper Extra Spawn Weight", 50, 0, 100);
+            this.festiveCreeperSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn").defineInRange("Festive Creeper Spawn Weight", 18, 0, 100);
+            this.festiveCreeperExtraSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn in extra biomes").defineInRange("Festive Creeper Extra Spawn Weight", 40, 0, 100);
             builder.pop();
             builder.push("Support Creeper");
             this.spawnSupportCreepers = builder.comment("Determines if Support Creepers should spawn").define("Spawn Support Creepers", true);
-            this.supportCreeperSpawnWeight = builder.comment("Determines how often do Support Creepers spawn").defineInRange("Support Creeper Spawn Weight", 25, 0, 100);
+            this.supportCreeperSpawnWeight = builder.comment("Determines how often do Support Creepers spawn").defineInRange("Support Creeper Spawn Weight", 20, 0, 100);
             this.supportCreeperExtraSpawnWeight = builder.comment("Determines how often do Support Creepers spawn in extra biomes").defineInRange("Support Creeper Extra Spawn Weight", 50, 0, 100);
             builder.pop();
             builder.push("Rocket Creeper");

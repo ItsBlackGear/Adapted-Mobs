@@ -69,6 +69,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public final AnimationState sitDownAnimationState = new AnimationState();
 
     // Entity Variables
+    private boolean isTame;
     private boolean orderedToSit;
     private int age;
     private int forcedAge;
@@ -130,6 +131,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
             tag.putUUID("Owner", this.getOwnerUUID());
         }
 
+        tag.putBoolean("Tamed", this.isTame);
         tag.putBoolean("Sitting", this.orderedToSit);
         tag.putInt("Age", this.getAge());
         tag.putInt("ForcedAge", this.forcedAge);
@@ -140,6 +142,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         UUID uuid = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null;
+        this.isTame = tag.getBoolean("Tamed");
 
         if (uuid != null) {
             try {
@@ -158,6 +161,10 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         if (tag.contains("ClothColor", 99)) {
             this.setClothColor(DyeColor.byId(tag.getInt("ClothColor")));
         }
+    }
+
+    public boolean canFollow() {
+        return true;
     }
 
     @Override
@@ -237,6 +244,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     public void setTame(boolean tame) {
+        this.isTame = tame;
         byte flag = this.entityData.get(DATA_FLAGS_ID);
         if (tame) {
             this.entityData.set(DATA_FLAGS_ID, (byte) (flag | 4));

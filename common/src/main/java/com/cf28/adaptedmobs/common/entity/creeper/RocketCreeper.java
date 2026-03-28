@@ -161,6 +161,11 @@ public class RocketCreeper extends TamableCreeper {
         this.entityData.define(IS_ROCKET, false);
     }
 
+    @Override
+    public boolean canFollow() {
+        return !this.isRocket();
+    }
+
     public void setRocket(boolean rocket) {
         this.entityData.set(IS_ROCKET, rocket);
     }

@@ -16,6 +16,7 @@ import com.cf28.adaptedmobs.common.registry.AMBlocks;
 import com.cf28.adaptedmobs.common.resource.SkullTypes;
 import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
+import com.cf28.adaptedmobs.core.api.ResourcePackManager;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.RenderType;
@@ -24,6 +25,8 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 
 public class ClientSetup {
     public static void onInstance() {
+        ResourcePackManager.registerBuiltInResourcePack(AdaptedMobs.resource("aux_textures"), AdaptedMobs.MOD_ID, "Aux's Textures");
+
         GameRendering.registerEntityRenderers(ClientSetup::setupEntityRenderers);
         GameRendering.registerModelLayers(ClientSetup::setupLayerDefinitions);
         GameRendering.registerBlockEntityRenderers(event -> event.register(AMBlockEntityTypes.SKULL.get(), SkullBlockRenderer::new));

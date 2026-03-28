@@ -30,9 +30,10 @@ public class CommonSetup {
                 context.addPool(
                     LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(AMItems.GREEN_MYSTERY_EGG.get()))
-                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                        .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.025F, 0.01F))
+                        .add(LootItem.lootTableItem(AMItems.GREEN_MYSTERY_EGG.get())
+                            .when(LootItemKilledByPlayerCondition.killedByPlayer())
+                            .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.025F, 0.01F))
+                        )
                 );
             }
         });

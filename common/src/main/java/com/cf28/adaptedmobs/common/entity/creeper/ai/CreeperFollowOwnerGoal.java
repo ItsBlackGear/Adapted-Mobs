@@ -37,13 +37,13 @@ public class CreeperFollowOwnerGoal extends Goal {
     @Override
     public boolean canUse() {
         LivingEntity owner = this.tamable.getOwner();
-        if (owner == null) {
-            return false;
-        } else if (owner.isSpectator()) {
-            return false;
-        } else if (this.tamable.isOrderedToSit()) {
-            return false;
-        } else if (this.tamable.distanceToSqr(owner) < (double)(this.startDistance * this.startDistance)) {
+        if (
+            owner == null ||
+            owner.isSpectator() ||
+            this.tamable.isOrderedToSit() ||
+            !this.tamable.canFollow() ||
+            this.tamable.distanceToSqr(owner) < (double)(this.startDistance * this.startDistance)
+        ) {
             return false;
         } else {
             this.owner = owner;
@@ -53,12 +53,14 @@ public class CreeperFollowOwnerGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (this.navigation.isDone()) {
-            return false;
-        } else if (this.tamable.isOrderedToSit()) {
+        if (
+            this.navigation.isDone() ||
+            this.tamable.isOrderedToSit() ||
+            !this.tamable.canFollow()
+        ) {
             return false;
         } else {
-            return this.tamable.distanceToSqr(this.owner) > (double)(this.stopDistance * this.stopDistance);
+            return this.tamable.distanceToSqr(this.owner) > (double) (this.stopDistance * this.stopDistance);
         }
     }
 
@@ -83,7 +85,6 @@ public class CreeperFollowOwnerGoal extends Goal {
             this.timeToRecalcPath = this.adjustedTickDelay(10);
             if (!this.tamable.isLeashed() && !this.tamable.isPassenger()) {
                 if (this.tamable.distanceToSqr(this.owner) >= 256.0D) {
-//                if (this.tamable.distanceToSqr(this.owner) >= 144.0D) {
                     this.teleportToOwner();
                 } else {
                     this.navigation.moveTo(this.owner, this.speedModifier);
