@@ -3,8 +3,22 @@ accessWidener   v2  named
 extendable method net/minecraft/world/entity/monster/Creeper explodeCreeper ()V
 
 accessible field net/minecraft/world/entity/monster/Creeper explosionRadius I
+
 accessible field net/minecraft/world/entity/monster/Creeper oldSwell I
 mutable field net/minecraft/world/entity/monster/Creeper oldSwell I
+
 accessible field net/minecraft/world/entity/monster/Creeper swell I
 mutable field net/minecraft/world/entity/monster/Creeper swell I
+
 accessible field net/minecraft/world/entity/monster/Creeper maxSwell I
+
+accessible field net/minecraft/world/item/CreativeModeTabs BUILDING_BLOCKS Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs COLORED_BLOCKS Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs NATURAL_BLOCKS Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs FUNCTIONAL_BLOCKS Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs REDSTONE_BLOCKS Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs TOOLS_AND_UTILITIES Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs COMBAT Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs FOOD_AND_DRINKS Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs INGREDIENTS Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/world/item/CreativeModeTabs SPAWN_EGGS Lnet/minecraft/resources/ResourceKey;

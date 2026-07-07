@@ -1,0 +1,17 @@
+{
+  "block.adaptedmobs.festive_creeper_head": "Festive Creeper Head",
+  "block.adaptedmobs.peeper_creeper_head": "Peeper Head",
+  "block.adaptedmobs.rocket_creeper_head": "Rocket Creeper Head",
+  "block.adaptedmobs.support_creeper_head": "Support Creeper Head",
+  "entity.adaptedmobs.creeper": "Creeper",
+  "entity.adaptedmobs.festive_creeper": "Festive Creeper",
+  "entity.adaptedmobs.rocket_creeper": "Rocket Creeper",
+  "entity.adaptedmobs.support_creeper": "Support Creeper",
+  "item.adaptedmobs.blue_mystery_egg": "Blue Mystery Egg",
+  "item.adaptedmobs.festive_creeper_spawn_egg": "Festive Creeper Spawn Egg",
+  "item.adaptedmobs.green_mystery_egg": "Green Mystery Egg",
+  "item.adaptedmobs.red_mystery_egg": "Red Mystery Egg",
+  "item.adaptedmobs.rocket_creeper_spawn_egg": "Rocket Creeper Spawn Egg",
+  "item.adaptedmobs.support_creeper_spawn_egg": "Support Creeper Spawn Egg",
+  "item.adaptedmobs.yellow_mystery_egg": "Yellow Mystery Egg"
+}

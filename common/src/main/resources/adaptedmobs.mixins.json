@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.cf28.adaptedmobs.core.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+  ],
+  "mixins": [
+    "common.cancel_default_behavior.CreeperMixin",
+    "common.festive_tnt.ExplosionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

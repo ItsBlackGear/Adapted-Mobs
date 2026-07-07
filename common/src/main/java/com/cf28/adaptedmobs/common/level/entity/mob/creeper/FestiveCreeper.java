@@ -1,0 +1,69 @@
+package com.cf28.adaptedmobs.common.level.entity.mob.creeper;
+
+import com.cf28.adaptedmobs.common.level.entity.ai.goal.BackUpIfTooCloseGoal;
+import com.cf28.adaptedmobs.common.level.entity.ai.goal.ThrowTntToTargetGoal;
+import com.cf28.adaptedmobs.common.level.entity.ai.pathfinding.move_control.BackUpMoveControl;
+import com.cf28.adaptedmobs.common.registries.AMBlocks;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
+public class FestiveCreeper extends TamableCreeper {
+    public FestiveCreeper(EntityType<? extends Creeper> entityType, Level level) {
+        super(entityType, level);
+        this.moveControl = new BackUpMoveControl(this);
+    }
+    
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(2, new ThrowTntToTargetGoal(this, UniformInt.of(18, 20), UniformInt.of(15, 18)));
+        this.goalSelector.addGoal(3, new BackUpIfTooCloseGoal(this, 8, 2.25F));
+    }
+    
+    public static @NotNull AttributeSupplier.Builder createAttributes() {
+        return Creeper.createAttributes().add(Attributes.MAX_HEALTH, 30.0).add(Attributes.MOVEMENT_SPEED, 0.3);
+    }
+    
+    @Override
+    public void tick() {
+        this.setupAnimations();
+        super.tick();
+    }
+    
+    @Override
+    public void setState(CreeperState state) {
+        if (state.is(CreeperState.ATTACKING)) {
+            this.playSound(SoundEvents.TNT_PRIMED, 1.0F, 1.0F);
+            super.setState(CreeperState.ATTACKING);
+        } else {
+            super.setState(state);
+        }
+    }
+    
+    @Override
+    protected ItemStack getSkull() {
+        return new ItemStack(AMBlocks.FESTIVE_CREEPER_HEAD.getFirst().get());
+    }
+    
+    @Override
+    public boolean canDropMobsSkull() {
+        return false;
+    }
+    
+    @Override
+    public boolean shouldSwell() {
+        return false;
+    }
+    
+    @Override
+    public ClothType getClothType() {
+        return ClothType.FESTIVE;
+    }
+}

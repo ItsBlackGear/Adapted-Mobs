@@ -1,48 +1,21 @@
 package com.cf28.adaptedmobs.common;
 
 import com.blackgear.platform.common.data.LootModifier;
-import com.blackgear.platform.common.entity.EntityFactory;
+import com.blackgear.platform.common.integration.MobIntegration;
+import com.blackgear.platform.common.worldgen.modifier.BiomeManager;
 import com.blackgear.platform.core.ParallelDispatch;
-import com.cf28.adaptedmobs.common.entity.creeper.FestiveCreeper;
-import com.cf28.adaptedmobs.common.entity.creeper.RocketCreeper;
-import com.cf28.adaptedmobs.common.entity.creeper.SupportCreeper;
-import com.cf28.adaptedmobs.common.entity.creeper.TamableCreeper;
-import com.cf28.adaptedmobs.common.level.WorldGeneration;
-import com.cf28.adaptedmobs.common.registry.AMEntityTypes;
-import com.cf28.adaptedmobs.common.registry.AMItems;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithLootingCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import com.cf28.adaptedmobs.common.integrations.BiomeIntegrations;
+import com.cf28.adaptedmobs.common.integrations.LootIntegrations;
+import com.cf28.adaptedmobs.common.integrations.MobIntegrations;
 
 public class CommonSetup {
-    public static void onInstance() {
-        EntityFactory.registerMobAttributes(CommonSetup::registerMobAttributes);
+    public static void setup() {
+        MobIntegration.registerIntegrations(MobIntegrations::setupMobAttributes);
+        MobIntegration.registerIntegrations(MobIntegrations::setupSpawnPlacements);
     }
-
-    public static void postInstance(ParallelDispatch dispatch) {
-        WorldGeneration.bootstrap();
-
-        LootModifier.modify((tables, path, context, builtIn) -> {
-            if (path.equals(EntityType.CREEPER.getDefaultLootTable())) {
-                context.addPool(
-                    LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(AMItems.GREEN_MYSTERY_EGG.get())
-                            .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                            .when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.025F, 0.01F))
-                        )
-                );
-            }
-        });
-    }
-
-    private static void registerMobAttributes(EntityFactory.EntityAttributesEvent event) {
-        event.register(AMEntityTypes.FESTIVE_CREEPER, FestiveCreeper::createAttributes);
-        event.register(AMEntityTypes.SUPPORT_CREEPER, SupportCreeper::createAttributes);
-        event.register(AMEntityTypes.ROCKET_CREEPER, RocketCreeper::createAttributes);
-        event.register(AMEntityTypes.CREEPER, TamableCreeper::createAttributes);
+    
+    public static void asyncSetup(ParallelDispatch dispatch) {
+        BiomeManager.add(BiomeIntegrations::create);
+        LootModifier.modify(LootIntegrations.INSTANCE);
     }
 }

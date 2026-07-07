@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "adaptedmobs",
   "version": "${version}",
-  "name": "Adapted Mobs",
-  "description": "The Spiritual Successor to Primitive Mobs",
+  "name": "AdaptedMobs",
+  "description": "The Spiritual Successor to Primitive Mobs!",
   "authors": [
     "Cf28"
   ],
@@ -16,26 +16,30 @@
     "Daveyx0"
   ],
   "contact": {
-    "homepage": "https://discord.gg/Mctsf64CXP",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://discord.gg/Mctsf64CXP"
   },
   "license": "MIT",
   "icon": "assets/adaptedmobs/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.cf28.adaptedmobs.core.fabric.AdaptedMobsFabric"
+      "com.cf28.adaptedmobs.fabric.AdaptedMobsFabric"
+    ],
+    "client": [
+      "com.cf28.adaptedmobs.fabric.client.AdaptedmobsFabricClient"
     ],
     "fabric-datagen": [
-      "com.cf28.adaptedmobs.core.data.DataGeneration"
+      "com.cf28.adaptedmobs.fabric.data.DataGenerator"
     ]
   },
   "mixins": [
-    "adaptedmobs.mixins.json",
-    "adaptedmobs-common.mixins.json"
+    "adaptedmobs.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
-    "minecraft": ">=1.19.2"
+    "fabricloader": ">=0.19.3",
+    "platform": ">=1.3.3",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
   }
 }
