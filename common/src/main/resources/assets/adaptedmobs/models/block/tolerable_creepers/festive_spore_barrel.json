@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "adaptedmobs:block/tolerable_creepers/festive_spore_barrel_top",
+    "bottom": "adaptedmobs:block/tolerable_creepers/spore_barrel_bottom",
+    "side": "adaptedmobs:block/tolerable_creepers/festive_spore_barrel_side"
+  }
+}
