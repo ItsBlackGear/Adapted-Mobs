@@ -19,26 +19,27 @@ public final class AdaptedMobs {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final CommonConfig CONFIG = Environment.registerConfig(MOD_ID, ModConfig.Type.COMMON, CommonConfig::new);
     public static final ModInstance INSTANCE = ModInstance.create(MOD_ID)
-        .client(ClientSetup::setup)
-        .postClient(ClientSetup::asyncSetup)
-        .common(CommonSetup::setup)
-        .postCommon(CommonSetup::asyncSetup)
-        .build();
-    
+            .client(ClientSetup::setup)
+            .postClient(ClientSetup::asyncSetup)
+            .common(CommonSetup::setup)
+            .postCommon(CommonSetup::asyncSetup)
+            .build();
+
     public static void bootstrap() {
         INSTANCE.bootstrap();
         ConfigLoader.bootstrap();
-        
+
         AMItems.REGISTRIES.register();
         AMBlocks.REGISTRIES.register();
         AMEntityTypes.REGISTRIES.register();
         AMBlockEntityTypes.REGISTRIES.register();
         AMEntityDataSerializers.REGISTRIES.register();
-        
+        AMParticles.REGISTRIES.register();
+
         AMBiomeTags.REGISTRY.register();
         AMItemTags.REGISTRY.register();
     }
-    
+
     public static ResourceLocation resource(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }

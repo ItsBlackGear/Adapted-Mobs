@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "adaptedmobs:block/tolerable_creepers/potted_support_creeper_spores_plant" },
+    "facing=east": { "model": "adaptedmobs:block/tolerable_creepers/potted_support_creeper_spores_plant", "y": 90 },
+    "facing=south": { "model": "adaptedmobs:block/tolerable_creepers/potted_support_creeper_spores_plant", "y": 180 },
+    "facing=west": { "model": "adaptedmobs:block/tolerable_creepers/potted_support_creeper_spores_plant", "y": 270 }
+  }
+}

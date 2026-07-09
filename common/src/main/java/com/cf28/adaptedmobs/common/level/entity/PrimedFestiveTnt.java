@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.level.entity;
 
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
+import com.cf28.adaptedmobs.common.registries.AMParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -10,13 +11,11 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +23,9 @@ import org.jetbrains.annotations.Nullable;
 public class PrimedFestiveTnt extends Entity {
     private static final EntityDataAccessor<Integer> DATA_FUSE = SynchedEntityData.defineId(PrimedFestiveTnt.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_CHARGED = SynchedEntityData.defineId(PrimedFestiveTnt.class, EntityDataSerializers.BOOLEAN);
-    @Nullable private LivingEntity owner;
+    private static final EntityDataAccessor<Boolean> DATA_SMALL = SynchedEntityData.defineId(PrimedFestiveTnt.class, EntityDataSerializers.BOOLEAN);
+    @Nullable
+    private LivingEntity owner;
 
     public PrimedFestiveTnt(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -41,11 +42,12 @@ public class PrimedFestiveTnt extends Entity {
         this.zo = z;
         this.owner = owner;
     }
-    
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_FUSE, 80);
         builder.define(DATA_CHARGED, false);
+        builder.define(DATA_SMALL, false);
     }
 
     @Override
@@ -80,30 +82,38 @@ public class PrimedFestiveTnt extends Entity {
         } else {
             this.updateInWaterStateAndDoFluidPushing();
             if (this.level().isClientSide) {
-                this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5, this.getZ(), 0.0, 0.0, 0.0);
+                if (this.isSmall()) {
+                    this.level().addParticle(AMParticles.FESTIVE_TNT_PARTICLETRAIL.get(), this.getX(), this.getY() + 0.25, this.getZ(), 0.0, 0.0, 0.0);
+                } else {
+                    this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5, this.getZ(), 0.0, 0.0, 0.0);
+                }
             }
         }
     }
 
     private void explode() {
         Level.ExplosionInteraction interaction = Level.ExplosionInteraction.NONE;
-        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 3 * (this.isCharged() ? 2.0F : 1.0F), interaction);
+        float radius = this.isSmall() ? 1.5F : 3.0F;
+        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), radius * (this.isCharged() ? 2.0F : 1.0F), interaction);
+
+        if (this.isSmall() && !this.level().isClientSide) {
+            ServerLevel serverLevel = (ServerLevel) this.level();
+            serverLevel.sendParticles(AMParticles.FESTIVE_SPORES.get(), this.getX(), this.getY() + 0.25, this.getZ(), 40, 0.4, 0.4, 0.4, 0.1);
+        }
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        tag.putShort("Fuse", (short)this.getFuse());
+        tag.putShort("Fuse", (short) this.getFuse());
         tag.putBoolean("Charged", this.isCharged());
+        tag.putBoolean("Small", this.isSmall());
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         this.setFuse(tag.getShort("Fuse"));
         this.setCharged(tag.getBoolean("Charged"));
-    }
-
-    public void setOwner(@Nullable LivingEntity owner) {
-        this.owner = owner;
+        this.setSmall(tag.getBoolean("Small"));
     }
 
     @Nullable
@@ -111,24 +121,36 @@ public class PrimedFestiveTnt extends Entity {
         return this.owner;
     }
 
-    public void setFuse(int life) {
-        this.entityData.set(DATA_FUSE, life);
+    public void setOwner(@Nullable LivingEntity owner) {
+        this.owner = owner;
     }
 
     public int getFuse() {
         return this.entityData.get(DATA_FUSE);
     }
 
-    public void setCharged(boolean charged) {
-        this.entityData.set(DATA_CHARGED, charged);
+    public void setFuse(int life) {
+        this.entityData.set(DATA_FUSE, life);
     }
 
     public boolean isCharged() {
         return this.entityData.get(DATA_CHARGED);
     }
-    
+
+    public void setCharged(boolean charged) {
+        this.entityData.set(DATA_CHARGED, charged);
+    }
+
+    public boolean isSmall() {
+        return this.entityData.get(DATA_SMALL);
+    }
+
+    public void setSmall(boolean small) {
+        this.entityData.set(DATA_SMALL, small);
+    }
+
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
         return new ClientboundAddEntityPacket(this, entity);
     }
 }

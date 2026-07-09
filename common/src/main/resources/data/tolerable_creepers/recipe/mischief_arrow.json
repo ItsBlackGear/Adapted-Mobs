@@ -1,0 +1,43 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tolerable_creepers"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "tolerable_creepers"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:arrow"
+    },
+    {
+      "item": "minecraft:arrow"
+    },
+    [
+      {
+        "item": "tolerable_creepers:creeper_spores"
+      },
+      {
+        "item": "adaptedmobs:support_creeper_spores"
+      },
+      {
+        "item": "adaptedmobs:rocket_creeper_spores"
+      },
+      {
+        "item": "adaptedmobs:festive_creeper_spores"
+      }
+    ]
+  ],
+  "result": {
+    "count": 2,
+    "id": "tolerable_creepers:mischief_arrow"
+  }
+}
