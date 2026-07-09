@@ -72,6 +72,21 @@ public class RocketCreeper extends TamableCreeper {
     }
 
     @Override
+    protected void explodeCreeper() {
+        if (this.shouldSwell() && !this.isTame() && TolerableCreepersCompat.isLoaded() && AdaptedMobs.CONFIG.preventRocketCreeperBlockDamage.get()) {
+            if (!this.level().isClientSide()) {
+                float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(),
+                        (float) this.explosionRadius * explosionMultiplier, Level.ExplosionInteraction.NONE);
+                this.discard();
+                this.postExplosion();
+            }
+        } else {
+            super.explodeCreeper();
+        }
+    }
+
+    @Override
     protected ResourceKey<LootTable> getExplosionLootTable() {
         return TolerableCreepersCompat.isLoaded() ? AM_EXPLODE_LOOT_TABLE : null;
     }

@@ -98,7 +98,7 @@ public class TolerableCreepersIntegration {
 
     public static Entity createSupportSporesFromCreeper(Level level, Creeper parent) {
         SupportSporesCloud spores = new SupportSporesCloud(AMEntityTypes.SUPPORT_SPORES.get(), level, false);
-        spores.setPos(parent.getX(), parent.getY(), parent.getZ());
+        spores.setPos(parent.getX(), parent.getY() + 0.01, parent.getZ());
         spores.setOwner(parent);
         int count = calculateSporeCount(level, parent.blockPosition(), parent.getRandom(),
                 AdaptedMobs.CONFIG.supportSporeCountDayBase.get(), AdaptedMobs.CONFIG.supportSporeCountDayRandom.get(),
@@ -109,7 +109,7 @@ public class TolerableCreepersIntegration {
 
     public static Entity createRocketSporesFromCreeper(Level level, Creeper parent) {
         RocketSporesCloud spores = new RocketSporesCloud(AMEntityTypes.ROCKET_SPORES.get(), level);
-        spores.setPos(parent.getX(), parent.getY(), parent.getZ());
+        spores.setPos(parent.getX(), parent.getY() + 0.01, parent.getZ());
         spores.setOwner(parent);
         int count = calculateSporeCount(level, parent.blockPosition(), parent.getRandom(),
                 AdaptedMobs.CONFIG.rocketSporeCountDayBase.get(), AdaptedMobs.CONFIG.rocketSporeCountDayRandom.get(),

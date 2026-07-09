@@ -14,6 +14,7 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Boolean> spawnRocketCreepers;
     public final ConfigBuilder.ConfigValue<Integer> rocketCreeperSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> rocketCreeperExtraSpawnWeight;
+    public final ConfigBuilder.ConfigValue<Boolean> preventRocketCreeperBlockDamage;
 
     public final ConfigBuilder.ConfigValue<Integer> festiveSporeCountDayBase;
     public final ConfigBuilder.ConfigValue<Integer> festiveSporeCountDayRandom;
@@ -47,6 +48,8 @@ public class CommonConfig {
         this.spawnRocketCreepers = builder.comment("Determines if Rocket Creepers should spawn").define("Spawn Rocket Creepers", true);
         this.rocketCreeperSpawnWeight = builder.comment("Determines how often do Rocket Creepers spawn").defineInRange("Rocket Creeper Spawn Weight", 25, 0, 100);
         this.rocketCreeperExtraSpawnWeight = builder.comment("Determines how often do Rocket Creepers spawn in extra biomes").defineInRange("Rocket Creeper Extra Spawn Weight", 50, 0, 100);
+        this.preventRocketCreeperBlockDamage = builder.comment("Requires Tolerable Creepers. Prevents Rocket Creeper explosions from damaging blocks and spawns a Rocket Creeper spore cloud instead")
+                .define("Prevent Rocket Creeper Block Damage", true);
         builder.pop();
 
         builder.push("Festive Creeper Spores");

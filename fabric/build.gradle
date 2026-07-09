@@ -52,7 +52,7 @@ dependencies {
     modRuntimeOnly "dev.emi:emi-fabric:${emi_version}"
 
     // modImplementation "maven.modrinth:tolerable-creepers:${tolerable_creepers_version}-fabric"
-    modImplementation "com.evandev.tolerable_creepers:tolerable-creepers-fabric:2.2.3-local"
+    modImplementation "com.evandev.tolerable_creepers:tolerable-creepers-fabric:2.2.4-local"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
