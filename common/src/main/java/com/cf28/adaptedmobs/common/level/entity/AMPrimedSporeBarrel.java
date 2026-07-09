@@ -88,20 +88,21 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
         this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), radius, Level.ExplosionInteraction.NONE);
 
         if (!this.level().isClientSide() && TolerableCreepersCompat.isLoaded()) {
+            int cloudSize = this.random.nextInt(7) + 5;
             if (type == AMSporeBarrelBlock.SporeType.SUPPORT) {
-                Entity spores = TolerableCreepersIntegration.createSupportSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), 2, false);
+                Entity spores = TolerableCreepersIntegration.createSupportSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize, false);
                 if (this.owner != null) {
                     TolerableCreepersIntegration.setSporesOwner(spores, this.owner);
                 }
                 this.level().addFreshEntity(spores);
             } else if (type == AMSporeBarrelBlock.SporeType.ROCKET) {
-                Entity spores = TolerableCreepersIntegration.createRocketSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), 2, false);
+                Entity spores = TolerableCreepersIntegration.createRocketSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize, false);
                 if (this.owner != null) {
                     TolerableCreepersIntegration.setSporesOwner(spores, this.owner);
                 }
                 this.level().addFreshEntity(spores);
             } else if (type == AMSporeBarrelBlock.SporeType.FESTIVE) {
-                Entity spores = TolerableCreepersIntegration.createFestiveSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), 2);
+                Entity spores = TolerableCreepersIntegration.createFestiveSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize);
                 if (this.owner != null) {
                     TolerableCreepersIntegration.setSporesOwner(spores, this.owner);
                 }

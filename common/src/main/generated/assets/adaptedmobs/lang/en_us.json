@@ -19,11 +19,14 @@
   "item.adaptedmobs.blue_mystery_egg": "Blue Mystery Egg",
   "item.adaptedmobs.festive_creeper_spawn_egg": "Festive Creeper Spawn Egg",
   "item.adaptedmobs.festive_creeper_spores": "Reaper Spores",
+  "item.adaptedmobs.festive_creepie_spawn_egg": "Festive Creepie Spawn Egg",
   "item.adaptedmobs.green_mystery_egg": "Green Mystery Egg",
   "item.adaptedmobs.red_mystery_egg": "Red Mystery Egg",
   "item.adaptedmobs.rocket_creeper_spawn_egg": "Rocket Creeper Spawn Egg",
   "item.adaptedmobs.rocket_creeper_spores": "Leaper Spores",
+  "item.adaptedmobs.rocket_creepie_spawn_egg": "Rocket Creepie Spawn Egg",
   "item.adaptedmobs.support_creeper_spawn_egg": "Support Creeper Spawn Egg",
   "item.adaptedmobs.support_creeper_spores": "Seeper Spores",
+  "item.adaptedmobs.support_creepie_spawn_egg": "Support Creepie Spawn Egg",
   "item.adaptedmobs.yellow_mystery_egg": "Yellow Mystery Egg"
 }

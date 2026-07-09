@@ -37,11 +37,11 @@ public class AMItems {
             properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPER, 6406895, 0, properties));
 
     public static final Supplier<Item> FESTIVE_CREEPIE_SPAWN_EGG = REGISTRIES.register("festive_creepie_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 14625830, 0, properties));
+            properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 14625830, 3429663, properties));
     public static final Supplier<Item> SUPPORT_CREEPIE_SPAWN_EGG = REGISTRIES.register("support_creepie_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPIE, 15197997, 0, properties));
+            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPIE, 15197997, 3429663, properties));
     public static final Supplier<Item> ROCKET_CREEPIE_SPAWN_EGG = REGISTRIES.register("rocket_creepie_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPIE, 6406895, 0, properties));
+            properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPIE, 6406895, 3429663, properties));
 
     public static final Supplier<Item> FESTIVE_CREEPER_SPORES = REGISTRIES.register("festive_creeper_spores",
             properties -> {

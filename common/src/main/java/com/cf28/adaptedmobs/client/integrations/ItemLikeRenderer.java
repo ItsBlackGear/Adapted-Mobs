@@ -18,11 +18,15 @@ public class ItemLikeRenderer {
     public static void setupBlockEntityRenderers(BlockEntityRendererEvent event) {
         event.register(AMBlockEntityTypes.SKULL.get(), SkullBlockRenderer::new);
     }
-    
+
     public static void setupBlockRenderers(BlockRendererEvent event) {
         event.register(RenderType.cutout(), AMBlocks.FESTIVE_TNT.get());
+        event.register(RenderType.cutout(),
+                AMBlocks.POTTED_FESTIVE_CREEPER_SPORES_PLANT.get(),
+                AMBlocks.POTTED_ROCKET_CREEPER_SPORES_PLANT.get(),
+                AMBlocks.POTTED_SUPPORT_CREEPER_SPORES_PLANT.get());
     }
-    
+
     public static void setupSkullRenderers(SkullRendererEvent event) {
         event.registerSkullModel(SkullTypes.FESTIVE_CREEPER, FestiveCreeperSkullModel::new, AMModelLayers.FESTIVE_CREEPER_SKULL);
         event.registerSkullTexture(SkullTypes.FESTIVE_CREEPER, AdaptedMobs.resource("textures/entity/creeper/festive_creeper.png"));

@@ -50,5 +50,9 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMEntityTypes.SUPPORT_CREEPIE.get(), "Support Creepie");
         builder.add(AMEntityTypes.ROCKET_CREEPIE.get(), "Rocket Creepie");
         builder.add(AMEntityTypes.FESTIVE_CREEPIE.get(), "Festive Creepie");
+
+        builder.add(AMItems.SUPPORT_CREEPIE_SPAWN_EGG.get(), "Support Creepie Spawn Egg");
+        builder.add(AMItems.ROCKET_CREEPIE_SPAWN_EGG.get(), "Rocket Creepie Spawn Egg");
+        builder.add(AMItems.FESTIVE_CREEPIE_SPAWN_EGG.get(), "Festive Creepie Spawn Egg");
     }
 }
