@@ -3,8 +3,6 @@ package com.cf28.adaptedmobs.client.level.model.mob;
 import com.cf28.adaptedmobs.client.level.animation.EntityTransformations;
 import com.cf28.adaptedmobs.client.level.animation.SupportCreeperAnimations;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.AgeableHierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -12,7 +10,6 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierarchicalModel<T> {
     private final ModelPart root;
     private final ModelPart head;
@@ -20,7 +17,7 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
     private final ModelPart rightHindLeg;
     private final ModelPart leftFrontLeg;
     private final ModelPart rightFrontLeg;
-    
+
     public SupportCreeperModel(ModelPart root) {
         super(0.5F, 24.0F);
         this.root = root;
@@ -41,46 +38,54 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
         PartDefinition root = mesh.getRoot();
         PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
         body.addOrReplaceChild(
-            "leg0",
-            CubeListBuilder.create()
-                .texOffs(0, 41)
-                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
-            PartPose.offset(-2.0F, -9.0F, 2.0F)
+                "leg0",
+                CubeListBuilder.create()
+                        .texOffs(0, 41)
+                        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
+                PartPose.offset(-2.0F, -9.0F, 2.0F)
         );
         body.addOrReplaceChild(
-            "leg1",
-            CubeListBuilder.create()
-                .texOffs(17, 41)
-                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
-            PartPose.offset(2.0F, -9.0F, 2.0F)
+                "leg1",
+                CubeListBuilder.create()
+                        .texOffs(17, 41)
+                        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
+                PartPose.offset(2.0F, -9.0F, 2.0F)
         );
         body.addOrReplaceChild(
-            "leg2",
-            CubeListBuilder.create()
-                .texOffs(0, 28)
-                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
-            PartPose.offset(-2.0F, -9.0F, -2.0F)
+                "leg2",
+                CubeListBuilder.create()
+                        .texOffs(0, 28)
+                        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
+                PartPose.offset(-2.0F, -9.0F, -2.0F)
         );
         body.addOrReplaceChild(
-            "leg3",
-            CubeListBuilder.create()
-                .texOffs(17, 28)
-                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
-            PartPose.offset(2.0F, -9.0F, -2.0F)
+                "leg3",
+                CubeListBuilder.create()
+                        .texOffs(17, 28)
+                        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 9.0F, 4.0F, deformation),
+                PartPose.offset(2.0F, -9.0F, -2.0F)
         );
         PartDefinition upper = body.addOrReplaceChild(
-            "upper",
-            CubeListBuilder.create()
-                .texOffs(0, 16)
-                .addBox(-3.0F, -8.0F, -2.0F, 6.0F, 8.0F, 4.0F, deformation),
-            PartPose.offset(0.0F, -9.0F, 0.0F)
+                "upper",
+                CubeListBuilder.create()
+                        .texOffs(0, 16)
+                        .addBox(-3.0F, -8.0F, -2.0F, 6.0F, 8.0F, 4.0F, deformation)
+                        .texOffs(32, 5)
+                        .addBox(0.0F, -6.0F, 2.0F, 0.0F, 6.0F, 5.0F, deformation),
+                PartPose.offset(0.0F, -9.0F, 0.0F)
         );
         upper.addOrReplaceChild(
-            "head",
-            CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation),
-            PartPose.offset(0.0F, -8.0F, 0.0F)
+                "head",
+                CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation)
+                        .texOffs(32, 48)
+                        .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.5F))
+                        .texOffs(0, 58)
+                        .addBox(-2.0F, -10.0F, -2.0F, 4.0F, 2.0F, 4.0F, deformation)
+                        .texOffs(32, 0)
+                        .addBox(-4.0F, -5.0F, -9.0F, 8.0F, 5.0F, 5.0F, deformation),
+                PartPose.offset(0.0F, -8.0F, 0.0F)
         );
         return mesh;
     }
@@ -95,7 +100,7 @@ public class SupportCreeperModel<T extends SupportCreeper> extends AgeableHierar
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.head.yRot = netHeadYaw * Mth.DEG_TO_RAD;
         this.head.xRot = headPitch * Mth.DEG_TO_RAD;
-        
+
         this.rightHindLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         this.leftHindLeg.xRot = Mth.cos(limbSwing * 0.6662F + Mth.PI) * 1.4F * limbSwingAmount;
         this.rightFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F + Mth.PI) * 1.4F * limbSwingAmount;

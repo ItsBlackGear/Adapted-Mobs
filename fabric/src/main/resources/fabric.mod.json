@@ -1,14 +1,15 @@
 {
   "schemaVersion": 1,
-  "id": "adaptedmobs",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "AdaptedMobs",
-  "description": "The Spiritual Successor to Primitive Mobs!",
+  "name": "${mod_name}",
+  "description": "${description}",
   "authors": [
-    "Cf28"
+    "${mod_author}"
   ],
   "contributors": [
     "Cf28",
+    "evanbones",
     "BlackGear",
     "Auxiliary",
     "EB Mario",
@@ -18,28 +19,32 @@
   "contact": {
     "homepage": "https://discord.gg/Mctsf64CXP"
   },
-  "license": "MIT",
-  "icon": "assets/adaptedmobs/icon.png",
+  "license": "${license}",
+  "icon": "assets/${mod_id}/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
       "com.cf28.adaptedmobs.fabric.AdaptedMobsFabric"
     ],
     "client": [
-      "com.cf28.adaptedmobs.fabric.client.AdaptedmobsFabricClient"
+      "com.cf28.adaptedmobs.fabric.client.AdaptedMobsFabricClient"
     ],
     "fabric-datagen": [
-      "com.cf28.adaptedmobs.fabric.data.DataGenerator"
+      "com.cf28.adaptedmobs.fabric.data.AMDataGenerator"
+    ],
+    "modmenu": [
+      "com.cf28.adaptedmobs.fabric.client.ModMenuIntegration"
     ]
   },
   "mixins": [
-    "adaptedmobs.mixins.json"
+    "${mod_id}.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.19.3",
     "platform": ">=1.3.3",
-    "minecraft": "~1.21.1",
-    "java": ">=21",
-    "fabric-api": "*"
+    "minecraft": "~${minecraft_version}",
+    "java": ">=${java_version}",
+    "fabric-api": "*",
+    "yet_another_config_lib_v3": ">=${yacl_version}"
   }
 }

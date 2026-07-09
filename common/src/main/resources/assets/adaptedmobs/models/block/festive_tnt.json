@@ -2,6 +2,7 @@
   "textures": {
     "0": "adaptedmobs:block/festive_tnt_side",
     "1": "adaptedmobs:block/festive_tnt_top",
+    "2": "adaptedmobs:block/festive_tnt_fringe",
     "particle": "adaptedmobs:block/festive_tnt_side"
   },
   "elements": [
@@ -15,6 +16,16 @@
         "west": {"uv": [2, 2, 14, 14], "texture": "#0"},
         "up": {"uv": [2, 2, 14, 14], "texture": "#1"},
         "down": {"uv": [2, 2, 14, 14], "texture": "#1"}
+      }
+    },
+    {
+      "from": [1.9, 9, 1.9],
+      "to": [14.1, 11, 14.1],
+      "faces": {
+        "north": {"uv": [2, 8, 14, 10], "texture": "#2"},
+        "east": {"uv": [2, 8, 14, 10], "texture": "#2"},
+        "south": {"uv": [2, 8, 14, 10], "texture": "#2"},
+        "west": {"uv": [2, 8, 14, 10], "texture": "#2"}
       }
     }
   ]

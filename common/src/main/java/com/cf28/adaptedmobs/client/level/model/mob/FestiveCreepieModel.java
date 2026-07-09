@@ -1,8 +1,6 @@
 package com.cf28.adaptedmobs.client.level.model.mob;
 
 import com.evandev.tolerable_creepers.common.entity.Creepie;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,7 +8,6 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class FestiveCreepieModel<T extends Creepie> extends HierarchicalModel<T> {
     private final ModelPart root;
     private final ModelPart bb_main;

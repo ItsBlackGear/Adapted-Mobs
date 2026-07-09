@@ -4,8 +4,6 @@ import com.cf28.adaptedmobs.common.level.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -17,7 +15,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class FestiveTntRenderer extends EntityRenderer<PrimedFestiveTnt> {
     private final BlockRenderDispatcher blockRenderer;
 
@@ -55,8 +52,9 @@ public class FestiveTntRenderer extends EntityRenderer<PrimedFestiveTnt> {
         super.render(entity, entityYaw, partialTicks, matrices, buffer, packedLight);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public @NotNull ResourceLocation getTextureLocation(PrimedFestiveTnt entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull PrimedFestiveTnt entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 }

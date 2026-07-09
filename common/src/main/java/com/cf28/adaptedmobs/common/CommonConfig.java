@@ -3,6 +3,8 @@ package com.cf28.adaptedmobs.common;
 import com.blackgear.platform.core.util.config.ConfigBuilder;
 
 public class CommonConfig {
+    public final ConfigBuilder.ConfigValue<Boolean> enableMysteryEggs;
+
     public final ConfigBuilder.ConfigValue<Boolean> spawnFestiveCreepers;
     public final ConfigBuilder.ConfigValue<Integer> festiveCreeperSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> festiveCreeperExtraSpawnWeight;
@@ -32,6 +34,10 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> supportSporeCountNightRandom;
 
     public CommonConfig(ConfigBuilder builder) {
+        builder.push("Mystery Eggs");
+        this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death").define("Enable Mystery Eggs", false);
+        builder.pop();
+
         builder.push("Festive Creeper");
         this.spawnFestiveCreepers = builder.comment("Determines if Festive Creepers should spawn").define("Spawn Festive Creepers", true);
         this.festiveCreeperSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn").defineInRange("Festive Creeper Spawn Weight", 18, 0, 100);

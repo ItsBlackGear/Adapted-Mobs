@@ -1,5 +1,6 @@
 package com.cf28.adaptedmobs.common.level.entity.mob.creeper;
 
+
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperFollowOwnerGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperOwnerHurtTargetGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperSitWhenOrderedToGoal;
@@ -46,6 +47,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     protected static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(TamableCreeper.class, EntityDataSerializers.BYTE);
     private static final int AGE_UP_EVENT = 14;
+    private static final float BLAST_DAMAGE_MULTIPLIER = 0.85F;
     public final AnimationState babyTransformationState = new AnimationState();
     public final AnimationState walkingAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
@@ -64,7 +66,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_STATE, CreeperState.IDLING);
         builder.define(DATA_BABY_ID, false);
@@ -74,7 +76,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.getOwnerUUID() != null)
             compound.putUUID("Owner", this.getOwnerUUID());
@@ -88,7 +90,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         UUID uuid = compound.hasUUID("Owner") ? compound.getUUID("Owner") : null;
         this.isTame = compound.getBoolean("Tamed");
@@ -112,7 +114,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         if (DATA_BABY_ID.equals(key))
             this.refreshDimensions();
 
@@ -280,7 +282,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    public boolean canAttack(LivingEntity target) {
+    public boolean canAttack(@NotNull LivingEntity target) {
         return !this.isOwnedBy(target) && super.canAttack(target);
     }
 
@@ -512,7 +514,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
             return false;
         } else {
@@ -520,12 +522,16 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                 this.setOrderedToSit(false);
             }
 
+            if (source.is(DamageTypeTags.IS_EXPLOSION)) {
+                amount *= BLAST_DAMAGE_MULTIPLIER;
+            }
+
             return super.hurt(source, amount);
         }
     }
 
     @Override
-    public void die(DamageSource source) {
+    public void die(@NotNull DamageSource source) {
         if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
             this.getOwner().sendSystemMessage(this.getCombatTracker().getDeathMessage());
         }
@@ -534,7 +540,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         Entity entity = damageSource.getEntity();
         if (entity != this && entity instanceof Creeper creeper && creeper.canDropMobsSkull()) {
@@ -544,7 +550,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    public boolean isAlliedTo(Entity target) {
+    public boolean isAlliedTo(@NotNull Entity target) {
         if (this.isTame()) {
             LivingEntity entity = this.getOwner();
             if (target == entity) {
@@ -571,7 +577,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    protected @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
 
@@ -663,7 +669,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
     }
 
     @Override
-    protected void onOffspringSpawnedFromEgg(Player player, Mob child) {
+    protected void onOffspringSpawnedFromEgg(@NotNull Player player, @NotNull Mob child) {
         super.onOffspringSpawnedFromEgg(player, child);
         if (child instanceof TamableCreeper creeper && this.getOwner() != null) {
             creeper.setOwnerUUID(this.getOwnerUUID());

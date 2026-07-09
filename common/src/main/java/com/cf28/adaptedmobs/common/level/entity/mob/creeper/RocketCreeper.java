@@ -184,7 +184,7 @@ public class RocketCreeper extends TamableCreeper {
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource source, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, source, recentlyHit);
 
         if (recentlyHit && Math.max(this.random.nextFloat() - (float) getLooting(level, source.getEntity()) * 0.01F, 0.0F) < 0.2F) {
@@ -207,7 +207,7 @@ public class RocketCreeper extends TamableCreeper {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(IS_ROCKET, false);
     }
@@ -226,13 +226,13 @@ public class RocketCreeper extends TamableCreeper {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Rocket", this.isRocket());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.setRocket(tag.getBoolean("Rocket"));
     }

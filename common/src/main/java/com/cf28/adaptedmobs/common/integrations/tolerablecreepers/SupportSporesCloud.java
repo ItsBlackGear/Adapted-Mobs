@@ -4,6 +4,7 @@ import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.evandev.tolerable_creepers.common.entity.CreeperSpores;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
+import com.evandev.tolerable_creepers.core.registry.TCParticles;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -24,9 +25,12 @@ public class SupportSporesCloud extends CreeperSpores {
 
     @Override
     protected SimpleParticleType getSporeParticleType() {
+        if (this.random.nextFloat() > 0.2F) {
+            return TCParticles.CREEPER_SPORES.get();
+        }
         return friendly
                 ? (this.random.nextBoolean() ? AMParticles.SUPPORTED_BLUE.get() : AMParticles.SUPPORTED_RED.get())
-                : (this.random.nextBoolean() ? AMParticles.SUPPORTED_YELLOW.get() : AMParticles.SUPPORTED_GREY.get());
+                : (this.random.nextBoolean() ? AMParticles.SUPPORTED_BLUE.get() : AMParticles.SUPPORTED_GREY.get());
     }
 
     @SuppressWarnings("unchecked")
