@@ -1,13 +1,10 @@
 package com.cf28.adaptedmobs.fabric.data.server.loot;
 
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
-import com.cf28.adaptedmobs.common.registries.AMItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
@@ -17,7 +14,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.TagEntry;
 import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
@@ -58,27 +54,6 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                 .withPool(
                     LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))
-                        .add(
-                            AlternativesEntry.alternatives(
-                                LootItem.lootTableItem(AMItems.RED_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(false))
-                                    ))
-                                    .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.01F)),
-                                LootItem.lootTableItem(AMItems.RED_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(true))
-                                    ))
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.20F, 0.01F))
-                            )
-                        )
-                )
-                .withPool(
-                    LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(Items.TNT))
                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.2F, 0.01F))
@@ -104,32 +79,11 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                 )
                 .withPool(
                     LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(
-                            AlternativesEntry.alternatives(
-                                LootItem.lootTableItem(AMItems.BLUE_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(false))
-                                    ))
-                                    .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.01F)),
-                                LootItem.lootTableItem(AMItems.BLUE_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(true))
-                                    ))
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.20F, 0.01F))
-                            )
-                        )
-                )
-                .withPool(
-                    LootPool.lootPool()
                         .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
                 )
         );
-        
+
         this.add(
             AMEntityTypes.SUPPORT_CREEPER,
             output,
@@ -145,32 +99,11 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                 )
                 .withPool(
                     LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(
-                            AlternativesEntry.alternatives(
-                                LootItem.lootTableItem(AMItems.YELLOW_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(false))
-                                    ))
-                                    .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.01F)),
-                                LootItem.lootTableItem(AMItems.YELLOW_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(true))
-                                    ))
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.20F, 0.01F))
-                            )
-                        )
-                )
-                .withPool(
-                    LootPool.lootPool()
                         .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
                 )
         );
-        
+
         this.add(
             AMEntityTypes.CREEPER,
             output,
@@ -186,37 +119,10 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                 )
                 .withPool(
                     LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(
-                            AlternativesEntry.alternatives(
-                                LootItem.lootTableItem(AMItems.GREEN_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(false))
-                                    ))
-                                    .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.01F)),
-                                LootItem.lootTableItem(AMItems.GREEN_MYSTERY_EGG.get())
-                                    .when(LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().nbt(isTame(true))
-                                    ))
-                                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.20F, 0.01F))
-                            )
-                        )
-                )
-                .withPool(
-                    LootPool.lootPool()
                         .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
                 )
         );
-    }
-    
-    private static NbtPredicate isTame(boolean tamed) {
-        CompoundTag tag = new CompoundTag();
-        tag.putBoolean("Tamed", tamed);
-        return new NbtPredicate(tag);
     }
     
     private <T extends Entity> void add(Supplier<EntityType<T>> type, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter, LootTable.Builder builder) {

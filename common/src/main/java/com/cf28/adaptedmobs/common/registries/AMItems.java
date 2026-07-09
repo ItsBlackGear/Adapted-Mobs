@@ -30,18 +30,18 @@ public class AMItems {
             new Properties().stacksTo(16));
 
     public static final Supplier<Item> FESTIVE_CREEPER_SPAWN_EGG = REGISTRIES.register("festive_creeper_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPER, 14625830, 0, properties));
+            properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPER, 10571065, 0, properties));
     public static final Supplier<Item> SUPPORT_CREEPER_SPAWN_EGG = REGISTRIES.register("support_creeper_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPER, 15197997, 0, properties));
+            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPER, 7110705, 0, properties));
     public static final Supplier<Item> ROCKET_CREEPER_SPAWN_EGG = REGISTRIES.register("rocket_creeper_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPER, 6406895, 0, properties));
+            properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPER, 5999444, 0, properties));
 
     public static final Supplier<Item> FESTIVE_CREEPIE_SPAWN_EGG = REGISTRIES.register("festive_creepie_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 14625830, 3429663, properties));
+            properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 10571065, 8754737, properties));
     public static final Supplier<Item> SUPPORT_CREEPIE_SPAWN_EGG = REGISTRIES.register("support_creepie_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPIE, 15197997, 3429663, properties));
+            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPIE, 7110705, 10895394, properties));
     public static final Supplier<Item> ROCKET_CREEPIE_SPAWN_EGG = REGISTRIES.register("rocket_creepie_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPIE, 6406895, 3429663, properties));
+            properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPIE, 5999444, 10800234, properties));
 
     public static final Supplier<Item> FESTIVE_CREEPER_SPORES = REGISTRIES.register("festive_creeper_spores",
             properties -> {
@@ -49,7 +49,7 @@ public class AMItems {
                     return TolerableCreepersIntegration.createFestiveSporesItem(properties);
                 }
                 return new Item(properties);
-            }, new Properties().stacksTo(16));
+            }, new Properties());
 
     public static final Supplier<Item> ROCKET_CREEPER_SPORES = REGISTRIES.register("rocket_creeper_spores",
             properties -> {
@@ -57,7 +57,7 @@ public class AMItems {
                     return TolerableCreepersIntegration.createRocketSporesItem(properties);
                 }
                 return new Item(properties);
-            }, new Properties().stacksTo(16));
+            }, new Properties());
 
     public static final Supplier<Item> SUPPORT_CREEPER_SPORES = REGISTRIES.register("support_creeper_spores",
             properties -> {
@@ -65,5 +65,5 @@ public class AMItems {
                     return TolerableCreepersIntegration.createSupportSporesItem(properties);
                 }
                 return new Item(properties);
-            }, new Properties().stacksTo(16));
+            }, new Properties());
 }

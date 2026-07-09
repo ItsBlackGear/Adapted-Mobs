@@ -1,12 +1,12 @@
 {
   "textures": [
-    "adaptedmobs:tolerable_creepers/blue_spore_0",
-    "adaptedmobs:tolerable_creepers/blue_spore_1",
-    "adaptedmobs:tolerable_creepers/blue_spore_2",
-    "adaptedmobs:tolerable_creepers/blue_spore_3",
-    "adaptedmobs:tolerable_creepers/blue_spore_4",
-    "adaptedmobs:tolerable_creepers/blue_spore_5",
+    "adaptedmobs:tolerable_creepers/blue_spore_7",
     "adaptedmobs:tolerable_creepers/blue_spore_6",
-    "adaptedmobs:tolerable_creepers/blue_spore_7"
+    "adaptedmobs:tolerable_creepers/blue_spore_5",
+    "adaptedmobs:tolerable_creepers/blue_spore_4",
+    "adaptedmobs:tolerable_creepers/blue_spore_3",
+    "adaptedmobs:tolerable_creepers/blue_spore_2",
+    "adaptedmobs:tolerable_creepers/blue_spore_1",
+    "adaptedmobs:tolerable_creepers/blue_spore_0"
   ]
 }

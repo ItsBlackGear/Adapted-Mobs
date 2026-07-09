@@ -1,13 +1,10 @@
 package com.cf28.adaptedmobs.client.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class AMSporeParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final int spriteAge;
@@ -57,7 +54,7 @@ public class AMSporeParticle extends TextureSheetParticle {
     }
 
     @Override
-    public void setSpriteFromAge(SpriteSet spriteSet) {
+    public void setSpriteFromAge(@NotNull SpriteSet spriteSet) {
         if (!this.removed) {
             this.setSprite(spriteSet.get(Math.min(this.age, this.lifetime - this.spriteAge), this.lifetime - this.spriteAge));
         }
@@ -68,7 +65,6 @@ public class AMSporeParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
-    @Environment(EnvType.CLIENT)
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprites;
 

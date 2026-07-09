@@ -7,6 +7,8 @@ import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.evandev.tolerable_creepers.common.entity.CreeperSpores;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 
 public class TolerableCreepersIntegration {
 
@@ -26,6 +29,25 @@ public class TolerableCreepersIntegration {
         int randomBound = day ? dayRandom : nightRandom;
         int randomAdd = randomBound > 0 ? random.nextInt(randomBound) : 0;
         return baseCount + randomAdd;
+    }
+
+    public static void spawnParticleRing(ServerLevel level, SimpleParticleType particle, Vec3 center, double radius, int count) {
+        for (int i = 0; i < count; i++) {
+            double angle = 2 * Math.PI * i / count;
+            double x = center.x() + Math.cos(angle) * radius;
+            double z = center.z() + Math.sin(angle) * radius;
+            level.sendParticles(particle, x, center.y(), z, 1, 0.0, 0.0, 0.0, 0.0);
+        }
+    }
+
+    public static void spawnParticleCircle(ServerLevel level, SimpleParticleType particle, RandomSource random, Vec3 center, double radius, int count) {
+        for (int i = 0; i < count; i++) {
+            double r = radius * Math.sqrt(random.nextDouble());
+            double angle = random.nextDouble() * 2 * Math.PI;
+            double x = center.x() + Math.cos(angle) * r;
+            double z = center.z() + Math.sin(angle) * r;
+            level.sendParticles(particle, x, center.y(), z, 1, 0.0, 0.0, 0.0, 0.0);
+        }
     }
 
     public static Item createSupportSporesItem(Item.Properties properties) {

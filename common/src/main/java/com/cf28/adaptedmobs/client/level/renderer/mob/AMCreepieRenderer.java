@@ -3,8 +3,6 @@ package com.cf28.adaptedmobs.client.level.renderer.mob;
 import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.SupportCreepieEntity;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -12,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class AMCreepieRenderer<T extends Creepie, M extends EntityModel<T>> extends MobRenderer<T, M> {
     private final ResourceLocation texture;
 

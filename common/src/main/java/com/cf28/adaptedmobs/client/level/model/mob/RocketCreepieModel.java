@@ -2,8 +2,6 @@ package com.cf28.adaptedmobs.client.level.model.mob;
 
 import com.cf28.adaptedmobs.client.level.animation.RocketCreepieAnimations;
 import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.RocketCreepieEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -12,7 +10,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class RocketCreepieModel<T extends Entity> extends HierarchicalModel<T> {
     private final ModelPart root;
     private final ModelPart head;

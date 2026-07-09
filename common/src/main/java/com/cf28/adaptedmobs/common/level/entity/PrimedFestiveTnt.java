@@ -1,10 +1,8 @@
 package com.cf28.adaptedmobs.common.level.entity;
 
-import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
-import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -15,15 +13,11 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -103,38 +97,10 @@ public class PrimedFestiveTnt extends Entity {
         float radius = this.isSmall() ? 1.5F : 3.0F;
         this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), radius * (this.isCharged() ? 2.0F : 1.0F), interaction);
 
-        if (this.isSmall() && !this.level().isClientSide) {
+        if (!this.level().isClientSide) {
             ServerLevel serverLevel = (ServerLevel) this.level();
-            serverLevel.sendParticles(AMParticles.FESTIVE_SPORES.get(), this.getX(), this.getY() + 0.25, this.getZ(), 40, 0.4, 0.4, 0.4, 0.1);
-
-            if (TolerableCreepersCompat.isLoaded()) {
-                trySpawnCreepie();
-            }
-        }
-    }
-
-    private void trySpawnCreepie() {
-        int count = TolerableCreepersIntegration.calculateSporeCount(this.level(), this.blockPosition(), this.random,
-                AdaptedMobs.CONFIG.festiveSporeCountDayBase.get(), AdaptedMobs.CONFIG.festiveSporeCountDayRandom.get(),
-                AdaptedMobs.CONFIG.festiveSporeCountNightBase.get(), AdaptedMobs.CONFIG.festiveSporeCountNightRandom.get());
-
-        for (int i = 0; i < count; i++) {
-            for (int attempt = 0; attempt < 4; attempt++) {
-                float theta = (float) (this.random.nextFloat() * 2 * Math.PI);
-                double xPos = this.getX() + Mth.sin(theta) * 1.5F * this.random.nextFloat();
-                double zPos = this.getZ() + Mth.cos(theta) * 1.5F * this.random.nextFloat();
-                Vec3 spawnPos = new Vec3(xPos, this.getY(), zPos);
-
-                if (this.level().clip(new ClipContext(this.position(), spawnPos,
-                                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this))
-                        .getType() == HitResult.Type.MISS) {
-                    Entity creepie = TolerableCreepersIntegration.createFestiveCreepie(this.level(), spawnPos.x(), spawnPos.y(), spawnPos.z());
-                    if (this.level().noCollision(creepie, creepie.getBoundingBox())) {
-                        this.level().addFreshEntity(creepie);
-                    }
-                    break;
-                }
-            }
+            TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.position().add(0.0, 0.1, 0.0), radius * 0.7, 24);
+            TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, this.position().add(0.0, 0.1, 0.0), radius * 0.7, 30);
         }
     }
 
@@ -186,7 +152,7 @@ public class PrimedFestiveTnt extends Entity {
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket(@NotNull ServerEntity entity) {
         return new ClientboundAddEntityPacket(this, entity);
     }
 }

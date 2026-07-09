@@ -4,8 +4,6 @@ import com.cf28.adaptedmobs.common.level.entity.AMPrimedSporeBarrel;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -16,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class AMPrimedSporeBarrelRenderer extends EntityRenderer<AMPrimedSporeBarrel> {
     private final BlockRenderDispatcher blockRenderer;
 
@@ -55,6 +52,7 @@ public class AMPrimedSporeBarrelRenderer extends EntityRenderer<AMPrimedSporeBar
         super.render(entity, entityYaw, partialTicks, matrices, buffer, packedLight);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull AMPrimedSporeBarrel entity) {
         return TextureAtlas.LOCATION_BLOCKS;

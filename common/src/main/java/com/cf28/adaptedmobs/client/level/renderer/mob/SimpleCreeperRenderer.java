@@ -5,13 +5,10 @@ import com.cf28.adaptedmobs.client.level.layer.EntityPowerLayer;
 import com.cf28.adaptedmobs.client.level.model.mob.SimpleCreeperModel;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.TamableCreeper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public class SimpleCreeperRenderer extends SwellableCreeperRenderer<TamableCreeper, SimpleCreeperModel<TamableCreeper>> {
     public SimpleCreeperRenderer(EntityRendererProvider.Context context) {
         super(context, new SimpleCreeperModel<>(context.bakeLayer(AMModelLayers.CREEPER)), 0.5F);
@@ -20,7 +17,7 @@ public class SimpleCreeperRenderer extends SwellableCreeperRenderer<TamableCreep
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(TamableCreeper entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull TamableCreeper entity) {
         return ResourceLocation.withDefaultNamespace("textures/entity/creeper/creeper.png");
     }
 }

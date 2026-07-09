@@ -10,8 +10,6 @@ import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -20,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@Environment(EnvType.CLIENT)
 public class SupportCreeperRenderer extends SwellableCreeperRenderer<SupportCreeper, SupportCreeperModel<SupportCreeper>> {
     private static final ResourceLocation SUPPORT_TEXTURE = AdaptedMobs.resource("textures/entity/creeper/support_creeper.png");
     private static final ResourceLocation PEEPER_TEXTURE = AdaptedMobs.resource("textures/entity/creeper/peeper_creeper.png");
@@ -39,7 +36,7 @@ public class SupportCreeperRenderer extends SwellableCreeperRenderer<SupportCree
     }
 
     @Override
-    public void render(SupportCreeper entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+    public void render(SupportCreeper entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource buffer, int packedLight) {
         this.model = this.mapperByVariant.get(entity.getVariant()).getFirst();
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
     }

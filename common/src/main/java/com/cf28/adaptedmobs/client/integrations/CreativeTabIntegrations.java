@@ -4,6 +4,7 @@ import com.blackgear.platform.common.CreativeTabs;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
 import com.cf28.adaptedmobs.common.registries.AMItems;
+import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Items;
 
@@ -27,12 +28,14 @@ public interface CreativeTabIntegrations {
     };
 
     CreativeTabs.Modifier INGREDIENTS = (flag, output, operator) -> {
-        output.addAllAfter(Items.GUNPOWDER, List.of(
-                AMItems.GREEN_MYSTERY_EGG.get(),
-                AMItems.RED_MYSTERY_EGG.get(),
-                AMItems.YELLOW_MYSTERY_EGG.get(),
-                AMItems.BLUE_MYSTERY_EGG.get()
-        ));
+        if (AdaptedMobs.CONFIG.enableMysteryEggs.get()) {
+            output.addAllAfter(Items.GUNPOWDER, List.of(
+                    AMItems.GREEN_MYSTERY_EGG.get(),
+                    AMItems.RED_MYSTERY_EGG.get(),
+                    AMItems.YELLOW_MYSTERY_EGG.get(),
+                    AMItems.BLUE_MYSTERY_EGG.get()
+            ));
+        }
 
         if (TolerableCreepersCompat.isLoaded()) {
             output.addAllAfter(Items.GUNPOWDER, List.of(

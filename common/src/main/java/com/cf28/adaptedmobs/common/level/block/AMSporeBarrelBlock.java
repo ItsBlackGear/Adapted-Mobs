@@ -1,10 +1,14 @@
 package com.cf28.adaptedmobs.common.level.block;
 
 import com.cf28.adaptedmobs.common.level.entity.AMPrimedSporeBarrel;
+import com.cf28.adaptedmobs.common.registries.AMParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -35,6 +39,30 @@ public class AMSporeBarrelBlock extends Block {
 
     public SporeType getSporeType() {
         return this.type;
+    }
+
+    private SimpleParticleType getStepParticle(RandomSource random) {
+        return switch (this.type) {
+            case FESTIVE -> AMParticles.FESTIVE_SPORES.get();
+            case ROCKET -> AMParticles.ROCKET_SPORES.get();
+            case SUPPORT ->
+                    random.nextBoolean() ? AMParticles.SUPPORTED_YELLOW.get() : AMParticles.SUPPORTED_GREY.get();
+        };
+    }
+
+    @Override
+    public void stepOn(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Entity entity) {
+        RandomSource random = level.getRandom();
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = pos.relative(direction);
+            if (!level.getBlockState(neighborPos).isSolidRender(level, neighborPos)) {
+                Direction.Axis axis = direction.getAxis();
+                double xOffset = axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
+                double yOffset = axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
+                double zOffset = axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
+                level.addParticle(this.getStepParticle(random), (double) pos.getX() + xOffset, (double) pos.getY() + yOffset, (double) pos.getZ() + zOffset, 0.0D, 0.0D, 0.0D);
+            }
+        }
     }
 
     public void explode(Level level, BlockPos blockPos, @Nullable LivingEntity livingEntity) {

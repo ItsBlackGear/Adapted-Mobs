@@ -2,14 +2,11 @@ package com.cf28.adaptedmobs.client.level.renderer.mob;
 
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.TamableCreeper;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.Mth;
 
-@Environment(EnvType.CLIENT)
 public abstract class SwellableCreeperRenderer<T extends TamableCreeper, M extends EntityModel<T>> extends MobRenderer<T, M> {
     protected SwellableCreeperRenderer(EntityRendererProvider.Context context, M model, float shadowRadius) {
         super(context, model, shadowRadius);
@@ -28,10 +25,10 @@ public abstract class SwellableCreeperRenderer<T extends TamableCreeper, M exten
     }
 
     @Override
-    protected float getWhiteOverlayProgress(T  creeper, float partialTicks) {
+    protected float getWhiteOverlayProgress(T creeper, float partialTicks) {
         float swelling = creeper.getSwelling(partialTicks);
         return (int) (swelling * 10.0F) % 2 == 0
-            ? 0.0F
-            : Mth.clamp(swelling, 0.5F, 1.0F);
+                ? 0.0F
+                : Mth.clamp(swelling, 0.5F, 1.0F);
     }
 }

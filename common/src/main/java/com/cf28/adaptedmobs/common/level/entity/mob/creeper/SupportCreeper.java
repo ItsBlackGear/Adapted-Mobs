@@ -52,7 +52,7 @@ public class SupportCreeper extends TamableCreeper {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SUPPORTED_ENTITY_UUID, Optional.empty());
         builder.define(DATA_ID_VARIANT, Variant.NORMAL.ordinal());
@@ -103,13 +103,13 @@ public class SupportCreeper extends TamableCreeper {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putString("Variant", this.getVariant().name);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("Variant", 8)) {
             this.setVariant(Variant.byName(tag.getString("Variant")));
