@@ -1,5 +1,7 @@
 package com.cf28.adaptedmobs.client.level.model.mob;
 
+import com.cf28.adaptedmobs.client.level.animation.RocketCreepieAnimations;
+import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.RocketCreepieEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HierarchicalModel;
@@ -21,25 +23,27 @@ public class RocketCreepieModel<T extends Entity> extends HierarchicalModel<T> {
 
     public RocketCreepieModel(ModelPart root) {
         this.root = root;
-        this.head = root.getChild("head");
-        this.leg1 = root.getChild("leg1");
-        this.leg2 = root.getChild("leg2");
-        this.leg3 = root.getChild("leg3");
-        this.leg4 = root.getChild("leg4");
+        ModelPart all = root.getChild("all");
+        this.head = all.getChild("head");
+        this.leg1 = all.getChild("leg1");
+        this.leg2 = all.getChild("leg2");
+        this.leg3 = all.getChild("leg3");
+        this.leg4 = all.getChild("leg4");
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
+        PartDefinition all = partdefinition.addOrReplaceChild("all", CubeListBuilder.create(), PartPose.ZERO);
 
-        PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -8.0F, -3.0F, 6.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, 0.0F));
+        PartDefinition head = all.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -8.0F, -3.0F, 6.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, 0.0F));
         PartDefinition stem = head.addOrReplaceChild("stem", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, -8.0F, 0.0F, -0.3491F, 0.0F, 0.0F));
         stem.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(2, 20).mirror().addBox(0.0F, -5.0F, -2.0F, 0.0F, 5.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.6981F, 0.0F));
 
-        partdefinition.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 16).mirror().addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-2.0F, 23.0F, -2.0F));
-        partdefinition.addOrReplaceChild("leg2", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 23.0F, -2.0F));
-        partdefinition.addOrReplaceChild("leg3", CubeListBuilder.create().texOffs(0, 16).mirror().addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-2.0F, 23.0F, 2.0F));
-        partdefinition.addOrReplaceChild("leg4", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 23.0F, 2.0F));
+        all.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 16).mirror().addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-2.0F, 23.0F, -2.0F));
+        all.addOrReplaceChild("leg2", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 23.0F, -2.0F));
+        all.addOrReplaceChild("leg3", CubeListBuilder.create().texOffs(0, 16).mirror().addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-2.0F, 23.0F, 2.0F));
+        all.addOrReplaceChild("leg4", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 23.0F, 2.0F));
 
         return LayerDefinition.create(meshdefinition, 32, 32);
     }
@@ -59,5 +63,9 @@ public class RocketCreepieModel<T extends Entity> extends HierarchicalModel<T> {
         this.leg2.xRot = Mth.cos(limbSwing * 0.6662F + Mth.PI) * 1.4F * limbSwingAmount;
         this.leg3.xRot = Mth.cos(limbSwing * 0.6662F + Mth.PI) * 1.4F * limbSwingAmount;
         this.leg4.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+
+        if (entity instanceof RocketCreepieEntity rocketCreepie) {
+            this.animate(rocketCreepie.launchAnimationState, RocketCreepieAnimations.ROCKET, ageInTicks);
+        }
     }
 }

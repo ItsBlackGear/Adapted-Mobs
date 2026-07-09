@@ -34,10 +34,11 @@ public class SupportSporesCloud extends CreeperSpores {
     protected Creepie createCreepie(Vec3 pos) {
         SupportCreepieEntity creepie = new SupportCreepieEntity(
                 (EntityType<? extends Creepie>) (EntityType<?>) AMEntityTypes.SUPPORT_CREEPIE.get(), this.level());
+        creepie.setOwner(this.getOwner());
+        this.initializeCreepie(creepie);
         if (friendly) {
             creepie.setVariant(this.random.nextBoolean()
                     ? SupportCreepieEntity.Variant.SPEED : SupportCreepieEntity.Variant.STRENGTH);
-            creepie.setOwner(this.getOwner());
         } else {
             creepie.setVariant(this.random.nextBoolean()
                     ? SupportCreepieEntity.Variant.SLOWNESS : SupportCreepieEntity.Variant.WEAKNESS);

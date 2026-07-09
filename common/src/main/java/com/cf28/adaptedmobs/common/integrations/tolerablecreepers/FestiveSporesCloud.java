@@ -25,10 +25,13 @@ public class FestiveSporesCloud extends CreeperSpores {
         return AMParticles.FESTIVE_SPORES.get();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Creepie createCreepie(Vec3 pos) {
         FestiveCreepieEntity creepie = new FestiveCreepieEntity(
                 (EntityType<? extends Creepie>) (EntityType<?>) AMEntityTypes.FESTIVE_CREEPIE.get(), this.level());
+        creepie.setOwner(this.getOwner());
+        this.initializeCreepie(creepie);
         creepie.setPos(pos);
         return creepie;
     }
