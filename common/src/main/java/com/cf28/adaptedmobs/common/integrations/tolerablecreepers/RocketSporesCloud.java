@@ -30,7 +30,6 @@ public class RocketSporesCloud extends CreeperSpores {
     protected Creepie createCreepie(Vec3 pos) {
         RocketCreepieEntity creepie = new RocketCreepieEntity(
                 (EntityType<? extends Creepie>) (EntityType<?>) AMEntityTypes.ROCKET_CREEPIE.get(), this.level());
-        creepie.setOwner(this.getOwner());
         this.initializeCreepie(creepie);
         creepie.setPos(pos);
         return creepie;

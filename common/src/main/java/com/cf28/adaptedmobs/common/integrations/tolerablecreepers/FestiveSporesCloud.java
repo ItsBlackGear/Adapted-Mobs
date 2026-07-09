@@ -30,7 +30,6 @@ public class FestiveSporesCloud extends CreeperSpores {
     protected Creepie createCreepie(Vec3 pos) {
         FestiveCreepieEntity creepie = new FestiveCreepieEntity(
                 (EntityType<? extends Creepie>) (EntityType<?>) AMEntityTypes.FESTIVE_CREEPIE.get(), this.level());
-        creepie.setOwner(this.getOwner());
         this.initializeCreepie(creepie);
         creepie.setPos(pos);
         return creepie;
