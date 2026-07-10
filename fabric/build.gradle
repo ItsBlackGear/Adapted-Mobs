@@ -17,7 +17,7 @@ dependencies {
     modRuntimeOnly "dev.emi:emi-fabric:${emi_version}"
 
     // modImplementation "maven.modrinth:tolerable-creepers:${tolerable_creepers_version}-fabric"
-    modImplementation "com.evandev.tolerable_creepers:tolerable-creepers-fabric:2.2.4-local"
+    modImplementation "com.evandev.tolerable_creepers:tolerable-creepers-fabric:2.2.4-pre1-local"
 
     // YACL
     modImplementation "maven.modrinth:yacl:${yacl_version}-fabric"

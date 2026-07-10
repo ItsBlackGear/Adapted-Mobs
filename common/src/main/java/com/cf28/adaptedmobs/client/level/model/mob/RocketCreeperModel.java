@@ -62,7 +62,7 @@ public class RocketCreeperModel<T extends RocketCreeper> extends AgeableHierarch
         this.rightFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F + Mth.PI) * 1.4F * limbSwingAmount;
         this.leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
-        this.animate(entity.attackAnimationState, RocketCreeperAnimations.ROCKET, ageInTicks);
+        this.animate(entity.attackAnimationState, RocketCreeperAnimations.ROCKET, ageInTicks, entity.getRocketAnimationSpeed());
         this.animate(entity.sitDownAnimationState, RocketCreeperAnimations.SIT_DOWN, ageInTicks);
         this.animate(entity.sitUpAnimationState, RocketCreeperAnimations.SIT_UP, ageInTicks);
 
