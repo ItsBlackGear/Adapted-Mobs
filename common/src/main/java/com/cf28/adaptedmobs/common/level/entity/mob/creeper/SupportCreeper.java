@@ -138,7 +138,7 @@ public class SupportCreeper extends TamableCreeper {
     @Override
     protected void postExplosion() {
         super.postExplosion();
-        if (!this.level().isClientSide() && TolerableCreepersCompat.isLoaded()) {
+        if (!this.level().isClientSide() && !this.isTame() && TolerableCreepersCompat.isLoaded()) {
             Entity spores = TolerableCreepersIntegration.createSupportSporesFromCreeper(this.level(), this);
             this.level().addFreshEntity(spores);
         }
@@ -147,6 +147,15 @@ public class SupportCreeper extends TamableCreeper {
     @Override
     protected ResourceKey<LootTable> getExplosionLootTable() {
         return TolerableCreepersCompat.isLoaded() ? AM_EXPLODE_LOOT_TABLE : null;
+    }
+
+    @Override
+    public float getExplosionDamageMultiplier() {
+        if (TolerableCreepersCompat.isLoaded() && AdaptedMobs.CONFIG.debuffSupportCreeperExplosionDamage.get()) {
+            return 0.5F;
+        }
+
+        return super.getExplosionDamageMultiplier();
     }
 
     @Override

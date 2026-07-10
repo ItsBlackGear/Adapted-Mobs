@@ -16,4 +16,5 @@ public class AMParticles {
     public static final Supplier<SimpleParticleType> SUPPORTED_BLUE = REGISTRIES.register("supported_blue", false);
     public static final Supplier<SimpleParticleType> SUPPORTED_YELLOW = REGISTRIES.register("supported_yellow", false);
     public static final Supplier<SimpleParticleType> SUPPORTED_GREY = REGISTRIES.register("supported_grey", false);
+    public static final Supplier<SimpleParticleType> CREEPER_HEAL = REGISTRIES.register("creeper_heal", false);
 }

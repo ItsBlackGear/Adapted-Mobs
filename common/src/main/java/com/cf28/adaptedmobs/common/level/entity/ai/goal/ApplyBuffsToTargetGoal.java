@@ -3,6 +3,10 @@ package com.cf28.adaptedmobs.common.level.entity.ai.goal;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.CreeperState;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.TamableCreeper;
+import com.cf28.adaptedmobs.common.registries.AMParticles;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -73,6 +77,8 @@ public class ApplyBuffsToTargetGoal extends Goal {
                 return;
             }
 
+            this.spawnSupportParticles(this.target);
+
             int amplification = this.boosted ? 1 : 0;
             if (!this.target.hasEffect(MobEffects.MOVEMENT_SPEED) || !this.target.hasEffect(MobEffects.DAMAGE_BOOST)) {
                 if (!this.playingAnimation) {
@@ -82,8 +88,8 @@ public class ApplyBuffsToTargetGoal extends Goal {
                 }
 
                 if (this.animationTimer == 0) {
-                    this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, amplification), this.mob);
-                    this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, amplification), this.mob);
+                    this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, amplification, false, false), this.mob);
+                    this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, amplification, false, false), this.mob);
                     this.mob.setState(CreeperState.IDLING);
                     this.playingAnimation = false;
                 } else {
@@ -104,6 +110,19 @@ public class ApplyBuffsToTargetGoal extends Goal {
             this.mob.getNavigation().stop();
             this.mob.setState(CreeperState.IDLING);
         }
+    }
+
+    private void spawnSupportParticles(LivingEntity target) {
+        if (!(this.mob.level() instanceof ServerLevel serverLevel)) return;
+
+        RandomSource random = this.mob.getRandom();
+        if (random.nextInt(3) != 0) return;
+
+        SimpleParticleType particle = random.nextBoolean() ? AMParticles.SUPPORTED_YELLOW.get() : AMParticles.SUPPORTED_RED.get();
+        double x = target.getX() + (random.nextDouble() - 0.5) * target.getBbWidth();
+        double y = target.getY() + random.nextDouble() * target.getBbHeight();
+        double z = target.getZ() + (random.nextDouble() - 0.5) * target.getBbWidth();
+        serverLevel.sendParticles(particle, x, y, z, 1, 0.0, 0.05, 0.0, 0.0);
     }
 
     @Nullable

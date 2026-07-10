@@ -79,7 +79,7 @@ public class RocketCreeper extends TamableCreeper {
     protected void postExplosion() {
         super.postExplosion();
         this.setRocket(false);
-        if (!this.level().isClientSide() && TolerableCreepersCompat.isLoaded()) {
+        if (!this.level().isClientSide() && !this.isTame() && TolerableCreepersCompat.isLoaded()) {
             Entity spores = TolerableCreepersIntegration.createRocketSporesFromCreeper(this.level(), this);
             this.level().addFreshEntity(spores);
         }
@@ -215,6 +215,10 @@ public class RocketCreeper extends TamableCreeper {
 
     @Override
     public float getExplosionDamageMultiplier() {
+        if (TolerableCreepersCompat.isLoaded() && AdaptedMobs.CONFIG.debuffRocketCreeperExplosionDamage.get()) {
+            return 0.75F;
+        }
+
         return 1.5F;
     }
 

@@ -6,6 +6,7 @@ import com.blackgear.platform.core.events.ResourcePackManager;
 import com.cf28.adaptedmobs.client.integrations.CreativeTabIntegrations;
 import com.cf28.adaptedmobs.client.integrations.EntityRenderer;
 import com.cf28.adaptedmobs.client.integrations.ItemLikeRenderer;
+import com.cf28.adaptedmobs.client.particle.AMFlowerParticle;
 import com.cf28.adaptedmobs.client.particle.AMSporeParticle;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
@@ -24,10 +25,11 @@ public class ClientSetup {
         event.register(AMParticles.FESTIVE_TNT_PARTICLETRAIL, AMSporeParticle.Provider::new);
         event.register(AMParticles.FESTIVE_SPORES, AMSporeParticle.Provider::new);
         event.register(AMParticles.ROCKET_SPORES, AMSporeParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_RED, AMSporeParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_BLUE, AMSporeParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_YELLOW, AMSporeParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_GREY, AMSporeParticle.Provider::new);
+        event.register(AMParticles.SUPPORTED_RED, AMFlowerParticle.Provider::new);
+        event.register(AMParticles.SUPPORTED_BLUE, AMFlowerParticle.Provider::new);
+        event.register(AMParticles.SUPPORTED_YELLOW, AMFlowerParticle.Provider::new);
+        event.register(AMParticles.SUPPORTED_GREY, AMFlowerParticle.Provider::new);
+        event.register(AMParticles.CREEPER_HEAL, AMFlowerParticle.Provider::new);
     }
 
     public static void asyncSetup(ParallelDispatch dispatch) {

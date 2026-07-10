@@ -13,11 +13,13 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> supportCreeperSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> supportCreeperExtraSpawnWeight;
     public final ConfigBuilder.ConfigValue<Boolean> preventSupportCreeperBlockDamage;
+    public final ConfigBuilder.ConfigValue<Boolean> debuffSupportCreeperExplosionDamage;
 
     public final ConfigBuilder.ConfigValue<Boolean> spawnRocketCreepers;
     public final ConfigBuilder.ConfigValue<Integer> rocketCreeperSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> rocketCreeperExtraSpawnWeight;
     public final ConfigBuilder.ConfigValue<Boolean> preventRocketCreeperBlockDamage;
+    public final ConfigBuilder.ConfigValue<Boolean> debuffRocketCreeperExplosionDamage;
 
     public final ConfigBuilder.ConfigValue<Integer> festiveSporeCountDayBase;
     public final ConfigBuilder.ConfigValue<Integer> festiveSporeCountDayRandom;
@@ -51,6 +53,8 @@ public class CommonConfig {
         this.supportCreeperExtraSpawnWeight = builder.comment("Determines how often do Support Creepers spawn in extra biomes").defineInRange("Support Creeper Extra Spawn Weight", 50, 0, 100);
         this.preventSupportCreeperBlockDamage = builder.comment("Requires Tolerable Creepers. Prevents Support Creeper explosions from damaging blocks and spawns a Support Creeper spore cloud instead")
                 .define("Prevent Support Creeper Block Damage", true);
+        this.debuffSupportCreeperExplosionDamage = builder.comment("Requires Tolerable Creepers. Halves the damage Support Creeper explosions deal to entities")
+                .define("Debuff Support Creeper Explosion Damage", true);
         builder.pop();
         
         builder.push("Rocket Creeper");
@@ -59,6 +63,8 @@ public class CommonConfig {
         this.rocketCreeperExtraSpawnWeight = builder.comment("Determines how often do Rocket Creepers spawn in extra biomes").defineInRange("Rocket Creeper Extra Spawn Weight", 50, 0, 100);
         this.preventRocketCreeperBlockDamage = builder.comment("Requires Tolerable Creepers. Prevents Rocket Creeper explosions from damaging blocks and spawns a Rocket Creeper spore cloud instead")
                 .define("Prevent Rocket Creeper Block Damage", true);
+        this.debuffRocketCreeperExplosionDamage = builder.comment("Requires Tolerable Creepers. Halves the damage Rocket Creeper explosions deal to entities")
+                .define("Debuff Rocket Creeper Explosion Damage", true);
         builder.pop();
 
         builder.push("Festive Creeper Spores");

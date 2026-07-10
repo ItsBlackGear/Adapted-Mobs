@@ -1,10 +1,10 @@
 package com.cf28.adaptedmobs.common.level.entity.mob.creeper;
 
-
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperFollowOwnerGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperOwnerHurtTargetGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperSitWhenOrderedToGoal;
 import com.cf28.adaptedmobs.common.registries.AMEntityDataSerializers;
+import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.tags.AMItemTags;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,11 +31,14 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -364,6 +367,27 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                 particles,
                 SoundEvents.GENERIC_EXPLODE
         );
+        this.spawnExplosionRadiusParticles(radius);
+    }
+
+    private void spawnExplosionRadiusParticles(float radius) {
+        if (!(this.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        Vec3 center = this.position().add(0.0, 0.5, 0.0);
+        int count = Math.round(radius * radius * 6.0F);
+        for (int i = 0; i < count; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0;
+            double phi = Math.acos(2.0 * this.random.nextDouble() - 1.0);
+            double dist = radius * Math.cbrt(this.random.nextDouble());
+            double dx = dist * Math.sin(phi) * Math.cos(theta);
+            double dy = dist * Math.sin(phi) * Math.sin(theta);
+            double dz = dist * Math.cos(phi);
+            Vec3 pos = center.add(dx, dy, dz);
+            if (this.level().clip(new ClipContext(center, pos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS) {
+                serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 1, 0.0, 0.0, 0.0, 0.0);
+            }
+        }
     }
 
     public float getExplosionDamageMultiplier() {
@@ -602,6 +626,9 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
                     }
 
                     this.heal(5);
+                    ((ServerLevel) this.level()).sendParticles(AMParticles.CREEPER_HEAL.get(),
+                            this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0),
+                            4, 0.2, 0.2, 0.2, 0.0);
                     return InteractionResult.SUCCESS;
                 }
 

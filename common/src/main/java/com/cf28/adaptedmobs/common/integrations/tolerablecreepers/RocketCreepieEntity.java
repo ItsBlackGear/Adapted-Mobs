@@ -116,6 +116,11 @@ public class RocketCreepieEntity extends Creepie {
     }
 
     @Override
+    public void setSwellDir(int swellDir) {
+        super.setSwellDir(-1);
+    }
+
+    @Override
     public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
         if (this.isRocketing()) {
             this.setDeltaMovement(Vec3.ZERO);
