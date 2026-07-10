@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.common.level.entity.mob.creeper;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
+import com.cf28.adaptedmobs.common.util.RocketFlightMath;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
@@ -36,6 +37,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -45,7 +47,11 @@ public class RocketCreeper extends TamableCreeper {
     private static final ResourceKey<LootTable> AM_EXPLODE_LOOT_TABLE =
             ResourceKey.create(Registries.LOOT_TABLE,
                     ResourceLocation.fromNamespaceAndPath(AdaptedMobs.MOD_ID, "entities/rocket_creeper_explode"));
+    private static final float ROTATION_TICKS = 30.8335F;
+    private static final float ROCKET_ANIMATION_SPEED = ROTATION_TICKS / RocketFlightMath.predictFlightTicks(1.2);
+    private static final int LANDING_DELAY = 4;
     private int timeBeforeJumping;
+    private int landingTimer = -1;
 
     public RocketCreeper(EntityType<? extends TamableCreeper> entityType, Level level) {
         super(entityType, level);
@@ -59,6 +65,14 @@ public class RocketCreeper extends TamableCreeper {
     @Override
     protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
         return super.calculateFallDamage(fallDistance, damageMultiplier) - 10;
+    }
+
+    @Override
+    public void ignite() {
+        super.ignite();
+        if (!this.level().isClientSide() && this.onGround() && this.hasEnoughVerticalSpace()) {
+            this.performLaunch(this.getTarget());
+        }
     }
 
     @Override
@@ -95,7 +109,9 @@ public class RocketCreeper extends TamableCreeper {
     public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
         if (this.isRocket()) {
             this.setSwellDir(-1);
-            this.explodeCreeper();
+            this.setDeltaMovement(Vec3.ZERO);
+            this.landingTimer = LANDING_DELAY;
+            return false;
         }
 
         return super.causeFallDamage(fallDistance, multiplier, source);
@@ -119,7 +135,14 @@ public class RocketCreeper extends TamableCreeper {
         this.setupAnimations();
         super.tick();
 
-        this.launchTowardsTarget();
+        if (this.landingTimer >= 0) {
+            if (this.landingTimer-- == 0) {
+                this.explodeCreeper();
+            }
+        } else {
+            this.launchTowardsTarget();
+        }
+
         if (this.level().isClientSide && this.isRocket()) {
             this.spawnSmokeParticles();
         }
@@ -144,13 +167,26 @@ public class RocketCreeper extends TamableCreeper {
         }
 
         if (this.shouldRocket() && target != null) {
-            this.setState(CreeperState.ATTACKING);
-            this.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0F, 0.5F);
-            this.setDeltaMovement((target.getX() - this.getX()) / 6.0D, 1.2D, (target.getZ() - this.getZ()) / 6.0D);
-
-            this.setRocket(true);
-            this.fallDistance = 0.0F;
+            this.performLaunch(target);
         }
+    }
+
+    private void performLaunch(LivingEntity target) {
+        this.setState(CreeperState.ATTACKING);
+        this.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0F, 0.5F);
+        if (target != null) {
+            this.setDeltaMovement((target.getX() - this.getX()) / 6.0D, 1.2D, (target.getZ() - this.getZ()) / 6.0D);
+        } else {
+            this.setDeltaMovement(0.0D, 1.2D, 0.0D);
+        }
+
+        this.setRocket(true);
+        this.fallDistance = 0.0F;
+        this.hasImpulse = true;
+    }
+
+    public float getRocketAnimationSpeed() {
+        return ROCKET_ANIMATION_SPEED;
     }
 
     private boolean shouldRocket() {

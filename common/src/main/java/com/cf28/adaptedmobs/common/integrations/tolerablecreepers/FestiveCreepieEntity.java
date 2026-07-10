@@ -1,12 +1,15 @@
 package com.cf28.adaptedmobs.common.integrations.tolerablecreepers;
 
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
+import com.cf28.adaptedmobs.common.level.entity.ai.goal.SwellNearAnyEntityGoal;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class FestiveCreepieEntity extends Creepie {
@@ -22,20 +25,24 @@ public class FestiveCreepieEntity extends Creepie {
     }
 
     @Override
+    public boolean canFight() {
+        return false;
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new SwellNearAnyEntityGoal(this, 3.0));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+    }
+
+    @Override
     public void setAge(int age) {
         if (!this.level().isClientSide() && age >= 0) {
             this.convertTo(AMEntityTypes.FESTIVE_CREEPER.get(), false);
             return;
         }
         super.setAge(age);
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-        this.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
-        this.getBrain().eraseMemory(MemoryModuleType.NEAREST_ATTACKABLE);
-        this.setAggressive(false);
     }
 
     @Override

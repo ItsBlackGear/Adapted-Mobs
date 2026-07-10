@@ -62,7 +62,7 @@ public class RocketCreepieModel<T extends Entity> extends HierarchicalModel<T> {
         this.leg4.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
         if (entity instanceof RocketCreepieEntity rocketCreepie) {
-            this.animate(rocketCreepie.launchAnimationState, RocketCreepieAnimations.ROCKET, ageInTicks);
+            this.animate(rocketCreepie.launchAnimationState, RocketCreepieAnimations.ROCKET, ageInTicks, rocketCreepie.getLaunchSpeed());
         }
     }
 }

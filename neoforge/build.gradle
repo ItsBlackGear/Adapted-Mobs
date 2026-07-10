@@ -44,7 +44,7 @@ dependencies {
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
     // implementation "maven.modrinth:tolerable-creepers:${tolerable_creepers_version}-neoforge"
-    implementation "com.evandev.tolerable_creepers:tolerable-creepers-neoforge:2.2.4-local"
+    implementation "com.evandev.tolerable_creepers:tolerable-creepers-neoforge:2.2.4-pre1-local"
 
     implementation "maven.modrinth:yacl:${yacl_version}-neoforge"
 }
