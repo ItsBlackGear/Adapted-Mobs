@@ -1,7 +1,6 @@
 package com.cf28.adaptedmobs.common.integrations.tolerablecreepers;
 
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
-import com.cf28.adaptedmobs.common.level.entity.ai.goal.SwellNearAnyEntityGoal;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
@@ -13,10 +12,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class FestiveCreepieEntity extends Creepie {
+    private static final int LANDED_FUSE_TICKS = 40;
+
+    private boolean hasLanded;
+    private int landedTicks;
+
     public FestiveCreepieEntity(EntityType<? extends Creepie> type, Level level) {
         super(type, level);
         this.setAge(-24000);
-        this.setFuseTime(20);
     }
 
     @Override
@@ -31,9 +34,21 @@ public class FestiveCreepieEntity extends Creepie {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new SwellNearAnyEntityGoal(this, 3.0));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide() && this.isAlive()) {
+            if (!this.hasLanded && this.onGround()) {
+                this.hasLanded = true;
+            }
+            if (this.hasLanded && ++this.landedTicks >= LANDED_FUSE_TICKS) {
+                this.explodeCustom();
+            }
+        }
     }
 
     @Override
