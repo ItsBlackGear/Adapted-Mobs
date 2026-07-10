@@ -46,6 +46,7 @@ public final class AMConfigScreen {
                 .option(boolOption(values, "spawn_support_creepers", true, config.spawnSupportCreepers))
                 .option(intOption(values, "support_creeper_spawn_weight", 20, 0, 100, config.supportCreeperSpawnWeight))
                 .option(intOption(values, "support_creeper_extra_spawn_weight", 50, 0, 100, config.supportCreeperExtraSpawnWeight))
+                .option(boolOption(values, "prevent_support_creeper_block_damage", true, config.preventSupportCreeperBlockDamage))
                 .option(intOption(values, "support_spore_count_day_base", 1, 0, 100, config.supportSporeCountDayBase))
                 .option(intOption(values, "support_spore_count_day_random", 2, 0, 100, config.supportSporeCountDayRandom))
                 .option(intOption(values, "support_spore_count_night_base", 3, 0, 100, config.supportSporeCountNightBase))

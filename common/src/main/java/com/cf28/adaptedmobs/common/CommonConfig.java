@@ -12,6 +12,7 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Boolean> spawnSupportCreepers;
     public final ConfigBuilder.ConfigValue<Integer> supportCreeperSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> supportCreeperExtraSpawnWeight;
+    public final ConfigBuilder.ConfigValue<Boolean> preventSupportCreeperBlockDamage;
 
     public final ConfigBuilder.ConfigValue<Boolean> spawnRocketCreepers;
     public final ConfigBuilder.ConfigValue<Integer> rocketCreeperSpawnWeight;
@@ -48,6 +49,8 @@ public class CommonConfig {
         this.spawnSupportCreepers = builder.comment("Determines if Support Creepers should spawn").define("Spawn Support Creepers", true);
         this.supportCreeperSpawnWeight = builder.comment("Determines how often do Support Creepers spawn").defineInRange("Support Creeper Spawn Weight", 20, 0, 100);
         this.supportCreeperExtraSpawnWeight = builder.comment("Determines how often do Support Creepers spawn in extra biomes").defineInRange("Support Creeper Extra Spawn Weight", 50, 0, 100);
+        this.preventSupportCreeperBlockDamage = builder.comment("Requires Tolerable Creepers. Prevents Support Creeper explosions from damaging blocks and spawns a Support Creeper spore cloud instead")
+                .define("Prevent Support Creeper Block Damage", true);
         builder.pop();
         
         builder.push("Rocket Creeper");

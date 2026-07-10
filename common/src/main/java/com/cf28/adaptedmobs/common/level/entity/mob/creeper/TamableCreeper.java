@@ -6,6 +6,7 @@ import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperOwnerHurtTargetGo
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.CreeperSitWhenOrderedToGoal;
 import com.cf28.adaptedmobs.common.registries.AMEntityDataSerializers;
 import com.cf28.adaptedmobs.core.tags.AMItemTags;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -336,15 +338,7 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
             if (this.isTame()) {
                 if (!this.level().isClientSide()) {
                     float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
-                    this.level().explode(
-                            this,
-                            this.getX(),
-                            this.getY(),
-                            this.getZ(),
-                            (float) this.explosionRadius * explosionMultiplier,
-                            Level.ExplosionInteraction.NONE
-                    );
-
+                    this.explodeWithoutBlockDamage((float) this.explosionRadius * explosionMultiplier);
                     this.postExplosion();
                 }
             } else {
@@ -354,6 +348,22 @@ public class TamableCreeper extends Creeper implements OwnableEntity {
         } else {
             this.postExplosion();
         }
+    }
+
+    protected void explodeWithoutBlockDamage(float radius) {
+        ParticleOptions particles = radius >= 2.0F ? ParticleTypes.EXPLOSION_EMITTER : ParticleTypes.EXPLOSION;
+        this.level().explode(
+                this,
+                Explosion.getDefaultDamageSource(this.level(), this),
+                null,
+                this.getX(), this.getY(), this.getZ(),
+                radius,
+                false,
+                Level.ExplosionInteraction.NONE,
+                particles,
+                particles,
+                SoundEvents.GENERIC_EXPLODE
+        );
     }
 
     public float getExplosionDamageMultiplier() {

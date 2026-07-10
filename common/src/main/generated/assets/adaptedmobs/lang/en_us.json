@@ -22,6 +22,7 @@
   "config.adaptedmobs.option.festive_spore_count_night_base": "Festive Spore Count Night Base",
   "config.adaptedmobs.option.festive_spore_count_night_random": "Festive Spore Count Night Random",
   "config.adaptedmobs.option.prevent_rocket_creeper_block_damage": "Prevent Rocket Creeper Block Damage",
+  "config.adaptedmobs.option.prevent_support_creeper_block_damage": "Prevent Support Creeper Block Damage",
   "config.adaptedmobs.option.rocket_creeper_extra_spawn_weight": "Rocket Creeper Extra Spawn Weight",
   "config.adaptedmobs.option.rocket_creeper_spawn_weight": "Rocket Creeper Spawn Weight",
   "config.adaptedmobs.option.rocket_spore_count_day_base": "Rocket Spore Count Day Base",

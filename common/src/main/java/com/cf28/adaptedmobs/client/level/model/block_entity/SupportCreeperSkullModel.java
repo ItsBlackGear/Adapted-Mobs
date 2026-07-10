@@ -5,17 +5,18 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import org.jetbrains.annotations.NotNull;
 
-public class RocketCreeperSkullModel extends SkullModelBase {
+public class SupportCreeperSkullModel extends SkullModelBase {
     protected final ModelPart head;
     private final ModelPart root;
 
-    public RocketCreeperSkullModel(ModelPart root) {
+    public SupportCreeperSkullModel(ModelPart root) {
         this.root = root;
         this.head = root.getChild("head");
     }
@@ -23,14 +24,20 @@ public class RocketCreeperSkullModel extends SkullModelBase {
     public static LayerDefinition createMobHeadLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        PartDefinition head = root.addOrReplaceChild(
+
+        root.addOrReplaceChild(
                 "head",
                 CubeListBuilder.create()
-                        .texOffs(0, 0).addBox(-4.0F, -11.0F, -4.0F, 8.0F, 11.0F, 8.0F)
-                        .texOffs(32, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F),
+                        .texOffs(0, 0)
+                        .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F)
+                        .texOffs(32, 48)
+                        .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.5F))
+                        .texOffs(0, 58)
+                        .addBox(-2.0F, -10.0F, -2.0F, 4.0F, 2.0F, 4.0F)
+                        .texOffs(32, 0)
+                        .addBox(-4.0F, -5.0F, -9.0F, 8.0F, 5.0F, 5.0F),
                 PartPose.ZERO
         );
-        head.addOrReplaceChild("head_r1", CubeListBuilder.create().texOffs(34, 19).addBox(-1.0F, -7.0F, 0.0F, 12.0F, 19.0F, 0.0F), PartPose.offsetAndRotation(0.0F, -11.0F, 0.0F, 0.0F, -1.2217F, 0.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }

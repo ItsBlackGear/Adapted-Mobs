@@ -23,13 +23,21 @@ public class FestiveCreeperSkullModel extends SkullModelBase {
     public static LayerDefinition createMobHeadLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        root.addOrReplaceChild(
+        PartDefinition head = root.addOrReplaceChild(
                 "head",
                 CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(-5.0F, -8.0F, -4.0F, 10.0F, 8.0F, 8.0F),
                 PartPose.ZERO
         );
+        head.addOrReplaceChild("head_r1", CubeListBuilder.create().texOffs(28, 0).addBox(-6.0F, -2.0F, 0.0F, 10.0F, 2.0F, 0.0F), PartPose.offsetAndRotation(1.0F, -8.0F, 4.0F, -0.7854F, 0.0F, 0.0F));
+        head.addOrReplaceChild("head_r2", CubeListBuilder.create().texOffs(28, 0).addBox(-7.0F, -2.0F, 0.0F, 10.0F, 2.0F, 0.0F), PartPose.offsetAndRotation(2.0F, -8.0F, -4.0F, 0.7854F, 0.0F, 0.0F));
+        head.addOrReplaceChild("head_r3", CubeListBuilder.create().texOffs(28, -6).addBox(0.0F, -2.0F, -4.0F, 0.0F, 2.0F, 8.0F), PartPose.offsetAndRotation(5.0F, -8.0F, 0.0F, 0.0F, 0.0F, 0.7854F));
+        head.addOrReplaceChild("head_r4", CubeListBuilder.create().texOffs(28, -6).addBox(0.0F, -2.0F, -3.0F, 0.0F, 2.0F, 8.0F), PartPose.offsetAndRotation(-5.0F, -8.0F, -1.0F, 0.0F, 0.0F, -0.7854F));
+        head.addOrReplaceChild("head_r5", CubeListBuilder.create().texOffs(36, 8).addBox(-2.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, 0.0F, 4.0F, 0.0F, 0.7854F, 0.0F));
+        head.addOrReplaceChild("head_r6", CubeListBuilder.create().texOffs(36, 8).mirror().addBox(0.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F).mirror(false), PartPose.offsetAndRotation(5.0F, 0.0F, 4.0F, 0.0F, -0.7854F, 0.0F));
+        head.addOrReplaceChild("head_r7", CubeListBuilder.create().texOffs(36, 8).addBox(-2.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, 0.0F, -4.0F, 0.0F, -0.7854F, 0.0F));
+        head.addOrReplaceChild("head_r8", CubeListBuilder.create().texOffs(36, 8).mirror().addBox(0.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F).mirror(false), PartPose.offsetAndRotation(5.0F, 0.0F, -4.0F, 0.0F, 0.7854F, 0.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }

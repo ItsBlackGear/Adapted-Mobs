@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.client.integrations;
 import com.cf28.adaptedmobs.client.level.model.block_entity.FestiveCreeperSkullModel;
 import com.cf28.adaptedmobs.client.level.model.block_entity.PeeperCreeperSkullModel;
 import com.cf28.adaptedmobs.client.level.model.block_entity.RocketCreeperSkullModel;
+import com.cf28.adaptedmobs.client.level.model.block_entity.SupportCreeperSkullModel;
 import com.cf28.adaptedmobs.client.level.model.mob.*;
 import com.cf28.adaptedmobs.client.level.renderer.mob.*;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
@@ -12,7 +13,6 @@ import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -77,7 +77,7 @@ public class EntityRenderer {
         event.register(AMModelLayers.FESTIVE_CREEPER_CLOTH, () -> FestiveCreeperModel.createBodyLayer(cloth));
 
         event.register(AMModelLayers.SUPPORT_CREEPER, () -> SupportCreeperModel.createBodyLayer(none));
-        event.register(AMModelLayers.SUPPORT_CREEPER_SKULL, SkullModel::createHumanoidHeadLayer);
+        event.register(AMModelLayers.SUPPORT_CREEPER_SKULL, SupportCreeperSkullModel::createMobHeadLayer);
         event.register(AMModelLayers.SUPPORT_CREEPER_ARMOR, () -> SupportCreeperModel.createBodyLayer(armor));
         event.register(AMModelLayers.SUPPORT_CREEPER_CLOTH, () -> SupportCreeperModel.createBodyLayer(cloth));
 

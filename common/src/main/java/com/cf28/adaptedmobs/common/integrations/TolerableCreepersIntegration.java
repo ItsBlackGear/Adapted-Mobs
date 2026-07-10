@@ -32,11 +32,17 @@ public class TolerableCreepersIntegration {
     }
 
     public static void spawnParticleRing(ServerLevel level, SimpleParticleType particle, Vec3 center, double radius, int count) {
+        spawnParticleRing(level, level.getRandom(), center, radius, count, particle, particle, 0.0F);
+    }
+
+    public static void spawnParticleRing(ServerLevel level, RandomSource random, Vec3 center, double radius, int count,
+                                         SimpleParticleType primary, SimpleParticleType secondary, float secondaryChance) {
         for (int i = 0; i < count; i++) {
             double angle = 2 * Math.PI * i / count;
-            double x = center.x() + Math.cos(angle) * radius;
-            double z = center.z() + Math.sin(angle) * radius;
-            level.sendParticles(particle, x, center.y(), z, 1, 0.0, 0.0, 0.0, 0.0);
+            double xVel = Math.cos(angle) * radius * 0.4;
+            double zVel = Math.sin(angle) * radius * 0.4;
+            SimpleParticleType particle = random.nextFloat() < secondaryChance ? secondary : primary;
+            level.sendParticles(particle, center.x(), center.y(), center.z(), 0, xVel, 0.05, zVel, 1.0);
         }
     }
 
@@ -155,7 +161,7 @@ public class TolerableCreepersIntegration {
             spores.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
             spores.setOwner(player);
             spores.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
-            spores.setCloudSizeDirect(cloudSize);
+            spores.setCloudSizeDirect(3 + random.nextInt(3));
             return spores;
         }
     }

@@ -122,6 +122,20 @@ public class SupportCreeper extends TamableCreeper {
     }
 
     @Override
+    protected void explodeCreeper() {
+        if (this.shouldSwell() && !this.isTame() && TolerableCreepersCompat.isLoaded() && AdaptedMobs.CONFIG.preventSupportCreeperBlockDamage.get()) {
+            if (!this.level().isClientSide()) {
+                float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
+                this.explodeWithoutBlockDamage((float) this.explosionRadius * explosionMultiplier);
+                this.discard();
+                this.postExplosion();
+            }
+        } else {
+            super.explodeCreeper();
+        }
+    }
+
+    @Override
     protected void postExplosion() {
         super.postExplosion();
         if (!this.level().isClientSide() && TolerableCreepersCompat.isLoaded()) {

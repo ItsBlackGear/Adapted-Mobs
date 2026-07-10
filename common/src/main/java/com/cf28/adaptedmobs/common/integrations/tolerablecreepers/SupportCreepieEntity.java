@@ -5,10 +5,17 @@ import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
+import com.evandev.tolerable_creepers.core.registry.TCParticles;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,11 +23,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class SupportCreepieEntity extends Creepie {
-    private static final double BUFF_RANGE_SQR = 2.25;
+    private static final EntityDataAccessor<Integer> DATA_VARIANT =
+            SynchedEntityData.defineId(SupportCreepieEntity.class, EntityDataSerializers.INT);
 
-    private Variant variant = Variant.SPEED;
+    private static final double BUFF_RANGE_SQR = 2.25;
+    private static final double BUFF_SEEK_RANGE = 16.0;
+    private static final float RING_SPORE_CHANCE = 0.35F;
 
     public SupportCreepieEntity(EntityType<? extends Creepie> type, Level level) {
         super(type, level);
@@ -28,12 +39,18 @@ public class SupportCreepieEntity extends Creepie {
         this.setFuseTime(24);
     }
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_VARIANT, Variant.SPEED.ordinal());
+    }
+
     public Variant getVariant() {
-        return variant;
+        return Variant.values()[this.entityData.get(DATA_VARIANT)];
     }
 
     public void setVariant(Variant v) {
-        this.variant = v;
+        this.entityData.set(DATA_VARIANT, v.ordinal());
         if (v == Variant.SPEED || v == Variant.STRENGTH) {
             this.setFuseTime(100);
             this.ignite();
@@ -43,13 +60,18 @@ public class SupportCreepieEntity extends Creepie {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        Variant variant = this.getVariant();
         if (variant != Variant.SPEED && variant != Variant.STRENGTH) {
             return;
         }
 
         Entity owner = this.getOwner();
         if (owner == null) {
-            this.explodeCustom();
+            owner = this.level().getNearestPlayer(this, BUFF_SEEK_RANGE);
+        }
+
+        if (owner == null) {
+            return;
         } else if (this.distanceToSqr(owner) <= BUFF_RANGE_SQR) {
             this.explodeCustom();
         } else if (this.getNavigation().isDone()) {
@@ -71,15 +93,18 @@ public class SupportCreepieEntity extends Creepie {
         if (this.level().isClientSide()) return;
         this.dead = true;
         ServerLevel sl = (ServerLevel) this.level();
+        Variant variant = this.getVariant();
 
         if (variant == Variant.SPEED || variant == Variant.STRENGTH) {
+            this.playBuffBurstEffects(sl);
             Holder<MobEffect> effect = variant == Variant.SPEED ? MobEffects.MOVEMENT_SPEED : MobEffects.DAMAGE_BOOST;
             for (Player p : this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(2.5))) {
                 p.addEffect(new MobEffectInstance(effect, 200, 0));
             }
             SimpleParticleType particle = variant == Variant.SPEED
-                    ? AMParticles.SUPPORTED_BLUE.get() : AMParticles.SUPPORTED_RED.get();
-            TolerableCreepersIntegration.spawnParticleRing(sl, particle, this.position().add(0.0, 0.1, 0.0), 0.6, 16);
+                    ? AMParticles.SUPPORTED_YELLOW.get() : AMParticles.SUPPORTED_RED.get();
+            TolerableCreepersIntegration.spawnParticleRing(sl, this.random, this.position().add(0.0, 0.1, 0.0), 0.6, 16,
+                    particle, TCParticles.CREEPER_SPORES.get(), RING_SPORE_CHANCE);
         } else {
             this.level().explode(this, this.getX(), this.getY(), this.getZ(), 1.5F, Level.ExplosionInteraction.NONE);
             Holder<MobEffect> debuff = variant == Variant.SLOWNESS ? MobEffects.MOVEMENT_SLOWDOWN : MobEffects.WEAKNESS;
@@ -88,10 +113,17 @@ public class SupportCreepieEntity extends Creepie {
             }
             SimpleParticleType particle = variant == Variant.SLOWNESS
                     ? AMParticles.SUPPORTED_BLUE.get() : AMParticles.SUPPORTED_GREY.get();
-            TolerableCreepersIntegration.spawnParticleRing(sl, particle, this.position().add(0.0, 0.1, 0.0), 0.6, 16);
+            TolerableCreepersIntegration.spawnParticleRing(sl, this.random, this.position().add(0.0, 0.1, 0.0), 0.6, 16,
+                    particle, TCParticles.CREEPER_SPORES.get(), RING_SPORE_CHANCE);
         }
 
         this.discard();
+    }
+
+    private void playBuffBurstEffects(ServerLevel level) {
+        level.sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(), this.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
+        level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE,
+                SoundSource.NEUTRAL, 2.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.7F);
     }
 
     public enum Variant {
