@@ -26,12 +26,18 @@ public class AMBlocks {
                     .noOcclusion()
                     .noLootTable());
 
-    public static final Pair<Supplier<Block>, Supplier<Block>> FESTIVE_CREEPER_HEAD = registerSkull("festive_creeper", SkullTypes.FESTIVE_CREEPER);
-    public static final Pair<Supplier<Block>, Supplier<Block>> SUPPORT_CREEPER_HEAD = registerSkull("support_creeper", SkullTypes.SUPPORT_CREEPER);
+    public static final Pair<Supplier<Block>, Supplier<Block>> FESTIVE_CREEPER_HEAD = registerSkull("festive_creeper", SkullTypes.FESTIVE_CREEPER,
+            FestiveCreeperSkullBlock::new,
+            WallFestiveCreeperSkullBlock::new);
+    public static final Pair<Supplier<Block>, Supplier<Block>> SUPPORT_CREEPER_HEAD = registerSkull("support_creeper", SkullTypes.SUPPORT_CREEPER,
+            SupportCreeperSkullBlock::new,
+            WallSupportCreeperSkullBlock::new);
     public static final Pair<Supplier<Block>, Supplier<Block>> ROCKET_CREEPER_HEAD = registerSkull("rocket_creeper", SkullTypes.ROCKET_CREEPER,
             RocketCreeperSkullBlock::new,
             WallRocketCreeperSkullBlock::new);
-    public static final Pair<Supplier<Block>, Supplier<Block>> PEEPER_CREEPER_HEAD = registerSkull("peeper_creeper", SkullTypes.PEEPER_CREEPER);
+    public static final Pair<Supplier<Block>, Supplier<Block>> PEEPER_CREEPER_HEAD = registerSkull("peeper_creeper", SkullTypes.PEEPER_CREEPER,
+            SupportCreeperSkullBlock::new,
+            WallSupportCreeperSkullBlock::new);
 
     public static final Supplier<Block> FESTIVE_SPORE_BARREL = REGISTRIES.registerNoItem("festive_spore_barrel",
             properties -> new AMSporeBarrelBlock(AMSporeBarrelBlock.SporeType.FESTIVE, properties),
@@ -57,10 +63,6 @@ public class AMBlocks {
         REGISTRIES.registerItem("festive_spore_barrel", () -> new BlockItem(FESTIVE_SPORE_BARREL.get(), new Item.Properties()));
         REGISTRIES.registerItem("rocket_spore_barrel", () -> new BlockItem(ROCKET_SPORE_BARREL.get(), new Item.Properties()));
         REGISTRIES.registerItem("support_spore_barrel", () -> new BlockItem(SUPPORT_SPORE_BARREL.get(), new Item.Properties()));
-    }
-
-    public static Pair<Supplier<Block>, Supplier<Block>> registerSkull(String name, SkullBlock.Type type) {
-        return registerSkull(name, type, AMSkullBlock::new, AMWallSkullBlock::new);
     }
 
     public static Pair<Supplier<Block>, Supplier<Block>> registerSkull(String name, SkullBlock.Type type, BiFunction<SkullBlock.Type, Properties, Block> base, BiFunction<SkullBlock.Type, Properties, Block> wall) {

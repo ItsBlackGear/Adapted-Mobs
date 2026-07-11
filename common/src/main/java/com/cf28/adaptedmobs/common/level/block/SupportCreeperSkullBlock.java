@@ -8,10 +8,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class RocketCreeperSkullBlock extends AMSkullBlock {
-    protected static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 11.0, 12.0);
+public class SupportCreeperSkullBlock extends AMSkullBlock {
+    protected static final VoxelShape SHAPE = Block.box(3.5, -0.5, 3.5, 12.5, 8.5, 12.5);
 
-    public RocketCreeperSkullBlock(Type type, Properties properties) {
+    public SupportCreeperSkullBlock(Type type, Properties properties) {
         super(type, properties);
     }
 

@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.level.entity.mob.creeper;
 
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.BackUpIfTooCloseGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.ThrowTntToTargetGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.pathfinding.move_control.BackUpMoveControl;
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -63,6 +65,20 @@ public class FestiveCreeper extends TamableCreeper {
     }
 
     @Override
+    protected void explodeCreeper() {
+        if (this.shouldSwell() && !this.isTame() && TolerableCreepersCompat.isLoaded() && AdaptedMobs.CONFIG.preventFestiveCreeperBlockDamage.get()) {
+            if (!this.level().isClientSide()) {
+                float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
+                this.explodeWithoutBlockDamage((float) this.explosionRadius * explosionMultiplier);
+                this.discard();
+                this.postExplosion();
+            }
+        } else {
+            super.explodeCreeper();
+        }
+    }
+
+    @Override
     protected ResourceKey<LootTable> getExplosionLootTable() {
         return TolerableCreepersCompat.isLoaded() ? AM_EXPLODE_LOOT_TABLE : null;
     }
@@ -73,8 +89,12 @@ public class FestiveCreeper extends TamableCreeper {
     }
 
     @Override
-    public boolean shouldSwell() {
-        return false;
+    protected void postExplosion() {
+        super.postExplosion();
+        if (!this.level().isClientSide() && !this.isTame() && TolerableCreepersCompat.isLoaded()) {
+            Entity spores = TolerableCreepersIntegration.createFestiveSporesFromCreeper(this.level(), this);
+            this.level().addFreshEntity(spores);
+        }
     }
 
     @Override

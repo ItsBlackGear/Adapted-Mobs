@@ -36,6 +36,7 @@ public class RocketCreepieEntity extends Creepie {
     private final int launchDelay;
     private int ticksAlive;
     private int landingTimer = -1;
+    private int flightTicksRemaining = -1;
 
     public RocketCreepieEntity(EntityType<? extends Creepie> type, Level level) {
         super(type, level);
@@ -92,11 +93,13 @@ public class RocketCreepieEntity extends Creepie {
                 }
                 return;
             }
-            if (!this.isRocketing() && this.onGround() && this.ticksAlive >= this.launchDelay) {
-                this.launch();
-            }
             if (this.isRocketing()) {
                 this.hasImpulse = true;
+                if (--this.flightTicksRemaining <= 0) {
+                    this.startLanding();
+                }
+            } else if (this.onGround() && this.ticksAlive >= this.launchDelay) {
+                this.launch();
             }
             this.ticksAlive++;
         }
@@ -110,7 +113,9 @@ public class RocketCreepieEntity extends Creepie {
         this.hasImpulse = true;
         this.fallDistance = 0.0F;
         this.setRocketing(true);
-        this.setLaunchSpeed(ROTATION_TICKS / RocketFlightMath.predictFlightTicks(verticalVelocity));
+        int predictedFlightTicks = RocketFlightMath.predictFlightTicks(verticalVelocity);
+        this.flightTicksRemaining = predictedFlightTicks;
+        this.setLaunchSpeed(ROTATION_TICKS / predictedFlightTicks);
         this.setYRot(yaw);
         this.setYBodyRot(yaw);
     }
@@ -123,11 +128,15 @@ public class RocketCreepieEntity extends Creepie {
     @Override
     public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
         if (this.isRocketing()) {
-            this.setDeltaMovement(Vec3.ZERO);
-            this.landingTimer = LANDING_DELAY;
+            this.startLanding();
             return false;
         }
         return super.causeFallDamage(fallDistance, multiplier, source);
+    }
+
+    private void startLanding() {
+        this.setDeltaMovement(Vec3.ZERO);
+        this.landingTimer = LANDING_DELAY;
     }
 
     @Override

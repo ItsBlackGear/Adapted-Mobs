@@ -17,13 +17,13 @@ public class LangGenerator extends FabricLanguageProvider {
     @Override
     public void generateTranslations(HolderLookup.Provider lookup, TranslationBuilder builder) {
         builder.add(AMEntityTypes.FESTIVE_CREEPER.get(), "Reaper");
-        builder.add(AMEntityTypes.SUPPORT_CREEPER.get(), "Support Creeper");
-        builder.add(AMEntityTypes.ROCKET_CREEPER.get(), "Rocket Creeper");
+        builder.add(AMEntityTypes.SUPPORT_CREEPER.get(), "Seeper");
+        builder.add(AMEntityTypes.ROCKET_CREEPER.get(), "Leaper");
         builder.add(AMEntityTypes.CREEPER.get(), "Creeper");
 
-        builder.add(AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(), "Festive Creeper Spawn Egg");
-        builder.add(AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(), "Support Creeper Spawn Egg");
-        builder.add(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), "Rocket Creeper Spawn Egg");
+        builder.add(AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(), "Reaper Spawn Egg");
+        builder.add(AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(), "Seeper Spawn Egg");
+        builder.add(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), "Leaper Spawn Egg");
 
         builder.add(AMItems.RED_MYSTERY_EGG.get(), "Red Mystery Egg");
         builder.add(AMItems.YELLOW_MYSTERY_EGG.get(), "Yellow Mystery Egg");
@@ -64,11 +64,12 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.category.support_creeper", "Seeper");
         builder.add("config.adaptedmobs.category.rocket_creeper", "Leaper");
 
-        builder.add("config.adaptedmobs.option.enable_mystery_eggs", "Enable Mystery Pods");
+        builder.add("config.adaptedmobs.option.enable_mystery_eggs", "Enable Mystery Eggs");
 
         builder.add("config.adaptedmobs.option.spawn_festive_creepers", "Spawn Reapers");
         builder.add("config.adaptedmobs.option.festive_creeper_spawn_weight", "Reaper Spawn Weight");
         builder.add("config.adaptedmobs.option.festive_creeper_extra_spawn_weight", "Reaper Extra Spawn Weight");
+        builder.add("config.adaptedmobs.option.prevent_festive_creeper_block_damage", "Prevent Reaper Block Damage");
         builder.add("config.adaptedmobs.option.festive_spore_count_day_base", "Reaper Spore Count Day Base");
         builder.add("config.adaptedmobs.option.festive_spore_count_day_random", "Reaper Spore Count Day Random");
         builder.add("config.adaptedmobs.option.festive_spore_count_night_base", "Reaper Spore Count Night Base");

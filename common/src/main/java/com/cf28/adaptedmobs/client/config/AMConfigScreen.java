@@ -35,6 +35,7 @@ public final class AMConfigScreen {
                 .option(boolOption(values, "spawn_festive_creepers", true, config.spawnFestiveCreepers))
                 .option(intOption(values, "festive_creeper_spawn_weight", 18, 0, 100, config.festiveCreeperSpawnWeight))
                 .option(intOption(values, "festive_creeper_extra_spawn_weight", 40, 0, 100, config.festiveCreeperExtraSpawnWeight))
+                .option(boolOption(values, "prevent_festive_creeper_block_damage", true, config.preventFestiveCreeperBlockDamage))
                 .option(intOption(values, "festive_spore_count_day_base", 1, 0, 100, config.festiveSporeCountDayBase))
                 .option(intOption(values, "festive_spore_count_day_random", 2, 0, 100, config.festiveSporeCountDayRandom))
                 .option(intOption(values, "festive_spore_count_night_base", 3, 0, 100, config.festiveSporeCountNightBase))

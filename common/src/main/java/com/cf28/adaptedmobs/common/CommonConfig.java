@@ -8,6 +8,7 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Boolean> spawnFestiveCreepers;
     public final ConfigBuilder.ConfigValue<Integer> festiveCreeperSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> festiveCreeperExtraSpawnWeight;
+    public final ConfigBuilder.ConfigValue<Boolean> preventFestiveCreeperBlockDamage;
 
     public final ConfigBuilder.ConfigValue<Boolean> spawnSupportCreepers;
     public final ConfigBuilder.ConfigValue<Integer> supportCreeperSpawnWeight;
@@ -45,6 +46,8 @@ public class CommonConfig {
         this.spawnFestiveCreepers = builder.comment("Determines if Festive Creepers should spawn").define("Spawn Festive Creepers", true);
         this.festiveCreeperSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn").defineInRange("Festive Creeper Spawn Weight", 18, 0, 100);
         this.festiveCreeperExtraSpawnWeight = builder.comment("Determines how often do Festive Creepers spawn in extra biomes").defineInRange("Festive Creeper Extra Spawn Weight", 40, 0, 100);
+        this.preventFestiveCreeperBlockDamage = builder.comment("Requires Tolerable Creepers. Prevents Festive Creeper explosions from damaging blocks and spawns Festive Creepies instead")
+                .define("Prevent Festive Creeper Block Damage", true);
         builder.pop();
         
         builder.push("Support Creeper");
@@ -68,9 +71,9 @@ public class CommonConfig {
         builder.pop();
 
         builder.push("Festive Creeper Spores");
-        this.festiveSporeCountDayBase = builder.comment("Base number of Festive Creepies a Festive Spore Barrel/TNT tries to spawn during the day").defineInRange("Festive Spore Count Day Base", 1, 0, 100);
+        this.festiveSporeCountDayBase = builder.comment("Base number of Festive Creepies a Festive Creeper's spore cloud tries to spawn during the day").defineInRange("Festive Spore Count Day Base", 1, 0, 100);
         this.festiveSporeCountDayRandom = builder.comment("Upper bound (exclusive) of the random bonus added to the day base count").defineInRange("Festive Spore Count Day Random", 2, 0, 100);
-        this.festiveSporeCountNightBase = builder.comment("Base number of Festive Creepies a Festive Spore Barrel/TNT tries to spawn at night").defineInRange("Festive Spore Count Night Base", 3, 0, 100);
+        this.festiveSporeCountNightBase = builder.comment("Base number of Festive Creepies a Festive Creeper's spore cloud tries to spawn at night").defineInRange("Festive Spore Count Night Base", 3, 0, 100);
         this.festiveSporeCountNightRandom = builder.comment("Upper bound (exclusive) of the random bonus added to the night base count").defineInRange("Festive Spore Count Night Random", 4, 0, 100);
         builder.pop();
 

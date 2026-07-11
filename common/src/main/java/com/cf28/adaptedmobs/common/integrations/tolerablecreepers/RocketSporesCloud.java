@@ -25,6 +25,16 @@ public class RocketSporesCloud extends CreeperSpores {
         return AMParticles.ROCKET_SPORES.get();
     }
 
+    @Override
+    protected float getVisualCloudSize() {
+        return 2.0F;
+    }
+
+    @Override
+    protected int getCreepieSpawnIntervalTicks() {
+        return 10;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected Creepie createCreepie(Vec3 pos) {

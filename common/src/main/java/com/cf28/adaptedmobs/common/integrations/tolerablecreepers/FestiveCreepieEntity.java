@@ -5,11 +5,11 @@ import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class FestiveCreepieEntity extends Creepie {
     private static final int LANDED_FUSE_TICKS = 40;
@@ -20,6 +20,11 @@ public class FestiveCreepieEntity extends Creepie {
     public FestiveCreepieEntity(EntityType<? extends Creepie> type, Level level) {
         super(type, level);
         this.setAge(-24000);
+        this.lookControl = new LookControl(this) {
+            @Override
+            public void tick() {
+            }
+        };
     }
 
     @Override
@@ -34,8 +39,11 @@ public class FestiveCreepieEntity extends Creepie {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+    }
+
+    @Override
+    public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
+        return false;
     }
 
     @Override

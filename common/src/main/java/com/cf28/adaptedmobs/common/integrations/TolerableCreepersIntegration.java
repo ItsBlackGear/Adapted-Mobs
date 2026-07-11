@@ -135,14 +135,22 @@ public class TolerableCreepersIntegration {
         return spores;
     }
 
+    public static Entity createFestiveSporesFromCreeper(Level level, Creeper parent) {
+        FestiveSporesCloud spores = new FestiveSporesCloud(AMEntityTypes.FESTIVE_SPORES.get(), level);
+        spores.setPos(parent.getX(), parent.getY() + 0.01, parent.getZ());
+        spores.setOwner(parent);
+        int count = calculateSporeCount(level, parent.blockPosition(), parent.getRandom(),
+                AdaptedMobs.CONFIG.festiveSporeCountDayBase.get(), AdaptedMobs.CONFIG.festiveSporeCountDayRandom.get(),
+                AdaptedMobs.CONFIG.festiveSporeCountNightBase.get(), AdaptedMobs.CONFIG.festiveSporeCountNightRandom.get());
+        spores.setCloudSizeDirect(Math.round(count * parent.getHealth() / parent.getMaxHealth()));
+        return spores;
+    }
+
     public static Entity createRocketSporesFromCreeper(Level level, Creeper parent) {
         RocketSporesCloud spores = new RocketSporesCloud(AMEntityTypes.ROCKET_SPORES.get(), level);
         spores.setPos(parent.getX(), parent.getY() + 0.01, parent.getZ());
         spores.setOwner(parent);
-        int count = calculateSporeCount(level, parent.blockPosition(), parent.getRandom(),
-                AdaptedMobs.CONFIG.rocketSporeCountDayBase.get(), AdaptedMobs.CONFIG.rocketSporeCountDayRandom.get(),
-                AdaptedMobs.CONFIG.rocketSporeCountNightBase.get(), AdaptedMobs.CONFIG.rocketSporeCountNightRandom.get());
-        spores.setCloudSizeDirect(Math.round(count * parent.getHealth() / parent.getMaxHealth()));
+        spores.setCloudSizeDirect(3 + parent.getRandom().nextInt(3));
         return spores;
     }
 

@@ -14,21 +14,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class WallRocketCreeperSkullBlock extends AMWallSkullBlock {
+public class WallSupportCreeperSkullBlock extends AMWallSkullBlock {
     private static final Map<Direction, VoxelShape> AABBS = Maps.newEnumMap(
             ImmutableMap.of(
                     Direction.NORTH,
-                    Block.box(4.0, 4.0, 8.0, 12.0, 15.0, 16.0),
+                    Block.box(3.5, 3.5, 7.5, 12.5, 12.5, 16.5),
                     Direction.SOUTH,
-                    Block.box(4.0, 4.0, 0.0, 12.0, 15.0, 8.0),
+                    Block.box(3.5, 3.5, -0.5, 12.5, 12.5, 8.5),
                     Direction.EAST,
-                    Block.box(0.0, 4.0, 4.0, 8.0, 15.0, 12.0),
+                    Block.box(-0.5, 3.5, 3.5, 8.5, 12.5, 12.5),
                     Direction.WEST,
-                    Block.box(8.0, 4.0, 4.0, 16.0, 15.0, 12.0)
+                    Block.box(7.5, 3.5, 3.5, 16.5, 12.5, 12.5)
             )
     );
 
-    public WallRocketCreeperSkullBlock(SkullBlock.Type type, Properties properties) {
+    public WallSupportCreeperSkullBlock(SkullBlock.Type type, Properties properties) {
         super(type, properties);
     }
 
