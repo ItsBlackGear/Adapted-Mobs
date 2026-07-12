@@ -28,6 +28,7 @@ public class FestiveTntRenderer extends EntityRenderer<PrimedFestiveTnt> {
     public void render(PrimedFestiveTnt entity, float entityYaw, float partialTicks, PoseStack matrices, MultiBufferSource buffer, int packedLight) {
         matrices.pushPose();
         matrices.translate(0.0, 0.5, 0.0);
+        matrices.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, entity.xRotO, entity.getXRot())));
         int fuseTicks = entity.getFuse();
         if ((float) fuseTicks - partialTicks + 1.0F < 10.0F) {
             float progress = 1.0F - ((float) fuseTicks - partialTicks + 1.0F) / 10.0F;

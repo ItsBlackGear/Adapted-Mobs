@@ -35,6 +35,7 @@ public final class AdaptedMobs {
         AMBlockEntityTypes.REGISTRIES.register();
         AMEntityDataSerializers.REGISTRIES.register();
         AMParticles.REGISTRIES.register();
+        AMMobEffects.REGISTRIES.register();
 
         AMBiomeTags.REGISTRY.register();
         AMItemTags.REGISTRY.register();

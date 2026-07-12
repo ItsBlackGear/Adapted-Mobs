@@ -65,6 +65,11 @@ public class FestiveCreeper extends TamableCreeper {
     }
 
     @Override
+    public boolean shouldSwell() {
+        return this.isIgnited();
+    }
+
+    @Override
     protected void explodeCreeper() {
         if (this.shouldSwell() && !this.isTame() && TolerableCreepersCompat.isLoaded() && AdaptedMobs.CONFIG.preventFestiveCreeperBlockDamage.get()) {
             if (!this.level().isClientSide()) {

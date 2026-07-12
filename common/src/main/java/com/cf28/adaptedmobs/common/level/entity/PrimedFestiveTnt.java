@@ -13,11 +13,13 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,6 +73,13 @@ public class PrimedFestiveTnt extends Entity {
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
         if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
+        }
+
+        Vec3 delta = this.getDeltaMovement();
+        double horizontalDistance = delta.horizontalDistance();
+        if (horizontalDistance > 1.0E-4 || Math.abs(delta.y) > 1.0E-4) {
+            this.xRotO = this.getXRot();
+            this.setXRot((float) (Mth.atan2(delta.y, horizontalDistance) * (180.0 / Math.PI)));
         }
 
         int fuse = this.getFuse() - 1;

@@ -93,7 +93,7 @@ public class RocketCreepieEntity extends Creepie {
             }
             if (this.isRocketing()) {
                 this.hasImpulse = true;
-                if (--this.flightTicksRemaining <= 0) {
+                if (--this.flightTicksRemaining <= 0 && this.onGround()) {
                     this.startLanding();
                 }
             } else if (this.onGround() && this.ticksAlive >= this.launchDelay && RocketFlightMath.hasEnoughVerticalSpace(this)) {

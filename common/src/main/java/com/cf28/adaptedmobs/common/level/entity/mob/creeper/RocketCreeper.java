@@ -48,6 +48,8 @@ public class RocketCreeper extends TamableCreeper {
     private static final float ROTATION_TICKS = 30.8335F;
     private static final float ROCKET_ANIMATION_SPEED = ROTATION_TICKS / RocketFlightMath.predictFlightTicks(1.2);
     private static final int LANDING_DELAY = 4;
+    private static final double TARGET_RANGE = 5.5;
+    private static final double TARGET_RANGE_SQR = TARGET_RANGE * TARGET_RANGE;
     private int timeBeforeJumping;
     private int landingTimer = -1;
 
@@ -85,6 +87,10 @@ public class RocketCreeper extends TamableCreeper {
 
     @Override
     protected void explodeCreeper() {
+        if (this.isRocket() && !this.onGround()) {
+            return;
+        }
+
         if (this.shouldSwell() && !this.isTame() && TolerableCreepersCompat.isLoaded() && AdaptedMobs.CONFIG.preventRocketCreeperBlockDamage.get()) {
             if (!this.level().isClientSide()) {
                 float explosionMultiplier = this.isPowered() ? 2.0F : 1.0F;
@@ -143,7 +149,7 @@ public class RocketCreeper extends TamableCreeper {
     private void launchTowardsTarget() {
         LivingEntity target = this.getTarget();
         if (target != null) {
-            if (this.distanceToSqr(target) > 25) {
+            if (this.distanceToSqr(target) > TARGET_RANGE_SQR) {
                 this.setSwellDir(-1);
             }
         }

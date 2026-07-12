@@ -4,11 +4,13 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.level.block.AMSporeBarrelBlock;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
+import com.cf28.adaptedmobs.common.registries.AMParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -84,31 +86,43 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
 
     private void explode() {
         AMSporeBarrelBlock.SporeType type = this.getSporeType();
-        float radius = type == AMSporeBarrelBlock.SporeType.FESTIVE ? 4.0F : 2.5F;
+        float radius = type == AMSporeBarrelBlock.SporeType.FESTIVE ? 3.0F : 2.5F;
         this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), radius, Level.ExplosionInteraction.NONE);
 
         if (!this.level().isClientSide() && TolerableCreepersCompat.isLoaded()) {
-            int cloudSize = this.random.nextInt(7) + 5;
             if (type == AMSporeBarrelBlock.SporeType.SUPPORT) {
+                int cloudSize = this.random.nextInt(7) + 5;
                 Entity spores = TolerableCreepersIntegration.createSupportSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize, false);
                 if (this.owner != null) {
                     TolerableCreepersIntegration.setSporesOwner(spores, this.owner);
                 }
                 this.level().addFreshEntity(spores);
             } else if (type == AMSporeBarrelBlock.SporeType.ROCKET) {
+                int cloudSize = this.random.nextInt(7) + 6;
                 Entity spores = TolerableCreepersIntegration.createRocketSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize, false);
                 if (this.owner != null) {
                     TolerableCreepersIntegration.setSporesOwner(spores, this.owner);
                 }
                 this.level().addFreshEntity(spores);
             } else if (type == AMSporeBarrelBlock.SporeType.FESTIVE) {
-                Entity spores = TolerableCreepersIntegration.createFestiveSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize);
-                if (this.owner != null) {
-                    TolerableCreepersIntegration.setSporesOwner(spores, this.owner);
-                }
-                this.level().addFreshEntity(spores);
+                this.explodeFestiveCreepies();
             }
         }
+    }
+
+    private void explodeFestiveCreepies() {
+        ServerLevel serverLevel = (ServerLevel) this.level();
+        int creepieCount = this.random.nextInt(4) + 4;
+        for (int i = 0; i < creepieCount; i++) {
+            Entity creepie = TolerableCreepersIntegration.createFestiveCreepie(this.level(), this.getX(), this.getY() + 0.1, this.getZ());
+            double angle = this.random.nextDouble() * Math.PI * 2;
+            double horizontalSpeed = 0.25 + this.random.nextDouble() * 0.25;
+            double verticalSpeed = 0.35 + this.random.nextDouble() * 0.35;
+            creepie.setDeltaMovement(Math.cos(angle) * horizontalSpeed, verticalSpeed, Math.sin(angle) * horizontalSpeed);
+            this.level().addFreshEntity(creepie);
+        }
+        TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.position().add(0.0, 0.1, 0.0), 1.2, 16);
+        TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, this.position().add(0.0, 0.1, 0.0), 1.2, 20);
     }
 
     @Override

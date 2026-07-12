@@ -5,6 +5,7 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.ApplyBuffsToTargetGoal;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -86,6 +87,18 @@ public class SupportCreeper extends TamableCreeper {
     public void tick() {
         this.setupAnimations();
         super.tick();
+        if (this.level().isClientSide()) {
+            this.spawnAmbientSporeParticles();
+        }
+    }
+
+    private void spawnAmbientSporeParticles() {
+        if (this.random.nextInt(40) != 0) return;
+
+        double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
+        double y = this.getY() + this.getBbHeight() * 0.9;
+        double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
+        this.level().addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, x, y, z, 0.0, 0.0, 0.0);
     }
 
     @Override

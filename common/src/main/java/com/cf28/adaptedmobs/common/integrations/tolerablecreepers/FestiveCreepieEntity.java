@@ -49,7 +49,11 @@ public class FestiveCreepieEntity extends Creepie {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide() && this.isAlive()) {
+        if (this.level().isClientSide()) {
+            if (!this.onGround()) {
+                this.level().addParticle(AMParticles.FESTIVE_TNT_PARTICLETRAIL.get(), this.getX(), this.getY() + 0.25, this.getZ(), 0.0, 0.0, 0.0);
+            }
+        } else if (this.isAlive()) {
             if (!this.hasLanded && this.onGround()) {
                 this.hasLanded = true;
             }

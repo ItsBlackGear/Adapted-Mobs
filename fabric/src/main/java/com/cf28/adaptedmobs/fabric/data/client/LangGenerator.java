@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.fabric.data.client;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMItems;
+import com.cf28.adaptedmobs.common.registries.AMMobEffects;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
@@ -54,6 +55,11 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMItems.SUPPORT_CREEPIE_SPAWN_EGG.get(), "Seepie Spawn Egg");
         builder.add(AMItems.ROCKET_CREEPIE_SPAWN_EGG.get(), "Leapie Spawn Egg");
         builder.add(AMItems.FESTIVE_CREEPIE_SPAWN_EGG.get(), "Reapie Spawn Egg");
+
+        builder.add(AMMobEffects.SUPPORT_SPEED.value(), "Speed");
+        builder.add(AMMobEffects.SUPPORT_STRENGTH.value(), "Strength");
+        builder.add(AMMobEffects.SUPPORT_SLOWNESS.value(), "Slowness");
+        builder.add(AMMobEffects.SUPPORT_WEAKNESS.value(), "Weakness");
 
         builder.add("block.tolerable_creepers.spore_barrel", "Creeper Spore Barrel");
         builder.add("entity.tolerable_creepers.spore_barrel", "Creeper Spore Barrel");

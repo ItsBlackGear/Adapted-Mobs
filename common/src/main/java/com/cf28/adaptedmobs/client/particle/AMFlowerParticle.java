@@ -6,6 +6,8 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 
 public class AMFlowerParticle extends TextureSheetParticle {
+    private final float rotationSpeed;
+
     protected AMFlowerParticle(ClientLevel clientLevel, double x, double y, double z, double xVelocity, double yVelocity, double zVelocity, SpriteSet spriteSet, float sizeMultiplier) {
         super(clientLevel, x, y, z);
         this.gravity = 0.1F;
@@ -16,6 +18,7 @@ public class AMFlowerParticle extends TextureSheetParticle {
         this.quadSize = 0.2F * sizeMultiplier * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
         this.lifetime = (int) (20.0D / (this.random.nextFloat() * 0.8D + 0.2D)) + 2;
         this.roll = this.oRoll = this.random.nextFloat() * (float) Math.PI * 2.0F;
+        this.rotationSpeed = (this.random.nextFloat() - 0.5F) * 2.0F;
         this.pickSprite(spriteSet);
     }
 
@@ -28,7 +31,7 @@ public class AMFlowerParticle extends TextureSheetParticle {
             this.remove();
         } else {
             this.oRoll = this.roll;
-            this.roll += (float) (Math.PI * Math.min(0.5, this.yd) * 2.0F);
+            this.roll += (float) (Math.PI * Math.min(0.5, this.yd) * 2.0F) * this.rotationSpeed;
 
             this.yd -= 0.04 * this.gravity;
             this.move(this.xd, this.yd, this.zd);

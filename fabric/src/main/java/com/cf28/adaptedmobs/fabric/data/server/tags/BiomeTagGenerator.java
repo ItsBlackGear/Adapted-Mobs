@@ -15,26 +15,27 @@ public class BiomeTagGenerator extends FabricTagProvider<Biome> {
     public BiomeTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
         super(output, Registries.BIOME, lookup);
     }
-    
+
     @Override
     protected void addTags(HolderLookup.Provider lookup) {
         this.getOrCreateTagBuilder(AMBiomeTags.EXTRA_FESTIVE_CREEPER_SPAWNS)
-            .forceAddTag(BiomeTags.IS_BADLANDS);
-        
+                .forceAddTag(BiomeTags.IS_JUNGLE);
+
         this.getOrCreateTagBuilder(AMBiomeTags.EXTRA_SUPPORT_CREEPER_SPAWNS)
-            .add(Biomes.DESERT);
-        
+                .add(Biomes.LUSH_CAVES)
+                .forceAddTag(BiomeTags.IS_JUNGLE);
+
         this.getOrCreateTagBuilder(AMBiomeTags.EXTRA_ROCKET_CREEPER_SPAWNS)
-            .add(Biomes.SNOWY_PLAINS)
-            .add(Biomes.ICE_SPIKES)
-            .add(Biomes.FROZEN_PEAKS)
-            .add(Biomes.JAGGED_PEAKS)
-            .add(Biomes.SNOWY_SLOPES)
-            .add(Biomes.FROZEN_OCEAN)
-            .add(Biomes.DEEP_FROZEN_OCEAN)
-            .add(Biomes.GROVE)
-            .add(Biomes.FROZEN_RIVER)
-            .add(Biomes.SNOWY_TAIGA)
-            .add(Biomes.SNOWY_BEACH);
+                .add(Biomes.SNOWY_PLAINS)
+                .add(Biomes.ICE_SPIKES)
+                .add(Biomes.FROZEN_PEAKS)
+                .add(Biomes.JAGGED_PEAKS)
+                .add(Biomes.SNOWY_SLOPES)
+                .add(Biomes.FROZEN_OCEAN)
+                .add(Biomes.DEEP_FROZEN_OCEAN)
+                .add(Biomes.GROVE)
+                .add(Biomes.FROZEN_RIVER)
+                .add(Biomes.SNOWY_TAIGA)
+                .add(Biomes.SNOWY_BEACH);
     }
 }
