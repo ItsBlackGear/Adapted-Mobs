@@ -1,5 +1,6 @@
 package com.cf28.adaptedmobs.client.level.model.block_entity;
 
+import com.cf28.adaptedmobs.client.level.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.SkullModelBase;
@@ -30,14 +31,14 @@ public class FestiveCreeperSkullModel extends SkullModelBase {
                         .addBox(-5.0F, -8.0F, -4.0F, 10.0F, 8.0F, 8.0F),
                 PartPose.ZERO
         );
-        head.addOrReplaceChild("head_r1", CubeListBuilder.create().texOffs(28, 0).addBox(-6.0F, -2.0F, 0.0F, 10.0F, 2.0F, 0.0F), PartPose.offsetAndRotation(1.0F, -8.0F, 4.0F, -0.7854F, 0.0F, 0.0F));
-        head.addOrReplaceChild("head_r2", CubeListBuilder.create().texOffs(28, 0).addBox(-7.0F, -2.0F, 0.0F, 10.0F, 2.0F, 0.0F), PartPose.offsetAndRotation(2.0F, -8.0F, -4.0F, 0.7854F, 0.0F, 0.0F));
-        head.addOrReplaceChild("head_r3", CubeListBuilder.create().texOffs(28, -6).addBox(0.0F, -2.0F, -4.0F, 0.0F, 2.0F, 8.0F), PartPose.offsetAndRotation(5.0F, -8.0F, 0.0F, 0.0F, 0.0F, 0.7854F));
-        head.addOrReplaceChild("head_r4", CubeListBuilder.create().texOffs(28, -6).addBox(0.0F, -2.0F, -3.0F, 0.0F, 2.0F, 8.0F), PartPose.offsetAndRotation(-5.0F, -8.0F, -1.0F, 0.0F, 0.0F, -0.7854F));
-        head.addOrReplaceChild("head_r5", CubeListBuilder.create().texOffs(36, 8).addBox(-2.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, 0.0F, 4.0F, 0.0F, 0.7854F, 0.0F));
-        head.addOrReplaceChild("head_r6", CubeListBuilder.create().texOffs(36, 8).mirror().addBox(0.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F).mirror(false), PartPose.offsetAndRotation(5.0F, 0.0F, 4.0F, 0.0F, -0.7854F, 0.0F));
-        head.addOrReplaceChild("head_r7", CubeListBuilder.create().texOffs(36, 8).addBox(-2.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, 0.0F, -4.0F, 0.0F, -0.7854F, 0.0F));
-        head.addOrReplaceChild("head_r8", CubeListBuilder.create().texOffs(36, 8).mirror().addBox(0.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F).mirror(false), PartPose.offsetAndRotation(5.0F, 0.0F, -4.0F, 0.0F, 0.7854F, 0.0F));
+        head.addOrReplaceChild("head_r1", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(28, 0), -6.0F, -2.0F, 0.0F, 10.0F, 2.0F, 0.0F, false), PartPose.offsetAndRotation(1.0F, -8.0F, 4.0F, -0.7854F, 0.0F, 0.0F));
+        head.addOrReplaceChild("head_r2", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(28, 0), -7.0F, -2.0F, 0.0F, 10.0F, 2.0F, 0.0F, false), PartPose.offsetAndRotation(2.0F, -8.0F, -4.0F, 0.7854F, 0.0F, 0.0F));
+        head.addOrReplaceChild("head_r3", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(28, -6), 0.0F, -2.0F, -4.0F, 0.0F, 2.0F, 8.0F, false), PartPose.offsetAndRotation(5.0F, -8.0F, 0.0F, 0.0F, 0.0F, 0.7854F));
+        head.addOrReplaceChild("head_r4", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(28, -6), 0.0F, -2.0F, -3.0F, 0.0F, 2.0F, 8.0F, false), PartPose.offsetAndRotation(-5.0F, -8.0F, -1.0F, 0.0F, 0.0F, -0.7854F));
+        head.addOrReplaceChild("head_r5", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(36, 8), -2.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F, false), PartPose.offsetAndRotation(-5.0F, 0.0F, 4.0F, 0.0F, 0.7854F, 0.0F));
+        head.addOrReplaceChild("head_r6", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(36, 8), 0.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F, true), PartPose.offsetAndRotation(5.0F, 0.0F, 4.0F, 0.0F, -0.7854F, 0.0F));
+        head.addOrReplaceChild("head_r7", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(36, 8), -2.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F, false), PartPose.offsetAndRotation(-5.0F, 0.0F, -4.0F, 0.0F, -0.7854F, 0.0F));
+        head.addOrReplaceChild("head_r8", ModelUtil.addFringeBox(CubeListBuilder.create().texOffs(36, 8), 0.0F, -8.0F, 0.0F, 2.0F, 8.0F, 0.0F, true), PartPose.offsetAndRotation(5.0F, 0.0F, -4.0F, 0.0F, 0.7854F, 0.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }
