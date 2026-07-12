@@ -25,10 +25,10 @@ public class ClientSetup {
         event.register(AMParticles.FESTIVE_TNT_PARTICLETRAIL, AMSporeParticle.Provider::new);
         event.register(AMParticles.FESTIVE_SPORES, AMSporeParticle.Provider::new);
         event.register(AMParticles.ROCKET_SPORES, AMSporeParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_RED, AMFlowerParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_BLUE, AMFlowerParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_YELLOW, AMFlowerParticle.Provider::new);
-        event.register(AMParticles.SUPPORTED_GREY, AMFlowerParticle.Provider::new);
+        event.register(AMParticles.SUPPORTED_RED, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
+        event.register(AMParticles.SUPPORTED_BLUE, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
+        event.register(AMParticles.SUPPORTED_YELLOW, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
+        event.register(AMParticles.SUPPORTED_GREY, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
         event.register(AMParticles.CREEPER_HEAL, AMFlowerParticle.Provider::new);
     }
 

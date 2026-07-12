@@ -19,12 +19,12 @@ import java.util.EnumSet;
 
 public class ApplyBuffsToTargetGoal extends Goal {
     private final SupportCreeper mob;
-    private LivingEntity target;
     private final double range;
     private final double speed;
+    private final boolean boosted;
+    private LivingEntity target;
     private int animationTimer;
     private boolean playingAnimation;
-    private final boolean boosted;
 
     public ApplyBuffsToTargetGoal(SupportCreeper mob, double range, double speed) {
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
@@ -37,7 +37,7 @@ public class ApplyBuffsToTargetGoal extends Goal {
     @Override
     public boolean canUse() {
         if (this.mob.isBaby()) return false;
-        
+
         if (this.target == null) {
             this.target = this.findTarget();
             return this.target != null;
@@ -49,11 +49,11 @@ public class ApplyBuffsToTargetGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         return this.target != null
-            && this.target.isAlive()
-            && this.mob.distanceToSqr(this.target) <= this.range * this.range
-            && !(this.target instanceof SupportCreeper)
-            && this.mob.hasLineOfSight(this.target)
-            && !this.mob.isOrderedToSit();
+                && this.target.isAlive()
+                && this.mob.distanceToSqr(this.target) <= this.range * this.range
+                && !(this.target instanceof SupportCreeper)
+                && this.mob.hasLineOfSight(this.target)
+                && !this.mob.isOrderedToSit();
     }
 
     @Override
@@ -88,8 +88,8 @@ public class ApplyBuffsToTargetGoal extends Goal {
                 }
 
                 if (this.animationTimer == 0) {
-                    this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, amplification, false, false), this.mob);
-                    this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, amplification, false, false), this.mob);
+                    this.target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200, amplification, false, false, true), this.mob);
+                    this.target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, amplification, false, false, true), this.mob);
                     this.mob.setState(CreeperState.IDLING);
                     this.playingAnimation = false;
                 } else {
@@ -128,10 +128,10 @@ public class ApplyBuffsToTargetGoal extends Goal {
     @Nullable
     private LivingEntity findTarget() {
         return this.mob.level().getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(this.range, this.range, this.range))
-            .stream()
-            .filter(this::shouldTarget)
-            .min(Comparator.comparingDouble(target -> target.distanceTo(this.mob)))
-            .orElse(null);
+                .stream()
+                .filter(this::shouldTarget)
+                .min(Comparator.comparingDouble(target -> target.distanceTo(this.mob)))
+                .orElse(null);
     }
 
     private boolean shouldTarget(LivingEntity target) {

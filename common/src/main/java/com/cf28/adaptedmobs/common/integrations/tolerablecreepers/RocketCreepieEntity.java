@@ -12,7 +12,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
@@ -26,10 +25,10 @@ import org.jetbrains.annotations.NotNull;
 public class RocketCreepieEntity extends Creepie {
     private static final EntityDataAccessor<Boolean> ROCKETING =
             SynchedEntityData.defineId(RocketCreepieEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Float> LAUNCH_SPEED =
-            SynchedEntityData.defineId(RocketCreepieEntity.class, EntityDataSerializers.FLOAT);
     private static final float ROTATION_TICKS = 30.0F;
     private static final int LANDING_DELAY = 4;
+    private static final int FLIGHT_TICKS = RocketFlightMath.predictFlightTicks(1.2);
+    private static final float ROCKET_ANIMATION_SPEED = ROTATION_TICKS / FLIGHT_TICKS;
 
     public final AnimationState launchAnimationState = new AnimationState();
 
@@ -49,7 +48,6 @@ public class RocketCreepieEntity extends Creepie {
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ROCKETING, false);
-        builder.define(LAUNCH_SPEED, 1.0F);
     }
 
     @Override
@@ -98,7 +96,7 @@ public class RocketCreepieEntity extends Creepie {
                 if (--this.flightTicksRemaining <= 0) {
                     this.startLanding();
                 }
-            } else if (this.onGround() && this.ticksAlive >= this.launchDelay) {
+            } else if (this.onGround() && this.ticksAlive >= this.launchDelay && RocketFlightMath.hasEnoughVerticalSpace(this)) {
                 this.launch();
             }
             this.ticksAlive++;
@@ -106,18 +104,12 @@ public class RocketCreepieEntity extends Creepie {
     }
 
     private void launch() {
-        float yaw = this.random.nextFloat() * 360.0F;
-        double height = Mth.nextDouble(this.random, 1.0, 4.0);
-        double verticalVelocity = Math.sqrt(2 * 0.08 * height);
-        this.setDeltaMovement(-Mth.sin(yaw * Mth.DEG_TO_RAD) * 0.3, verticalVelocity, Mth.cos(yaw * Mth.DEG_TO_RAD) * 0.3);
+        this.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0F, 0.5F);
+        this.setDeltaMovement(0.0D, 1.2D, 0.0D);
         this.hasImpulse = true;
         this.fallDistance = 0.0F;
         this.setRocketing(true);
-        int predictedFlightTicks = RocketFlightMath.predictFlightTicks(verticalVelocity);
-        this.flightTicksRemaining = predictedFlightTicks;
-        this.setLaunchSpeed(ROTATION_TICKS / predictedFlightTicks);
-        this.setYRot(yaw);
-        this.setYBodyRot(yaw);
+        this.flightTicksRemaining = FLIGHT_TICKS;
     }
 
     @Override
@@ -170,10 +162,6 @@ public class RocketCreepieEntity extends Creepie {
     }
 
     public float getLaunchSpeed() {
-        return this.entityData.get(LAUNCH_SPEED);
-    }
-
-    public void setLaunchSpeed(float speed) {
-        this.entityData.set(LAUNCH_SPEED, speed);
+        return ROCKET_ANIMATION_SPEED;
     }
 }

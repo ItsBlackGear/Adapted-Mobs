@@ -6,14 +6,14 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 
 public class AMFlowerParticle extends TextureSheetParticle {
-    protected AMFlowerParticle(ClientLevel clientLevel, double x, double y, double z, double xVelocity, double yVelocity, double zVelocity, SpriteSet spriteSet) {
+    protected AMFlowerParticle(ClientLevel clientLevel, double x, double y, double z, double xVelocity, double yVelocity, double zVelocity, SpriteSet spriteSet, float sizeMultiplier) {
         super(clientLevel, x, y, z);
         this.gravity = 0.1F;
         this.friction = 0.6F;
         this.xd = xVelocity;
         this.yd = yVelocity;
         this.zd = zVelocity;
-        this.quadSize = 0.2F * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
+        this.quadSize = 0.2F * sizeMultiplier * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
         this.lifetime = (int) (20.0D / (this.random.nextFloat() * 0.8D + 0.2D)) + 2;
         this.roll = this.oRoll = this.random.nextFloat() * (float) Math.PI * 2.0F;
         this.pickSprite(spriteSet);
@@ -54,14 +54,20 @@ public class AMFlowerParticle extends TextureSheetParticle {
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprites;
+        private final float sizeMultiplier;
 
         public Provider(SpriteSet spriteSet) {
+            this(spriteSet, 1.0F);
+        }
+
+        public Provider(SpriteSet spriteSet, float sizeMultiplier) {
             this.sprites = spriteSet;
+            this.sizeMultiplier = sizeMultiplier;
         }
 
         @Override
         public Particle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level, double x, double y, double z, double xVelocity, double yVelocity, double zVelocity) {
-            return new AMFlowerParticle(level, x, y, z, xVelocity, yVelocity, zVelocity, this.sprites);
+            return new AMFlowerParticle(level, x, y, z, xVelocity, yVelocity, zVelocity, this.sprites, this.sizeMultiplier);
         }
     }
 }

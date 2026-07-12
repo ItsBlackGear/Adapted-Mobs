@@ -6,7 +6,6 @@ import com.cf28.adaptedmobs.common.registries.AMBlocks;
 import com.cf28.adaptedmobs.common.util.RocketFlightMath;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -35,7 +34,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -117,16 +115,7 @@ public class RocketCreeper extends TamableCreeper {
     }
 
     public boolean hasEnoughVerticalSpace() {
-        BlockPos pos = this.blockPosition();
-        while (pos.getY() < this.level().getHeight()) {
-            BlockState state = this.level().getBlockState(pos);
-            if (!state.canBeReplaced())
-                return false;
-
-            pos = pos.above();
-        }
-
-        return true;
+        return RocketFlightMath.hasEnoughVerticalSpace(this);
     }
 
     @Override
