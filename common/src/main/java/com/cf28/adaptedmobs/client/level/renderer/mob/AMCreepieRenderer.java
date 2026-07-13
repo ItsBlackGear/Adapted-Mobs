@@ -1,9 +1,12 @@
 package com.cf28.adaptedmobs.client.level.renderer.mob;
 
+import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.FestiveCreepieEntity;
 import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.SupportCreepieEntity;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +19,22 @@ public class AMCreepieRenderer<T extends Creepie, M extends EntityModel<T>> exte
     public AMCreepieRenderer(EntityRendererProvider.Context context, M model, ResourceLocation texture) {
         super(context, model, 0.25F);
         this.texture = texture;
+    }
+
+    @Override
+    public void render(@NotNull T entity, float entityYaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
+        if (entity instanceof FestiveCreepieEntity festive) {
+            float tilt = Mth.lerp(partialTicks, festive.xRotO, festive.getXRot());
+            float halfHeight = entity.getBbHeight() / 2.0F;
+            poseStack.pushPose();
+            poseStack.translate(0.0, halfHeight, 0.0);
+            poseStack.mulPose(Axis.XP.rotationDegrees(tilt));
+            poseStack.translate(0.0, -halfHeight, 0.0);
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            poseStack.popPose();
+        } else {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+        }
     }
 
     @Override

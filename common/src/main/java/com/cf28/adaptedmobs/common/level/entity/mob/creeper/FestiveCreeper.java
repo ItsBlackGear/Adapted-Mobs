@@ -6,13 +6,14 @@ import com.cf28.adaptedmobs.common.level.entity.ai.goal.BackUpIfTooCloseGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.ThrowTntToTargetGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.pathfinding.move_control.BackUpMoveControl;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
+import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class FestiveCreeper extends TamableCreeper {
@@ -97,8 +99,12 @@ public class FestiveCreeper extends TamableCreeper {
     protected void postExplosion() {
         super.postExplosion();
         if (!this.level().isClientSide() && !this.isTame() && TolerableCreepersCompat.isLoaded()) {
-            Entity spores = TolerableCreepersIntegration.createFestiveSporesFromCreeper(this.level(), this);
-            this.level().addFreshEntity(spores);
+            ServerLevel serverLevel = (ServerLevel) this.level();
+            Vec3 center = this.position().add(0.0, 0.1, 0.0);
+            int count = 3 + this.random.nextInt(3);
+            TolerableCreepersIntegration.spawnFestiveCreepieBurst(this.level(), this.random, center, count);
+            TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), center, 1.0, 16);
+            TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, center, 1.0, 20);
         }
     }
 

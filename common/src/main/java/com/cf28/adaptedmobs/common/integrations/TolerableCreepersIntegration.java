@@ -46,6 +46,10 @@ public class TolerableCreepersIntegration {
         }
     }
 
+    public static void spawnParticleSphere(Entity entity, RandomSource random, Vec3 center, int amount, float cloudSize, SimpleParticleType particle) {
+        CreeperSpores.spawnParticleSphere(entity, random, center, amount, cloudSize, particle);
+    }
+
     public static void spawnParticleCircle(ServerLevel level, SimpleParticleType particle, RandomSource random, Vec3 center, double radius, int count) {
         for (int i = 0; i < count; i++) {
             double r = radius * Math.sqrt(random.nextDouble());
@@ -135,15 +139,15 @@ public class TolerableCreepersIntegration {
         return spores;
     }
 
-    public static Entity createFestiveSporesFromCreeper(Level level, Creeper parent) {
-        FestiveSporesCloud spores = new FestiveSporesCloud(AMEntityTypes.FESTIVE_SPORES.get(), level);
-        spores.setPos(parent.getX(), parent.getY() + 0.01, parent.getZ());
-        spores.setOwner(parent);
-        int count = calculateSporeCount(level, parent.blockPosition(), parent.getRandom(),
-                AdaptedMobs.CONFIG.festiveSporeCountDayBase.get(), AdaptedMobs.CONFIG.festiveSporeCountDayRandom.get(),
-                AdaptedMobs.CONFIG.festiveSporeCountNightBase.get(), AdaptedMobs.CONFIG.festiveSporeCountNightRandom.get());
-        spores.setCloudSizeDirect(Math.round(count * parent.getHealth() / parent.getMaxHealth()));
-        return spores;
+    public static void spawnFestiveCreepieBurst(Level level, RandomSource random, Vec3 center, int count) {
+        for (int i = 0; i < count; i++) {
+            Entity creepie = createFestiveCreepie(level, center.x(), center.y(), center.z());
+            double angle = random.nextDouble() * Math.PI * 2;
+            double horizontalSpeed = 0.4 + random.nextDouble() * 0.4;
+            double verticalSpeed = 0.5 + random.nextDouble() * 0.5;
+            creepie.setDeltaMovement(Math.cos(angle) * horizontalSpeed, verticalSpeed, Math.sin(angle) * horizontalSpeed);
+            level.addFreshEntity(creepie);
+        }
     }
 
     public static Entity createRocketSporesFromCreeper(Level level, Creeper parent) {

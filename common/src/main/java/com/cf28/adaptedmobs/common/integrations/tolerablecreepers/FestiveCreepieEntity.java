@@ -4,22 +4,27 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class FestiveCreepieEntity extends Creepie {
-    private static final int LANDED_FUSE_TICKS = 40;
+    private static final int TRAIL_START_DELAY = 6;
 
     private boolean hasLanded;
-    private int landedTicks;
 
     public FestiveCreepieEntity(EntityType<? extends Creepie> type, Level level) {
         super(type, level);
         this.setAge(-24000);
+        this.maxSwell = 40;
         this.lookControl = new LookControl(this) {
             @Override
             public void tick() {
@@ -47,19 +52,50 @@ public class FestiveCreepieEntity extends Creepie {
     }
 
     @Override
+    protected void checkFallDamage(double y, boolean onGround, @NotNull BlockState state, @NotNull BlockPos pos) {
+        if (!this.isInWater()) {
+            this.updateInWaterStateAndDoFluidPushing();
+        }
+        if (onGround) {
+            this.resetFallDistance();
+        }
+    }
+
+    @Override
+    public void travel(@NotNull Vec3 travelVector) {
+        if (!this.hasLanded && this.isControlledByLocalInstance()) {
+            Vec3 delta = this.getDeltaMovement();
+            this.move(MoverType.SELF, delta);
+            this.setDeltaMovement(delta.x * 0.99, delta.y - 0.03, delta.z * 0.99);
+            this.calculateEntityAnimation(false);
+        } else {
+            super.travel(travelVector);
+        }
+    }
+
+    @Override
     public void tick() {
         super.tick();
+
+        if (!this.onGround()) {
+            Vec3 delta = this.getDeltaMovement();
+            double horizontalDistance = delta.horizontalDistance();
+            if (horizontalDistance > 1.0E-4 || Math.abs(delta.y) > 1.0E-4) {
+                this.xRotO = this.getXRot();
+                this.setXRot((float) (Mth.atan2(delta.y, horizontalDistance) * (180.0 / Math.PI)));
+            }
+        } else if (this.getXRot() != 0.0F) {
+            this.xRotO = this.getXRot();
+            this.setXRot(0.0F);
+        }
+
         if (this.level().isClientSide()) {
-            if (!this.onGround()) {
+            if (this.tickCount >= TRAIL_START_DELAY && !this.onGround()) {
                 this.level().addParticle(AMParticles.FESTIVE_TNT_PARTICLETRAIL.get(), this.getX(), this.getY() + 0.25, this.getZ(), 0.0, 0.0, 0.0);
             }
-        } else if (this.isAlive()) {
-            if (!this.hasLanded && this.onGround()) {
-                this.hasLanded = true;
-            }
-            if (this.hasLanded && ++this.landedTicks >= LANDED_FUSE_TICKS) {
-                this.explodeCustom();
-            }
+        } else if (this.isAlive() && !this.hasLanded && this.onGround()) {
+            this.hasLanded = true;
+            this.setSwellDir(1);
         }
     }
 

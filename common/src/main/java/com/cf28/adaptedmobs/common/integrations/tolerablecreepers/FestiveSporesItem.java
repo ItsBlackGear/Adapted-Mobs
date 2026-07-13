@@ -5,7 +5,6 @@ import com.evandev.tolerable_creepers.common.item.CreeperSporesItem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -28,15 +27,12 @@ public class FestiveSporesItem extends CreeperSporesItem {
                 SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL,
                 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!level.isClientSide()) {
+            Vec3 look = player.getLookAngle();
             Entity entity = TolerableCreepersIntegration.createFestiveCreepie(
-                    level, player.getX(), player.getEyeY() - 0.1, player.getZ());
+                    level, player.getX() + look.x * 0.8, player.getEyeY() - 0.1 + look.y * 0.8, player.getZ() + look.z * 0.8);
 
-            float pitch = player.getXRot();
             float yaw = player.getYRot();
-            float f = -Mth.sin(yaw * ((float) Math.PI / 180.0F)) * Mth.cos(pitch * ((float) Math.PI / 180.0F));
-            float g = -Mth.sin(pitch * ((float) Math.PI / 180.0F));
-            float h = Mth.cos(yaw * ((float) Math.PI / 180.0F)) * Mth.cos(pitch * ((float) Math.PI / 180.0F));
-            Vec3 dir = new Vec3(f, g, h).normalize().scale(1.2);
+            Vec3 dir = look.scale(1.2);
 
             if (entity instanceof LivingEntity creepie) {
                 creepie.setDeltaMovement(dir);

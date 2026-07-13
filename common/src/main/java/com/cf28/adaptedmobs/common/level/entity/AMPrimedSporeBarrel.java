@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -112,17 +113,12 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
 
     private void explodeFestiveCreepies() {
         ServerLevel serverLevel = (ServerLevel) this.level();
+        Vec3 center = this.position().add(0.0, 0.1, 0.0);
         int creepieCount = this.random.nextInt(4) + 4;
-        for (int i = 0; i < creepieCount; i++) {
-            Entity creepie = TolerableCreepersIntegration.createFestiveCreepie(this.level(), this.getX(), this.getY() + 0.1, this.getZ());
-            double angle = this.random.nextDouble() * Math.PI * 2;
-            double horizontalSpeed = 0.25 + this.random.nextDouble() * 0.25;
-            double verticalSpeed = 0.35 + this.random.nextDouble() * 0.35;
-            creepie.setDeltaMovement(Math.cos(angle) * horizontalSpeed, verticalSpeed, Math.sin(angle) * horizontalSpeed);
-            this.level().addFreshEntity(creepie);
-        }
-        TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.position().add(0.0, 0.1, 0.0), 1.2, 16);
-        TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, this.position().add(0.0, 0.1, 0.0), 1.2, 20);
+        TolerableCreepersIntegration.spawnFestiveCreepieBurst(this.level(), this.random, center, creepieCount);
+        TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), center, 1.2, 16);
+        TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, center, 1.2, 20);
+        TolerableCreepersIntegration.spawnParticleSphere(this, this.random, center.add(0.0, 0.3, 0.0), 2, 1.0F, AMParticles.FESTIVE_SPORES.get());
     }
 
     @Override
