@@ -37,10 +37,10 @@ public class SupportCreepieEntity extends Creepie {
     private static final double BUFF_SEEK_RANGE = 16.0;
     private static final float RING_SPORE_CHANCE = 0.35F;
     private static final double HOSTILE_SWELL_RANGE = 2.0;
-    private static final int IGNITED_FUSE_TIME = 24;
+    private static final float DEBUFF_EXPLOSION_RADIUS = 2.5F;
     private static final int BUFF_DURATION = 240;
     private static final int DEBUFF_DURATION = 160;
-    private static final float BUFF_CLOUD_RADIUS = 1.0F;
+    private static final float BUFF_CLOUD_RADIUS = 1.5F;
     private static final float DEBUFF_CLOUD_RADIUS = 1.5F;
     private static final int LINGERING_CLOUD_DURATION = 100;
 
@@ -62,10 +62,6 @@ public class SupportCreepieEntity extends Creepie {
 
     public void setVariant(Variant v) {
         this.entityData.set(DATA_VARIANT, v.ordinal());
-        if (v == Variant.SPEED || v == Variant.STRENGTH) {
-            this.setFuseTime(IGNITED_FUSE_TIME);
-            this.ignite();
-        }
     }
 
     @Nullable
@@ -128,7 +124,7 @@ public class SupportCreepieEntity extends Creepie {
                     ringParticle, TCParticles.CREEPER_SPORES.get(), RING_SPORE_CHANCE);
             this.spawnLingeringCloud(sl, effect, BUFF_CLOUD_RADIUS, BUFF_DURATION);
         } else {
-            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 1.5F, Level.ExplosionInteraction.NONE);
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), DEBUFF_EXPLOSION_RADIUS, Level.ExplosionInteraction.NONE);
             Holder<MobEffect> effect = variant == Variant.SLOWNESS ? AMMobEffects.SUPPORT_SLOWNESS : AMMobEffects.SUPPORT_WEAKNESS;
             SimpleParticleType ringParticle = variant == Variant.SLOWNESS
                     ? AMParticles.SUPPORTED_BLUE.get() : AMParticles.SUPPORTED_GREY.get();

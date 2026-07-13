@@ -12,12 +12,17 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -96,8 +101,12 @@ public class RocketCreepieEntity extends Creepie {
                 if (--this.flightTicksRemaining <= 0 && this.onGround()) {
                     this.startLanding();
                 }
-            } else if (this.onGround() && this.ticksAlive >= this.launchDelay && RocketFlightMath.hasEnoughVerticalSpace(this)) {
-                this.launch();
+            } else if (this.onGround() && this.ticksAlive >= this.launchDelay) {
+                if (RocketFlightMath.hasEnoughVerticalSpace(this)) {
+                    this.launch();
+                } else {
+                    this.explodeCustom();
+                }
             }
             this.ticksAlive++;
         }
@@ -115,6 +124,23 @@ public class RocketCreepieEntity extends Creepie {
     @Override
     public void setSwellDir(int swellDir) {
         super.setSwellDir(-1);
+    }
+
+    @Override
+    public boolean isInvulnerableTo(@NotNull DamageSource source) {
+        if (source.is(DamageTypeTags.IS_EXPLOSION) && source.getEntity() instanceof Creepie) {
+            return true;
+        }
+        return super.isInvulnerableTo(source);
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.is(ItemTags.CREEPER_IGNITERS)) {
+            return InteractionResult.PASS;
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override

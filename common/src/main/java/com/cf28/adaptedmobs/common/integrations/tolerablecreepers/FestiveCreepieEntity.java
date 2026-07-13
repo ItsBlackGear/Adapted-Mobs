@@ -6,11 +6,16 @@ import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -47,15 +52,23 @@ public class FestiveCreepieEntity extends Creepie {
     }
 
     @Override
+    public int getMaxHeadXRot() {
+        return 0;
+    }
+
+    @Override
+    public int getMaxHeadYRot() {
+        return 0;
+    }
+
+    @Override
     public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
         return false;
     }
 
     @Override
     protected void checkFallDamage(double y, boolean onGround, @NotNull BlockState state, @NotNull BlockPos pos) {
-        if (!this.isInWater()) {
-            this.updateInWaterStateAndDoFluidPushing();
-        }
+        this.updateInWaterStateAndDoFluidPushing();
         if (onGround) {
             this.resetFallDistance();
         }
@@ -63,14 +76,36 @@ public class FestiveCreepieEntity extends Creepie {
 
     @Override
     public void travel(@NotNull Vec3 travelVector) {
-        if (!this.hasLanded && this.isControlledByLocalInstance()) {
+        if (this.hasLanded) {
+            if (!this.isControlledByLocalInstance()) {
+                super.travel(travelVector);
+            }
+            return;
+        }
+
+        if (this.isControlledByLocalInstance()) {
             Vec3 delta = this.getDeltaMovement();
             this.move(MoverType.SELF, delta);
-            this.setDeltaMovement(delta.x * 0.99, delta.y - 0.03, delta.z * 0.99);
+            if (this.isInWater()) {
+                Vec3 scaled = delta.scale(0.6);
+                this.setDeltaMovement(scaled.x, scaled.y - 0.05, scaled.z);
+            } else {
+                double newY = delta.y - 0.08;
+                this.setDeltaMovement(delta.x * 0.98, newY * 0.98, delta.z * 0.98);
+            }
             this.calculateEntityAnimation(false);
         } else {
             super.travel(travelVector);
         }
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.is(ItemTags.CREEPER_IGNITERS)) {
+            return InteractionResult.PASS;
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -95,6 +130,7 @@ public class FestiveCreepieEntity extends Creepie {
             }
         } else if (this.isAlive() && !this.hasLanded && this.onGround()) {
             this.hasLanded = true;
+            this.setDeltaMovement(Vec3.ZERO);
             this.setSwellDir(1);
         }
     }

@@ -27,6 +27,11 @@ public class RocketSporesCloud extends CreeperSpores {
 
     @Override
     protected float getVisualCloudSize() {
+        return 1.5F;
+    }
+
+    @Override
+    protected float getSpawnRadius() {
         return 2.0F;
     }
 

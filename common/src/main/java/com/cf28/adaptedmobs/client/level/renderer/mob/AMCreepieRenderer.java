@@ -26,9 +26,12 @@ public class AMCreepieRenderer<T extends Creepie, M extends EntityModel<T>> exte
         if (entity instanceof FestiveCreepieEntity festive) {
             float tilt = Mth.lerp(partialTicks, festive.xRotO, festive.getXRot());
             float halfHeight = entity.getBbHeight() / 2.0F;
+            float yawDeg = 180.0F - entityYaw;
             poseStack.pushPose();
             poseStack.translate(0.0, halfHeight, 0.0);
+            poseStack.mulPose(Axis.YP.rotationDegrees(yawDeg));
             poseStack.mulPose(Axis.XP.rotationDegrees(tilt));
+            poseStack.mulPose(Axis.YP.rotationDegrees(-yawDeg));
             poseStack.translate(0.0, -halfHeight, 0.0);
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             poseStack.popPose();
