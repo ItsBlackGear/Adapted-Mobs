@@ -34,6 +34,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
+modId = "tolerable_creepers"
+type = "optional"
+versionRange = "[1.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
 modId = "yet_another_config_lib_v3"
 type = "required"
 versionRange = "[${yacl_version},)"

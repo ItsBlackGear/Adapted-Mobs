@@ -20,7 +20,7 @@
     "homepage": "https://discord.gg/Mctsf64CXP"
   },
   "license": "${license}",
-  "icon": "assets/${mod_id}/icon.png",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -46,5 +46,8 @@
     "java": ">=${java_version}",
     "fabric-api": "*",
     "yet_another_config_lib_v3": ">=${yacl_version}"
+  },
+  "optional": {
+    "tolerable-creepers": "*"
   }
 }
