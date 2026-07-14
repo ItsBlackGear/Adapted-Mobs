@@ -84,8 +84,7 @@ Spawns: Thrown Reaper Spores or grown from a Reaper's spore cloud
 
 Hostility: Hostile, but can't move
 
-Special Info: Won't target or follow anything, but detonates the instant a living thing wanders close enough. Doesn't
-damage terrain
+Special Info: Won't target or follow anything, but detonates shortly after landing. Doesn't damage terrain
 
 </details>
 
