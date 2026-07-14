@@ -5,6 +5,7 @@ import com.cf28.adaptedmobs.client.level.model.block_entity.PeeperCreeperSkullMo
 import com.cf28.adaptedmobs.client.level.model.block_entity.RocketCreeperSkullModel;
 import com.cf28.adaptedmobs.client.level.model.block_entity.SupportCreeperSkullModel;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.level.block.SkullTypes;
 import com.cf28.adaptedmobs.common.registries.AMBlockEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
@@ -21,10 +22,12 @@ public class ItemLikeRenderer {
 
     public static void setupBlockRenderers(BlockRendererEvent event) {
         event.register(RenderType.cutout(), AMBlocks.FESTIVE_TNT.get());
-        event.register(RenderType.cutout(),
-                AMBlocks.POTTED_FESTIVE_CREEPER_SPORES_PLANT.get(),
-                AMBlocks.POTTED_ROCKET_CREEPER_SPORES_PLANT.get(),
-                AMBlocks.POTTED_SUPPORT_CREEPER_SPORES_PLANT.get());
+        if (TolerableCreepersCompat.isLoaded()) {
+            event.register(RenderType.cutout(),
+                    AMBlocks.POTTED_FESTIVE_CREEPER_SPORES_PLANT.get(),
+                    AMBlocks.POTTED_ROCKET_CREEPER_SPORES_PLANT.get(),
+                    AMBlocks.POTTED_SUPPORT_CREEPER_SPORES_PLANT.get());
+        }
     }
 
     public static void setupSkullRenderers(SkullRendererEvent event) {

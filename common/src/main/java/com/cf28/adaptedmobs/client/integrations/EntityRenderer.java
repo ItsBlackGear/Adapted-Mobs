@@ -34,11 +34,11 @@ public class EntityRenderer {
         event.register(AMEntityTypes.FESTIVE_TNT.get(), FestiveTntRenderer::new);
         event.register(AMEntityTypes.MYSTERY_EGG.get(), ThrownItemRenderer::new);
 
-        event.register(AMEntityTypes.SUPPORT_SPORES.get(), NoopEntityRenderer::new);
-        event.register(AMEntityTypes.ROCKET_SPORES.get(), NoopEntityRenderer::new);
-        event.register(AMEntityTypes.FESTIVE_SPORES.get(), NoopEntityRenderer::new);
-
         if (TolerableCreepersCompat.isLoaded()) {
+            event.register(AMEntityTypes.SUPPORT_SPORES.get(), NoopEntityRenderer::new);
+            event.register(AMEntityTypes.ROCKET_SPORES.get(), NoopEntityRenderer::new);
+            event.register(AMEntityTypes.FESTIVE_SPORES.get(), NoopEntityRenderer::new);
+
             registerCreepieRenderer(event, AMEntityTypes.SUPPORT_CREEPIE.get(),
                     context -> new SupportCreepieModel<>(context.bakeLayer(AMModelLayers.SUPPORT_CREEPIE)),
                     SupportCreepieEntity.Variant.SPEED.getTexture());
@@ -48,10 +48,6 @@ public class EntityRenderer {
             registerCreepieRenderer(event, AMEntityTypes.FESTIVE_CREEPIE.get(),
                     context -> new FestiveCreepieModel<>(context.bakeLayer(AMModelLayers.FESTIVE_CREEPIE)),
                     ResourceLocation.fromNamespaceAndPath(AdaptedMobs.MOD_ID, "textures/entity/tolerable_creepers/festive_creepie.png"));
-        } else {
-            event.register(AMEntityTypes.SUPPORT_CREEPIE.get(), NoopEntityRenderer::new);
-            event.register(AMEntityTypes.ROCKET_CREEPIE.get(), NoopEntityRenderer::new);
-            event.register(AMEntityTypes.FESTIVE_CREEPIE.get(), NoopEntityRenderer::new);
         }
         event.register(AMEntityTypes.PRIMED_SPORE_BARREL.get(), AMPrimedSporeBarrelRenderer::new);
     }

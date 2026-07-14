@@ -43,7 +43,7 @@ dependencies {
 
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
-    compileOnly "maven.modrinth:tolerable-creepers:${tolerable_creepers_version}-neoforge"
+    implementation "maven.modrinth:tolerable-creepers:${tolerable_creepers_version}-neoforge"
 
     implementation "maven.modrinth:yacl:${yacl_version}-neoforge"
 }

@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.registries;
 
 import com.blackgear.platform.core.helper.BlockRegistry;
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.level.block.*;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.mojang.datafixers.util.Pair;
@@ -39,30 +40,44 @@ public class AMBlocks {
             SupportCreeperSkullBlock::new,
             WallSupportCreeperSkullBlock::new);
 
-    public static final Supplier<Block> FESTIVE_SPORE_BARREL = REGISTRIES.registerNoItem("festive_spore_barrel",
-            properties -> new AMSporeBarrelBlock(AMSporeBarrelBlock.SporeType.FESTIVE, properties),
-            Properties.ofFullCopy(Blocks.BARREL).noOcclusion());
-    public static final Supplier<Block> ROCKET_SPORE_BARREL = REGISTRIES.registerNoItem("rocket_spore_barrel",
-            properties -> new AMSporeBarrelBlock(AMSporeBarrelBlock.SporeType.ROCKET, properties),
-            Properties.ofFullCopy(Blocks.BARREL).noOcclusion());
-    public static final Supplier<Block> SUPPORT_SPORE_BARREL = REGISTRIES.registerNoItem("support_spore_barrel",
-            properties -> new AMSporeBarrelBlock(AMSporeBarrelBlock.SporeType.SUPPORT, properties),
-            Properties.ofFullCopy(Blocks.BARREL).noOcclusion());
+    public static final Supplier<Block> FESTIVE_SPORE_BARREL = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.registerNoItem("festive_spore_barrel",
+                    properties -> new AMSporeBarrelBlock(AMSporeBarrelBlock.SporeType.FESTIVE, properties),
+                    Properties.ofFullCopy(Blocks.BARREL).noOcclusion())
+            : null;
+    public static final Supplier<Block> ROCKET_SPORE_BARREL = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.registerNoItem("rocket_spore_barrel",
+                    properties -> new AMSporeBarrelBlock(AMSporeBarrelBlock.SporeType.ROCKET, properties),
+                    Properties.ofFullCopy(Blocks.BARREL).noOcclusion())
+            : null;
+    public static final Supplier<Block> SUPPORT_SPORE_BARREL = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.registerNoItem("support_spore_barrel",
+                    properties -> new AMSporeBarrelBlock(AMSporeBarrelBlock.SporeType.SUPPORT, properties),
+                    Properties.ofFullCopy(Blocks.BARREL).noOcclusion())
+            : null;
 
-    public static final Supplier<Block> POTTED_FESTIVE_CREEPER_SPORES_PLANT = REGISTRIES.registerNoItem("potted_festive_creeper_spores_plant",
-            properties -> new AMPottedSporeBlock(AMItems.FESTIVE_CREEPER_SPORES, properties),
-            Properties.of().instabreak().noOcclusion());
-    public static final Supplier<Block> POTTED_ROCKET_CREEPER_SPORES_PLANT = REGISTRIES.registerNoItem("potted_rocket_creeper_spores_plant",
-            properties -> new AMPottedSporeBlock(AMItems.ROCKET_CREEPER_SPORES, properties),
-            Properties.of().instabreak().noOcclusion());
-    public static final Supplier<Block> POTTED_SUPPORT_CREEPER_SPORES_PLANT = REGISTRIES.registerNoItem("potted_support_creeper_spores_plant",
-            properties -> new AMPottedSporeBlock(AMItems.SUPPORT_CREEPER_SPORES, properties),
-            Properties.of().instabreak().noOcclusion());
+    public static final Supplier<Block> POTTED_FESTIVE_CREEPER_SPORES_PLANT = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.registerNoItem("potted_festive_creeper_spores_plant",
+                    properties -> new AMPottedSporeBlock(AMItems.FESTIVE_CREEPER_SPORES, properties),
+                    Properties.of().instabreak().noOcclusion())
+            : null;
+    public static final Supplier<Block> POTTED_ROCKET_CREEPER_SPORES_PLANT = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.registerNoItem("potted_rocket_creeper_spores_plant",
+                    properties -> new AMPottedSporeBlock(AMItems.ROCKET_CREEPER_SPORES, properties),
+                    Properties.of().instabreak().noOcclusion())
+            : null;
+    public static final Supplier<Block> POTTED_SUPPORT_CREEPER_SPORES_PLANT = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.registerNoItem("potted_support_creeper_spores_plant",
+                    properties -> new AMPottedSporeBlock(AMItems.SUPPORT_CREEPER_SPORES, properties),
+                    Properties.of().instabreak().noOcclusion())
+            : null;
 
     static {
-        REGISTRIES.registerItem("festive_spore_barrel", () -> new BlockItem(FESTIVE_SPORE_BARREL.get(), new Item.Properties()));
-        REGISTRIES.registerItem("rocket_spore_barrel", () -> new BlockItem(ROCKET_SPORE_BARREL.get(), new Item.Properties()));
-        REGISTRIES.registerItem("support_spore_barrel", () -> new BlockItem(SUPPORT_SPORE_BARREL.get(), new Item.Properties()));
+        if (TolerableCreepersCompat.isLoaded()) {
+            REGISTRIES.registerItem("festive_spore_barrel", () -> new BlockItem(FESTIVE_SPORE_BARREL.get(), new Item.Properties()));
+            REGISTRIES.registerItem("rocket_spore_barrel", () -> new BlockItem(ROCKET_SPORE_BARREL.get(), new Item.Properties()));
+            REGISTRIES.registerItem("support_spore_barrel", () -> new BlockItem(SUPPORT_SPORE_BARREL.get(), new Item.Properties()));
+        }
     }
 
     public static Pair<Supplier<Block>, Supplier<Block>> registerSkull(String name, SkullBlock.Type type, BiFunction<SkullBlock.Type, Properties, Block> base, BiFunction<SkullBlock.Type, Properties, Block> wall) {

@@ -1,4 +1,18 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tolerable_creepers"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "tolerable_creepers"
+      ]
+    }
+  ],
   "type": "minecraft:block",
   "pools": [
     {
@@ -26,7 +40,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "adaptedmobs:rocket_creeper_spores"
+          "name": "adaptedmobs:festive_creeper_spores"
         }
       ],
       "rolls": 1.0

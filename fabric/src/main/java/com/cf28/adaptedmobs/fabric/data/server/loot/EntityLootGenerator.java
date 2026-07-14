@@ -31,100 +31,100 @@ import java.util.function.Supplier;
 
 public class EntityLootGenerator extends SimpleFabricLootTableProvider {
     private final HolderLookup.Provider registries;
-    
+
     public EntityLootGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
         super(output, lookup, LootContextParamSets.ENTITY);
         this.registries = lookup.resultNow();
     }
-    
+
     @Override
     public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
         this.add(
-            AMEntityTypes.FESTIVE_CREEPER,
-            output,
-            LootTable.lootTable()
-                .withPool(
-                    LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(Items.GUNPOWDER)
-                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
-                            .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                AMEntityTypes.FESTIVE_CREEPER,
+                output,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(Items.GUNPOWDER)
+                                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
                         )
-                )
-                .withPool(
-                    LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(Items.TNT))
-                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                        .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.2F, 0.01F))
-                )
-                .withPool(
-                    LootPool.lootPool()
-                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
-                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
-                )
-        );
-        
-        this.add(
-            AMEntityTypes.ROCKET_CREEPER,
-            output,
-            LootTable.lootTable()
-                .withPool(
-                    LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(Items.GUNPOWDER)
-                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
-                            .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(Items.TNT))
+                                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
+                                        .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.2F, 0.01F))
                         )
-                )
-                .withPool(
-                    LootPool.lootPool()
-                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
-                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
-                )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
+                                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
+                        )
         );
 
         this.add(
-            AMEntityTypes.SUPPORT_CREEPER,
-            output,
-            LootTable.lootTable()
-                .withPool(
-                    LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(
-                            LootItem.lootTableItem(Items.GUNPOWDER)
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
-                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                AMEntityTypes.ROCKET_CREEPER,
+                output,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(Items.GUNPOWDER)
+                                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
                         )
-                )
-                .withPool(
-                    LootPool.lootPool()
-                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
-                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
-                )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
+                                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
+                        )
         );
 
         this.add(
-            AMEntityTypes.CREEPER,
-            output,
-            LootTable.lootTable()
-                .withPool(
-                    LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0F))
-                        .add(
-                            LootItem.lootTableItem(Items.GUNPOWDER)
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
-                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                AMEntityTypes.SUPPORT_CREEPER,
+                output,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.GUNPOWDER)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
                         )
-                )
-                .withPool(
-                    LootPool.lootPool()
-                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
-                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
-                )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
+                                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
+                        )
+        );
+
+        this.add(
+                AMEntityTypes.CREEPER,
+                output,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.GUNPOWDER)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
+                                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
+                        )
         );
     }
-    
+
     private <T extends Entity> void add(Supplier<EntityType<T>> type, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter, LootTable.Builder builder) {
         exporter.accept(type.get().getDefaultLootTable(), builder);
     }

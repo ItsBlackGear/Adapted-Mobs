@@ -1,5 +1,6 @@
 package com.cf28.adaptedmobs.common.level.entity;
 
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
@@ -106,7 +107,7 @@ public class PrimedFestiveTnt extends Entity {
         float radius = this.isSmall() ? 1.5F : 3.0F;
         this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), radius * (this.isCharged() ? 2.0F : 1.0F), interaction);
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide && TolerableCreepersCompat.isLoaded()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
             TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.position().add(0.0, 0.1, 0.0), radius * 0.7, 24);
             TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, this.position().add(0.0, 0.1, 0.0), radius * 0.7, 30);

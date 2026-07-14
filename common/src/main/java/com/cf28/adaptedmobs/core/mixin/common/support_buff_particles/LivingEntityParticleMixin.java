@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.core.mixin.common.support_buff_particles;
 import com.cf28.adaptedmobs.common.registries.AMMobEffects;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,7 +41,7 @@ public abstract class LivingEntityParticleMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     private void am$spawnSupportBuffParticles(CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
-        if (!self.level().isClientSide() || self.getRandom().nextInt(3) != 0) {
+        if (self.level().isClientSide() || self.getRandom().nextInt(3) != 0) {
             return;
         }
 
@@ -55,6 +56,6 @@ public abstract class LivingEntityParticleMixin {
         double xSpeed = (self.getRandom().nextDouble() - 0.5) * 0.05;
         double ySpeed = self.getRandom().nextDouble() * 0.05;
         double zSpeed = (self.getRandom().nextDouble() - 0.5) * 0.05;
-        self.level().addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
+        ((ServerLevel) self.level()).sendParticles(particle, x, y, z, 0, xSpeed, ySpeed, zSpeed, 1.0);
     }
 }

@@ -63,5 +63,6 @@
   "item.adaptedmobs.support_creeper_spawn_egg": "Seeper Spawn Egg",
   "item.adaptedmobs.support_creeper_spores": "Seeper Spores",
   "item.adaptedmobs.support_creepie_spawn_egg": "Seepie Spawn Egg",
-  "item.adaptedmobs.yellow_mystery_egg": "Yellow Mystery Egg"
+  "item.adaptedmobs.yellow_mystery_egg": "Yellow Mystery Egg",
+  "tag.item.adaptedmobs.creeper_food": "Creeper Food"
 }

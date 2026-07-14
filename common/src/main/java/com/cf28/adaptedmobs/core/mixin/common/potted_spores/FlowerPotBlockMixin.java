@@ -1,5 +1,6 @@
 package com.cf28.adaptedmobs.core.mixin.common.potted_spores;
 
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.level.block.AMPottedSporeBlock;
 import com.cf28.adaptedmobs.common.registries.AMBlocks;
 import com.cf28.adaptedmobs.common.registries.AMItems;
@@ -28,6 +29,9 @@ import java.util.function.Supplier;
 public class FlowerPotBlockMixin {
     @Unique
     private static Supplier<Block> am$pottedPlantFor(ItemStack stack) {
+        if (!TolerableCreepersCompat.isLoaded()) {
+            return null;
+        }
         if (stack.is(AMItems.FESTIVE_CREEPER_SPORES.get())) {
             return AMBlocks.POTTED_FESTIVE_CREEPER_SPORES_PLANT;
         }

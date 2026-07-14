@@ -97,5 +97,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.option.rocket_spore_count_day_random", "Leaper Spore Count Day Random");
         builder.add("config.adaptedmobs.option.rocket_spore_count_night_base", "Leaper Spore Count Night Base");
         builder.add("config.adaptedmobs.option.rocket_spore_count_night_random", "Leaper Spore Count Night Random");
+
+        builder.add("tag.item.adaptedmobs.creeper_food", "Creeper Food");
     }
 }

@@ -15,7 +15,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.projectile.ThrownEgg;
 
 import java.util.function.Supplier;
 
@@ -52,68 +51,50 @@ public class AMEntityTypes {
                     .clientTrackingRange(4)
                     .updateInterval(10));
 
-    public static final Supplier<EntityType<Creeper>> SUPPORT_CREEPIE = REGISTRIES.entity("support_creepie",
-            EntityType.Builder.<Creeper>of((type, level) -> {
-                        if (TolerableCreepersCompat.isLoaded()) {
-                            return (Creeper) TolerableCreepersIntegration.createSupportCreepie(type, level);
-                        }
-                        return new Creeper(type, level);
-                    }, MobCategory.MONSTER)
-                    .sized(0.3F, 0.85F)
-                    .clientTrackingRange(8));
+    public static final Supplier<EntityType<Creeper>> SUPPORT_CREEPIE = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.entity("support_creepie",
+                    EntityType.Builder.<Creeper>of((type, level) -> (Creeper) TolerableCreepersIntegration.createSupportCreepie(type, level), MobCategory.MONSTER)
+                            .sized(0.3F, 0.85F)
+                            .clientTrackingRange(8))
+            : null;
 
-    public static final Supplier<EntityType<Creeper>> ROCKET_CREEPIE = REGISTRIES.entity("rocket_creepie",
-            EntityType.Builder.<Creeper>of((type, level) -> {
-                        if (TolerableCreepersCompat.isLoaded()) {
-                            return (Creeper) TolerableCreepersIntegration.createRocketCreepie(type, level);
-                        }
-                        return new Creeper(type, level);
-                    }, MobCategory.MONSTER)
-                    .sized(0.3F, 0.85F)
-                    .clientTrackingRange(8));
+    public static final Supplier<EntityType<Creeper>> ROCKET_CREEPIE = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.entity("rocket_creepie",
+                    EntityType.Builder.<Creeper>of((type, level) -> (Creeper) TolerableCreepersIntegration.createRocketCreepie(type, level), MobCategory.MONSTER)
+                            .sized(0.3F, 0.85F)
+                            .clientTrackingRange(8))
+            : null;
 
-    public static final Supplier<EntityType<Creeper>> FESTIVE_CREEPIE = REGISTRIES.entity("festive_creepie",
-            EntityType.Builder.<Creeper>of((type, level) -> {
-                        if (TolerableCreepersCompat.isLoaded()) {
-                            return (Creeper) TolerableCreepersIntegration.createFestiveCreepie(type, level);
-                        }
-                        return new Creeper(type, level);
-                    }, MobCategory.MONSTER)
-                    .sized(0.3F, 0.7F)
-                    .clientTrackingRange(8));
+    public static final Supplier<EntityType<Creeper>> FESTIVE_CREEPIE = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.entity("festive_creepie",
+                    EntityType.Builder.<Creeper>of((type, level) -> (Creeper) TolerableCreepersIntegration.createFestiveCreepie(type, level), MobCategory.MONSTER)
+                            .sized(0.3F, 0.7F)
+                            .clientTrackingRange(8))
+            : null;
 
-    public static final Supplier<EntityType<Entity>> SUPPORT_SPORES = REGISTRIES.entity("support_spores",
-            EntityType.Builder.of((type, level) -> {
-                        if (TolerableCreepersCompat.isLoaded()) {
-                            return TolerableCreepersIntegration.createSupportSpores(type, level);
-                        }
-                        return new ThrownEgg(EntityType.EGG, level);
-                    }, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
-                    .clientTrackingRange(4)
-                    .updateInterval(10));
+    public static final Supplier<EntityType<Entity>> SUPPORT_SPORES = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.entity("support_spores",
+                    EntityType.Builder.of(TolerableCreepersIntegration::createSupportSpores, MobCategory.MISC)
+                            .sized(0.25F, 0.25F)
+                            .clientTrackingRange(4)
+                            .updateInterval(10))
+            : null;
 
-    public static final Supplier<EntityType<Entity>> ROCKET_SPORES = REGISTRIES.entity("rocket_spores",
-            EntityType.Builder.of((type, level) -> {
-                        if (TolerableCreepersCompat.isLoaded()) {
-                            return TolerableCreepersIntegration.createRocketSpores(type, level);
-                        }
-                        return new ThrownEgg(EntityType.EGG, level);
-                    }, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
-                    .clientTrackingRange(4)
-                    .updateInterval(10));
+    public static final Supplier<EntityType<Entity>> ROCKET_SPORES = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.entity("rocket_spores",
+                    EntityType.Builder.of(TolerableCreepersIntegration::createRocketSpores, MobCategory.MISC)
+                            .sized(0.25F, 0.25F)
+                            .clientTrackingRange(4)
+                            .updateInterval(10))
+            : null;
 
-    public static final Supplier<EntityType<Entity>> FESTIVE_SPORES = REGISTRIES.entity("festive_spores",
-            EntityType.Builder.of((type, level) -> {
-                        if (TolerableCreepersCompat.isLoaded()) {
-                            return TolerableCreepersIntegration.createFestiveSpores(type, level);
-                        }
-                        return new ThrownEgg(EntityType.EGG, level);
-                    }, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
-                    .clientTrackingRange(4)
-                    .updateInterval(10));
+    public static final Supplier<EntityType<Entity>> FESTIVE_SPORES = TolerableCreepersCompat.isLoaded()
+            ? REGISTRIES.entity("festive_spores",
+                    EntityType.Builder.of(TolerableCreepersIntegration::createFestiveSpores, MobCategory.MISC)
+                            .sized(0.25F, 0.25F)
+                            .clientTrackingRange(4)
+                            .updateInterval(10))
+            : null;
 
     public static final Supplier<EntityType<AMPrimedSporeBarrel>> PRIMED_SPORE_BARREL = REGISTRIES.entity("primed_spore_barrel",
             EntityType.Builder.<AMPrimedSporeBarrel>of(AMPrimedSporeBarrel::new, MobCategory.MISC)
