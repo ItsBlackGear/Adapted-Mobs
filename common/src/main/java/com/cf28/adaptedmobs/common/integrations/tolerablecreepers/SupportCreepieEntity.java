@@ -4,6 +4,7 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMMobEffects;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
+import com.cf28.adaptedmobs.common.registries.AMSoundEvents;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import com.evandev.tolerable_creepers.core.registry.TCParticles;
@@ -17,13 +18,15 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.EntityBasedExplosionDamageCalculator;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +41,7 @@ public class SupportCreepieEntity extends Creepie {
     private static final float RING_SPORE_CHANCE = 0.35F;
     private static final double HOSTILE_SWELL_RANGE = 2.0;
     private static final float DEBUFF_EXPLOSION_RADIUS = 2.5F;
+    private static final float HOSTILE_DAMAGE_MULTIPLIER = 0.35F;
     private static final int BUFF_DURATION = 240;
     private static final int DEBUFF_DURATION = 160;
     private static final float BUFF_CLOUD_RADIUS = 1.5F;
@@ -75,17 +79,13 @@ public class SupportCreepieEntity extends Creepie {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        Variant variant = this.getVariant();
-        if (variant != Variant.SPEED && variant != Variant.STRENGTH) {
-            return;
-        }
 
         Entity owner = this.getOwner();
         if (owner == null) {
             owner = this.level().getNearestPlayer(this, BUFF_SEEK_RANGE);
         }
 
-        if (owner == null) {
+        if (owner == null || (owner instanceof Player player && player.isCreative())) {
             return;
         } else if (this.distanceToSqr(owner) <= BUFF_RANGE_SQR) {
             this.explodeCustom();
@@ -110,7 +110,7 @@ public class SupportCreepieEntity extends Creepie {
 
     @Override
     protected void explodeCustom() {
-        if (this.level().isClientSide()) return;
+        if (this.level().isClientSide() || this.dead) return;
         this.dead = true;
         ServerLevel sl = (ServerLevel) this.level();
         Variant variant = this.getVariant();
@@ -124,7 +124,23 @@ public class SupportCreepieEntity extends Creepie {
                     ringParticle, TCParticles.CREEPER_SPORES.get(), RING_SPORE_CHANCE);
             this.spawnLingeringCloud(sl, effect, BUFF_CLOUD_RADIUS, BUFF_DURATION);
         } else {
-            this.level().explode(this, this.getX(), this.getY(), this.getZ(), DEBUFF_EXPLOSION_RADIUS, Level.ExplosionInteraction.NONE);
+            this.level().explode(
+                    this,
+                    Explosion.getDefaultDamageSource(this.level(), this),
+                    new EntityBasedExplosionDamageCalculator(this) {
+                        @Override
+                        public float getEntityDamageAmount(@NotNull Explosion explosion, @NotNull Entity target) {
+                            return super.getEntityDamageAmount(explosion, target) * HOSTILE_DAMAGE_MULTIPLIER;
+                        }
+                    },
+                    this.getX(), this.getY(), this.getZ(),
+                    DEBUFF_EXPLOSION_RADIUS,
+                    false,
+                    Level.ExplosionInteraction.NONE,
+                    ParticleTypes.EXPLOSION,
+                    ParticleTypes.EXPLOSION,
+                    AMSoundEvents.SUPPORT_CREEPIE_BLAST
+            );
             Holder<MobEffect> effect = variant == Variant.SLOWNESS ? AMMobEffects.SUPPORT_SLOWNESS : AMMobEffects.SUPPORT_WEAKNESS;
             SimpleParticleType ringParticle = variant == Variant.SLOWNESS
                     ? AMParticles.SUPPORTED_BLUE.get() : AMParticles.SUPPORTED_GREY.get();
@@ -149,7 +165,7 @@ public class SupportCreepieEntity extends Creepie {
 
     private void playBuffBurstEffects(ServerLevel level) {
         level.sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(), this.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
-        level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE,
+        level.playSound(null, this.getX(), this.getY(), this.getZ(), AMSoundEvents.SUPPORT_CREEPIE_BLAST,
                 SoundSource.NEUTRAL, 2.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.7F);
     }
 

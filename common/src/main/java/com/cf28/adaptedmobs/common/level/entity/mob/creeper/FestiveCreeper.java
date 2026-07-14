@@ -91,18 +91,13 @@ public class FestiveCreeper extends TamableCreeper {
     }
 
     @Override
-    public boolean canDropMobsSkull() {
-        return false;
-    }
-
-    @Override
     protected void postExplosion() {
         super.postExplosion();
         if (!this.level().isClientSide() && !this.isTame() && TolerableCreepersCompat.isLoaded()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
             Vec3 center = this.position().add(0.0, 0.1, 0.0);
             int count = 3 + this.random.nextInt(3);
-            TolerableCreepersIntegration.spawnFestiveCreepieBurst(this.level(), this.random, center, count);
+            TolerableCreepersIntegration.spawnFestiveCreepieBurst(this.level(), this.random, center, count, 0.2, 0.25, 0.3, 0.3);
             TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), center, 1.0, 16);
             TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, center, 1.0, 20);
         }

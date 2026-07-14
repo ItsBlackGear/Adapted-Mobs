@@ -14,6 +14,7 @@ import com.cf28.adaptedmobs.core.AdaptedMobs;
 public class ClientSetup {
     public static void setup() {
         ResourcePackManager.registerBuiltResourcePack(AdaptedMobs.resource("aux_textures"), AdaptedMobs.MOD_ID, "Aux's Textures");
+        ResourcePackManager.registerBuiltResourcePack(AdaptedMobs.resource("original_textures"), AdaptedMobs.MOD_ID, "Original Textures");
 
         GameRendering.registerEntityRenderers(EntityRenderer::setupEntityRenderers);
         GameRendering.registerModelLayers(EntityRenderer::setupLayerDefinitions);
@@ -29,7 +30,7 @@ public class ClientSetup {
         event.register(AMParticles.SUPPORTED_BLUE, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
         event.register(AMParticles.SUPPORTED_YELLOW, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
         event.register(AMParticles.SUPPORTED_GREY, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
-        event.register(AMParticles.CREEPER_HEAL, AMFlowerParticle.Provider::new);
+        event.register(AMParticles.CREEPER_HEAL, sprites -> new AMFlowerParticle.Provider(sprites, 0.5F, false));
     }
 
     public static void asyncSetup(ParallelDispatch dispatch) {

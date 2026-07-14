@@ -5,7 +5,6 @@ import com.cf28.adaptedmobs.fabric.data.client.ModelGenerator;
 import com.cf28.adaptedmobs.fabric.data.server.loot.BlockLootGenerator;
 import com.cf28.adaptedmobs.fabric.data.server.loot.EntityLootGenerator;
 import com.cf28.adaptedmobs.fabric.data.server.tags.BiomeTagGenerator;
-import com.cf28.adaptedmobs.fabric.data.server.tags.ItemTagGenerator;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
@@ -20,7 +19,6 @@ public class AMDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BlockLootGenerator::new);
         pack.addProvider(EntityLootGenerator::new);
         
-        pack.addProvider(ItemTagGenerator::new);
         pack.addProvider(BiomeTagGenerator::new);
     }
 }

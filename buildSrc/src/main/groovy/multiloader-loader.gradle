@@ -46,6 +46,7 @@ publishMods {
 
         requires("yacl")
         requires("platform")
+        optional("tolerable-creepers")
     }
 
     modrinth {
@@ -55,5 +56,6 @@ publishMods {
 
         requires("yacl")
         requires("platform")
+        optional("tolerable-creepers")
     }
 }

@@ -128,7 +128,7 @@ public class RocketCreepieEntity extends Creepie {
 
     @Override
     public boolean isInvulnerableTo(@NotNull DamageSource source) {
-        if (source.is(DamageTypeTags.IS_EXPLOSION) && source.getEntity() instanceof Creepie) {
+        if (source.is(DamageTypeTags.IS_EXPLOSION)) {
             return true;
         }
         return super.isInvulnerableTo(source);

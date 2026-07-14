@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:gunpowder",
+    {
+      "id": "tolerable_creepers:creeper_spores",
+      "required": false
+    }
+  ]
+}

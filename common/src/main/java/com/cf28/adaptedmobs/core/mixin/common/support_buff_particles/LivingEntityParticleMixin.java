@@ -10,21 +10,31 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityParticleMixin {
     @Unique
     private static SimpleParticleType am$pickParticle(LivingEntity entity) {
+        List<SimpleParticleType> active = new ArrayList<>();
         if (entity.hasEffect(AMMobEffects.SUPPORT_SPEED)) {
-            return AMParticles.SUPPORTED_YELLOW.get();
-        } else if (entity.hasEffect(AMMobEffects.SUPPORT_STRENGTH)) {
-            return AMParticles.SUPPORTED_RED.get();
-        } else if (entity.hasEffect(AMMobEffects.SUPPORT_SLOWNESS)) {
-            return AMParticles.SUPPORTED_BLUE.get();
-        } else if (entity.hasEffect(AMMobEffects.SUPPORT_WEAKNESS)) {
-            return AMParticles.SUPPORTED_GREY.get();
+            active.add(AMParticles.SUPPORTED_YELLOW.get());
+        }
+        if (entity.hasEffect(AMMobEffects.SUPPORT_STRENGTH)) {
+            active.add(AMParticles.SUPPORTED_RED.get());
+        }
+        if (entity.hasEffect(AMMobEffects.SUPPORT_SLOWNESS)) {
+            active.add(AMParticles.SUPPORTED_BLUE.get());
+        }
+        if (entity.hasEffect(AMMobEffects.SUPPORT_WEAKNESS)) {
+            active.add(AMParticles.SUPPORTED_GREY.get());
         }
 
-        return null;
+        if (active.isEmpty()) {
+            return null;
+        }
+        return active.get(entity.getRandom().nextInt(active.size()));
     }
 
     @Inject(method = "tick", at = @At("TAIL"))

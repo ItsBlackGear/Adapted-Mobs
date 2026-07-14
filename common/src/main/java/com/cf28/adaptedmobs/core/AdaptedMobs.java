@@ -19,8 +19,8 @@ public final class AdaptedMobs {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final CommonConfig CONFIG = Environment.registerConfig(MOD_ID, ModConfig.Type.COMMON, CommonConfig::new);
     public static final ModInstance INSTANCE = ModInstance.create(MOD_ID)
-            .client(ClientSetup::setup)
-            .postClient(ClientSetup::asyncSetup)
+            .client(() -> ClientSetup.setup())
+            .postClient(dispatch -> ClientSetup.asyncSetup(dispatch))
             .common(CommonSetup::setup)
             .postCommon(CommonSetup::asyncSetup)
             .build();
@@ -36,6 +36,7 @@ public final class AdaptedMobs {
         AMEntityDataSerializers.REGISTRIES.register();
         AMParticles.REGISTRIES.register();
         AMMobEffects.REGISTRIES.register();
+        AMSoundEvents.REGISTRIES.register();
 
         AMBiomeTags.REGISTRY.register();
         AMItemTags.REGISTRY.register();

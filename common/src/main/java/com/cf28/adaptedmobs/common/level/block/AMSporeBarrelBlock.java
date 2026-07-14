@@ -1,7 +1,9 @@
 package com.cf28.adaptedmobs.common.level.block;
 
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.level.entity.AMPrimedSporeBarrel;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
+import com.evandev.tolerable_creepers.core.registry.TCParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -45,8 +47,12 @@ public class AMSporeBarrelBlock extends Block {
         return switch (this.type) {
             case FESTIVE -> AMParticles.FESTIVE_SPORES.get();
             case ROCKET -> AMParticles.ROCKET_SPORES.get();
-            case SUPPORT ->
-                    random.nextBoolean() ? AMParticles.SUPPORTED_YELLOW.get() : AMParticles.SUPPORTED_GREY.get();
+            case SUPPORT -> {
+                if (TolerableCreepersCompat.isLoaded() && random.nextFloat() > 0.2F) {
+                    yield TCParticles.CREEPER_SPORES.get();
+                }
+                yield random.nextBoolean() ? AMParticles.SUPPORTED_YELLOW.get() : AMParticles.SUPPORTED_GREY.get();
+            }
         };
     }
 

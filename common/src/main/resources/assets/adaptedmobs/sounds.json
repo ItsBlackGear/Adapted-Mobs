@@ -1,0 +1,10 @@
+{
+  "support_creepie_blast": {
+    "sounds": [
+      {
+        "name": "adaptedmobs:entity/support_creepie/blast",
+        "volume": 1.5
+      }
+    ]
+  }
+}

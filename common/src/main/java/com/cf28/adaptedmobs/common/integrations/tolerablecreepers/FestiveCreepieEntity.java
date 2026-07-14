@@ -6,6 +6,8 @@ import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -23,8 +25,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class FestiveCreepieEntity extends Creepie {
     private static final int TRAIL_START_DELAY = 6;
+    private static final int WATER_EXPLODE_DELAY = 60;
 
     private boolean hasLanded;
+    private int waterTicks;
 
     public FestiveCreepieEntity(EntityType<? extends Creepie> type, Level level) {
         super(type, level);
@@ -88,7 +92,11 @@ public class FestiveCreepieEntity extends Creepie {
             this.move(MoverType.SELF, delta);
             if (this.isInWater()) {
                 Vec3 scaled = delta.scale(0.6);
-                this.setDeltaMovement(scaled.x, scaled.y - 0.05, scaled.z);
+                double submersion = this.getBbHeight() > 0.0F
+                        ? Mth.clamp(this.getFluidHeight(FluidTags.WATER) / this.getBbHeight(), 0.0, 1.0)
+                        : 0.0;
+                double newY = Mth.clamp(scaled.y * 0.5 + submersion * 0.06, -0.1, 0.08);
+                this.setDeltaMovement(scaled.x, newY, scaled.z);
             } else {
                 double newY = delta.y - 0.08;
                 this.setDeltaMovement(delta.x * 0.98, newY * 0.98, delta.z * 0.98);
@@ -128,11 +136,29 @@ public class FestiveCreepieEntity extends Creepie {
             if (this.tickCount >= TRAIL_START_DELAY && !this.onGround()) {
                 this.level().addParticle(AMParticles.FESTIVE_TNT_PARTICLETRAIL.get(), this.getX(), this.getY() + 0.25, this.getZ(), 0.0, 0.0, 0.0);
             }
-        } else if (this.isAlive() && !this.hasLanded && this.onGround()) {
-            this.hasLanded = true;
-            this.setDeltaMovement(Vec3.ZERO);
-            this.setSwellDir(1);
+        } else if (this.isAlive()) {
+            if (!this.hasLanded && this.onGround()) {
+                this.hasLanded = true;
+                this.setDeltaMovement(Vec3.ZERO);
+                this.setSwellDir(1);
+            }
+
+            if (this.isInWater()) {
+                if (++this.waterTicks >= WATER_EXPLODE_DELAY) {
+                    this.explodeCustom();
+                }
+            } else {
+                this.waterTicks = 0;
+            }
         }
+    }
+
+    @Override
+    public boolean isInvulnerableTo(@NotNull DamageSource source) {
+        if (source.is(DamageTypeTags.IS_EXPLOSION)) {
+            return true;
+        }
+        return super.isInvulnerableTo(source);
     }
 
     @Override

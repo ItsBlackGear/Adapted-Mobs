@@ -114,8 +114,8 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
     private void explodeFestiveCreepies() {
         ServerLevel serverLevel = (ServerLevel) this.level();
         Vec3 center = this.position().add(0.0, 0.1, 0.0);
-        int creepieCount = this.random.nextInt(4) + 4;
-        TolerableCreepersIntegration.spawnFestiveCreepieBurst(this.level(), this.random, center, creepieCount);
+        int creepieCount = this.random.nextInt(4) + 5;
+        TolerableCreepersIntegration.spawnFestiveCreepieBurst(this.level(), this.random, center, creepieCount, 0.4, 0.3, 0.5, 0.4);
         TolerableCreepersIntegration.spawnParticleRing(serverLevel, AMParticles.FESTIVE_SPORES.get(), center, 1.2, 16);
         TolerableCreepersIntegration.spawnParticleCircle(serverLevel, AMParticles.FESTIVE_SPORES.get(), this.random, center, 1.2, 20);
         TolerableCreepersIntegration.spawnParticleSphere(this, this.random, center.add(0.0, 0.3, 0.0), 2, 1.0F, AMParticles.FESTIVE_SPORES.get());

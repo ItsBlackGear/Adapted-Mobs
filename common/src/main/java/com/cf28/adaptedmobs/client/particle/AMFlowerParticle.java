@@ -6,9 +6,10 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 
 public class AMFlowerParticle extends TextureSheetParticle {
+    private final boolean canRotate;
     private final float rotationSpeed;
 
-    protected AMFlowerParticle(ClientLevel clientLevel, double x, double y, double z, double xVelocity, double yVelocity, double zVelocity, SpriteSet spriteSet, float sizeMultiplier) {
+    protected AMFlowerParticle(ClientLevel clientLevel, double x, double y, double z, double xVelocity, double yVelocity, double zVelocity, SpriteSet spriteSet, float sizeMultiplier, boolean canRotate) {
         super(clientLevel, x, y, z);
         this.gravity = 0.1F;
         this.friction = 0.6F;
@@ -17,8 +18,9 @@ public class AMFlowerParticle extends TextureSheetParticle {
         this.zd = zVelocity;
         this.quadSize = 0.2F * sizeMultiplier * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
         this.lifetime = (int) (20.0D / (this.random.nextFloat() * 0.8D + 0.2D)) + 2;
-        this.roll = this.oRoll = this.random.nextFloat() * (float) Math.PI * 2.0F;
-        this.rotationSpeed = (this.random.nextFloat() - 0.5F) * 2.0F;
+        this.canRotate = canRotate;
+        this.roll = this.oRoll = canRotate ? this.random.nextFloat() * (float) Math.PI * 2.0F : 0.0F;
+        this.rotationSpeed = canRotate ? (this.random.nextFloat() - 0.5F) * 2.0F : 0.0F;
         this.pickSprite(spriteSet);
     }
 
@@ -30,8 +32,10 @@ public class AMFlowerParticle extends TextureSheetParticle {
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
-            this.oRoll = this.roll;
-            this.roll += (float) (Math.PI * Math.min(0.5, this.yd) * 2.0F) * this.rotationSpeed;
+            if (this.canRotate) {
+                this.oRoll = this.roll;
+                this.roll += (float) (Math.PI * Math.min(0.5, this.yd) * 2.0F) * this.rotationSpeed;
+            }
 
             this.yd -= 0.04 * this.gravity;
             this.move(this.xd, this.yd, this.zd);
@@ -58,19 +62,25 @@ public class AMFlowerParticle extends TextureSheetParticle {
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprites;
         private final float sizeMultiplier;
+        private final boolean canRotate;
 
         public Provider(SpriteSet spriteSet) {
             this(spriteSet, 1.0F);
         }
 
         public Provider(SpriteSet spriteSet, float sizeMultiplier) {
+            this(spriteSet, sizeMultiplier, true);
+        }
+
+        public Provider(SpriteSet spriteSet, float sizeMultiplier, boolean canRotate) {
             this.sprites = spriteSet;
             this.sizeMultiplier = sizeMultiplier;
+            this.canRotate = canRotate;
         }
 
         @Override
         public Particle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level, double x, double y, double z, double xVelocity, double yVelocity, double zVelocity) {
-            return new AMFlowerParticle(level, x, y, z, xVelocity, yVelocity, zVelocity, this.sprites, this.sizeMultiplier);
+            return new AMFlowerParticle(level, x, y, z, xVelocity, yVelocity, zVelocity, this.sprites, this.sizeMultiplier, this.canRotate);
         }
     }
 }

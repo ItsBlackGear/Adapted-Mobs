@@ -139,12 +139,14 @@ public class TolerableCreepersIntegration {
         return spores;
     }
 
-    public static void spawnFestiveCreepieBurst(Level level, RandomSource random, Vec3 center, int count) {
+    public static void spawnFestiveCreepieBurst(Level level, RandomSource random, Vec3 center, int count,
+                                                double minHorizontalSpeed, double horizontalSpeedRange,
+                                                double minVerticalSpeed, double verticalSpeedRange) {
         for (int i = 0; i < count; i++) {
             Entity creepie = createFestiveCreepie(level, center.x(), center.y(), center.z());
             double angle = random.nextDouble() * Math.PI * 2;
-            double horizontalSpeed = 0.4 + random.nextDouble() * 0.4;
-            double verticalSpeed = 0.5 + random.nextDouble() * 0.5;
+            double horizontalSpeed = minHorizontalSpeed + random.nextDouble() * horizontalSpeedRange;
+            double verticalSpeed = minVerticalSpeed + random.nextDouble() * verticalSpeedRange;
             creepie.setDeltaMovement(Math.cos(angle) * horizontalSpeed, verticalSpeed, Math.sin(angle) * horizontalSpeed);
             level.addFreshEntity(creepie);
         }
