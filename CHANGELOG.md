@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Tolerable Creepers integration!
     - Adapted Mobs now have their own Creepie variants, spores, and spore barrels.
+- Added YACL integration for in-game config options.
+- Added additional config options.
 
 ### Changed
 
