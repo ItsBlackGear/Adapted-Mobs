@@ -1,6 +1,6 @@
 Remember Primitive Mobs? Adapted Mobs is the definitive (and officially approved) spiritual successor to it!
 
-![the creepers](https://cdn.modrinth.com/data/cached_images/7cbaf95dbbc3f2af05856678c73b97e2beb5ac44.png)
+![the creepers](https://cdn.modrinth.com/data/H5xbZtYP/images/e6406d9ff505396a6189ba589a687253b2671dfa.png)
 
 From revamped PM mobs to brand-new ones (coming in the future), Adapted Mobs will give you unique, vanilla-style mobs
 for your modded world!
