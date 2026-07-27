@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
+import com.cf28.adaptedmobs.common.level.block.HarpyEggBlock;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -26,6 +27,10 @@ public class AMBlocks {
             Properties.ofFullCopy(Blocks.TNT)
                     .noOcclusion()
                     .noLootTable());
+
+    public static final Supplier<Block> HARPY_EGG = REGISTRIES.registerNoItem("harpy_egg",
+            HarpyEggBlock::new,
+            Properties.ofFullCopy(Blocks.TURTLE_EGG));
 
     public static final Pair<Supplier<Block>, Supplier<Block>> FESTIVE_CREEPER_HEAD = registerSkull("festive_creeper", SkullTypes.FESTIVE_CREEPER,
             FestiveCreeperSkullBlock::new,

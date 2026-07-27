@@ -31,6 +31,9 @@ public class AMModelLayers {
     public static final ModelLayerLocation ROCKET_CREEPIE = create("rocket_creepie");
     public static final ModelLayerLocation FESTIVE_CREEPIE = create("festive_creepie");
 
+    public static final ModelLayerLocation HARPY = create("harpy");
+    public static final ModelLayerLocation HARPY_CHICK = create("harpy_chick");
+
     private static ModelLayerLocation create(String name) {
         return create(name, "main");
     }

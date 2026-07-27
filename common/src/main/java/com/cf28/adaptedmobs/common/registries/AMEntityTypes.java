@@ -10,6 +10,7 @@ import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.TamableCreeper;
+import com.cf28.adaptedmobs.common.level.entity.mob.Harpy;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -103,4 +104,9 @@ public class AMEntityTypes {
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
                     .updateInterval(10));
+
+    public static final Supplier<EntityType<Harpy>> HARPY = REGISTRIES.entity("harpy",
+            EntityType.Builder.of(Harpy::new, MobCategory.CREATURE)
+                    .sized(0.75F, 1.4F)
+                    .clientTrackingRange(8));
 }

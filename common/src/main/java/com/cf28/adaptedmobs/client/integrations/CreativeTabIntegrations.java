@@ -15,7 +15,8 @@ public interface CreativeTabIntegrations {
         output.addAllAfter(Items.CREEPER_HEAD, List.of(
                 AMBlocks.FESTIVE_CREEPER_HEAD.getFirst().get(),
                 AMBlocks.SUPPORT_CREEPER_HEAD.getFirst().get(),
-                AMBlocks.ROCKET_CREEPER_HEAD.getFirst().get()
+                AMBlocks.ROCKET_CREEPER_HEAD.getFirst().get(),
+                AMItems.HARPY_EGG.get()
         ));
 
         if (TolerableCreepersCompat.isLoaded()) {
@@ -50,7 +51,8 @@ public interface CreativeTabIntegrations {
         output.addAllAfter(Items.CREEPER_SPAWN_EGG, List.of(
                 AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(),
                 AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(),
-                AMItems.ROCKET_CREEPER_SPAWN_EGG.get()
+                AMItems.ROCKET_CREEPER_SPAWN_EGG.get(),
+                AMItems.HARPY_SPAWN_EGG.get()
         ));
 
         if (TolerableCreepersCompat.isLoaded()) {

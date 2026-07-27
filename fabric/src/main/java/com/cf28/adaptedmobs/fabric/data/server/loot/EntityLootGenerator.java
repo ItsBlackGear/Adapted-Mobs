@@ -123,6 +123,30 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
                         )
         );
+
+        this.add(
+                AMEntityTypes.HARPY,
+                output,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.FEATHER)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 4.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.CHICKEN)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+        );
     }
 
     private <T extends Entity> void add(Supplier<EntityType<T>> type, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter, LootTable.Builder builder) {

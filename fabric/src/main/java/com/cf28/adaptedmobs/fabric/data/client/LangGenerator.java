@@ -21,10 +21,13 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMEntityTypes.SUPPORT_CREEPER.get(), "Seeper");
         builder.add(AMEntityTypes.ROCKET_CREEPER.get(), "Leaper");
         builder.add(AMEntityTypes.CREEPER.get(), "Creeper");
+        builder.add(AMEntityTypes.HARPY.get(), "Harpy");
 
         builder.add(AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(), "Reaper Spawn Egg");
         builder.add(AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(), "Seeper Spawn Egg");
         builder.add(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), "Leaper Spawn Egg");
+        builder.add(AMItems.HARPY_SPAWN_EGG.get(), "Harpy Spawn Egg");
+        builder.add(AMBlocks.HARPY_EGG.get(), "Harpy Egg");
 
         builder.add(AMItems.RED_MYSTERY_EGG.get(), "Red Mystery Egg");
         builder.add(AMItems.YELLOW_MYSTERY_EGG.get(), "Yellow Mystery Egg");
@@ -84,6 +87,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.option.spawn_support_creepers", "Spawn Seepers");
         builder.add("config.adaptedmobs.option.support_creeper_spawn_weight", "Seeper Spawn Weight");
         builder.add("config.adaptedmobs.option.support_creeper_extra_spawn_weight", "Seeper Extra Spawn Weight");
+        builder.add("config.adaptedmobs.option.prevent_support_creeper_block_damage", "Prevent Seeper Block Damage");
         builder.add("config.adaptedmobs.option.support_spore_count_day_base", "Seeper Spore Count Day Base");
         builder.add("config.adaptedmobs.option.support_spore_count_day_random", "Seeper Spore Count Day Random");
         builder.add("config.adaptedmobs.option.support_spore_count_night_base", "Seeper Spore Count Night Base");

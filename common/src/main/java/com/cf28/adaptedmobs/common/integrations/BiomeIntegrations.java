@@ -43,5 +43,10 @@ public class BiomeIntegrations extends FeatureManager {
                 writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.ROCKET_CREEPER.get(), weight, 1, 3));
             }
         });
+        
+        this.addIf(context -> context.is(net.minecraft.tags.BiomeTags.IS_MOUNTAIN), (context, writer) -> {
+            writer.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(AMEntityTypes.HARPY.get(), 15, 1, 2));
+        });
+
     }
 }

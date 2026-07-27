@@ -1,4 +1,8 @@
-### Fixed
+### Added
 
-- Fixed Fabric crash.
-- Adjusted Tolerable Creepers dependency range.
+- Added the Harpy!
+- Added Harpy Eggs and Baby Harpies.
+
+### Changed
+
+- Mystery Eggs are now only disabled by default if Tolerable Creepers is installed.

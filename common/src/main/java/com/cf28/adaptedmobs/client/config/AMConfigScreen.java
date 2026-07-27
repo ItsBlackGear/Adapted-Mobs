@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.client.config;
 
 import com.blackgear.platform.core.util.config.ConfigBuilder;
 import com.cf28.adaptedmobs.common.CommonConfig;
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
@@ -27,7 +28,7 @@ public final class AMConfigScreen {
 
         ConfigCategory general = ConfigCategory.createBuilder()
                 .name(Component.translatable("config.adaptedmobs.category.general"))
-                .option(boolOption(values, "enable_mystery_eggs", false, config.enableMysteryEggs))
+                .option(boolOption(values, "enable_mystery_eggs", !TolerableCreepersCompat.isLoaded(), config.enableMysteryEggs))
                 .build();
 
         ConfigCategory festiveCreeper = ConfigCategory.createBuilder()

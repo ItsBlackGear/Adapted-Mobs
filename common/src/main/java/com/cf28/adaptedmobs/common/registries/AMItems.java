@@ -5,6 +5,7 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.level.item.MysteryEggItem;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 
@@ -35,6 +36,12 @@ public class AMItems {
             properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPER, 7110705, 0, properties));
     public static final Supplier<Item> ROCKET_CREEPER_SPAWN_EGG = REGISTRIES.register("rocket_creeper_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPER, 5999444, 0, properties));
+
+    public static final Supplier<Item> HARPY_SPAWN_EGG = REGISTRIES.register("harpy_spawn_egg",
+            properties -> createSpawnEgg(AMEntityTypes.HARPY, 0x8a6f5e, 0xd0c4b4, properties));
+
+    public static final Supplier<Item> HARPY_EGG = REGISTRIES.register("harpy_egg",
+            () -> new BlockItem(AMBlocks.HARPY_EGG.get(), new Properties()));
 
     public static final Supplier<Item> FESTIVE_CREEPIE_SPAWN_EGG = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("festive_creepie_spawn_egg",

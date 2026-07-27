@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common;
 
 import com.blackgear.platform.core.util.config.ConfigBuilder;
+import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 
 public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Boolean> enableMysteryEggs;
@@ -39,7 +40,8 @@ public class CommonConfig {
 
     public CommonConfig(ConfigBuilder builder) {
         builder.push("Mystery Eggs");
-        this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death").define("Enable Mystery Eggs", false);
+        this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death")
+                .define("Enable Mystery Eggs", !TolerableCreepersCompat.isLoaded());
         builder.pop();
 
         builder.push("Festive Creeper");
