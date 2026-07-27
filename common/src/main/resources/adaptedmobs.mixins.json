@@ -4,13 +4,17 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "client.GuiMixin",
+    "client.LivingEntityRendererMixin"
   ],
   "mixins": [
     "common.cancel_default_behavior.CreeperMixin",
     "common.creeper_head_detection.LivingEntityMixin",
     "common.festive_tnt.ExplosionMixin",
     "common.potted_spores.FlowerPotBlockMixin",
-    "common.support_buff_particles.LivingEntityParticleMixin"
+    "common.support_buff_particles.LivingEntityParticleMixin",
+    "common.ProjectileUtilMixin",
+    "common.PlayerDismountMixin"
   ],
   "injectors": {
     "defaultRequire": 1
