@@ -30,7 +30,7 @@ public class AMBlocks {
 
     public static final Supplier<Block> HARPY_EGG = REGISTRIES.registerNoItem("harpy_egg",
             HarpyEggBlock::new,
-            Properties.ofFullCopy(Blocks.TURTLE_EGG));
+            Properties.ofFullCopy(Blocks.SNIFFER_EGG));
 
     public static final Pair<Supplier<Block>, Supplier<Block>> FESTIVE_CREEPER_HEAD = registerSkull("festive_creeper", SkullTypes.FESTIVE_CREEPER,
             FestiveCreeperSkullBlock::new,

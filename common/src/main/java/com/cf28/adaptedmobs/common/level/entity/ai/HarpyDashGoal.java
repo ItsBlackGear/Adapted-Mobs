@@ -33,7 +33,7 @@ public class HarpyDashGoal extends Goal {
         }
 
         LivingEntity target = this.harpy.getTarget();
-        if (target == null || !target.isAlive() || this.harpy.isBaby()) {
+        if (target == null || !target.isAlive() || this.harpy.isBaby() || this.harpy.isVehicle()) {
             return false;
         }
 

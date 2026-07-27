@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,6 +32,10 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -97,7 +102,17 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new HarpyDashGoal(this));
         this.goalSelector.addGoal(2, new HarpyPickupGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
+            @Override
+            public boolean canUse() {
+                return !Harpy.this.isBaby() && !Harpy.this.isVehicle() && super.canUse();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return !Harpy.this.isBaby() && !Harpy.this.isVehicle() && super.canContinueToUse();
+            }
+        });
         this.goalSelector.addGoal(5, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
@@ -216,6 +231,14 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     }
 
     @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.getEntity() != null && this.hasPassenger(source.getEntity())) {
+            return false;
+        }
+        return super.hurt(source, amount);
+    }
+
+    @Override
     public boolean doHurtTarget(Entity entity) {
         if (this.hasPassenger(entity) || this.isPassengerOfSameVehicle(entity)) {
             return false;
@@ -241,11 +264,50 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     }
 
     @Override
+    public LivingEntity getControllingPassenger() {
+        return null;
+    }
+
+    @Override
     protected void positionRider(Entity passenger, Entity.MoveFunction callback) {
         super.positionRider(passenger, callback);
         if (this.hasPassenger(passenger)) {
-            double yOffset = -passenger.getBbHeight() - 0.35D;
+            double yOffset = -passenger.getBbHeight() + 0.1D;
             callback.accept(passenger, this.getX(), this.getY() + yOffset, this.getZ());
+        }
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        if (this.isTame() && this.isBaby() && target instanceof Harpy harpy && !harpy.isBaby()) {
+            return false;
+        }
+        return super.canAttack(target);
+    }
+
+    @Override
+    public boolean wantsToAttack(LivingEntity target, LivingEntity owner) {
+        if (target instanceof Creeper || target instanceof Ghast || target instanceof ArmorStand) {
+            return false;
+        } else if (target instanceof Harpy harpy) {
+            if (this.isBaby() && !harpy.isBaby()) {
+                return false;
+            }
+            return !harpy.isTame() || harpy.getOwner() != owner;
+        } else {
+            if (target instanceof Player player && owner instanceof Player player1 && !player1.canHarmPlayer(player)) {
+                return false;
+            }
+
+            if (target instanceof AbstractHorse abstracthorse && abstracthorse.isTamed()) {
+                return false;
+            }
+
+            if (target instanceof TamableAnimal tamableanimal && tamableanimal.isTame()) {
+                return false;
+            }
+
+            return true;
         }
     }
 }

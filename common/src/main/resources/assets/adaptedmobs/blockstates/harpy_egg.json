@@ -1,7 +1,13 @@
 {
   "variants": {
-    "": {
+    "hatch=0": {
       "model": "adaptedmobs:block/harpy_egg"
+    },
+    "hatch=1": {
+      "model": "adaptedmobs:block/harpy_egg_slightly_cracked"
+    },
+    "hatch=2": {
+      "model": "adaptedmobs:block/harpy_egg_very_cracked"
     }
   }
 }

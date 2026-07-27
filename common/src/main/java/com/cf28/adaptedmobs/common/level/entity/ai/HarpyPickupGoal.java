@@ -31,7 +31,7 @@ public class HarpyPickupGoal extends Goal {
         }
 
         LivingEntity target = this.harpy.getTarget();
-        if (target == null || !target.isAlive() || this.harpy.isBaby()) {
+        if (target == null || !target.isAlive()) {
             return false;
         }
 
@@ -76,6 +76,8 @@ public class HarpyPickupGoal extends Goal {
                 this.target.startRiding(this.harpy, true);
                 this.isLifting = true;
                 this.startY = this.harpy.getY();
+                this.harpy.setNoGravity(true);
+                this.harpy.setDeltaMovement(this.harpy.getDeltaMovement().x, 0.3D, this.harpy.getDeltaMovement().z);
                 this.harpy.getNavigation().stop();
             } else {
                 this.harpy.getNavigation().moveTo(this.target, 1.0D);
@@ -89,9 +91,10 @@ public class HarpyPickupGoal extends Goal {
             this.liftTicks++;
             Vec3 look = this.harpy.getLookAngle();
             Vec3 forward = new Vec3(look.x, 0.0D, look.z).normalize().scale(0.15D);
-            this.harpy.setDeltaMovement(forward.x, 0.2D, forward.z);
+            this.harpy.setDeltaMovement(forward.x, 0.25D, forward.z);
 
-            if (this.liftTicks > 100 || this.harpy.getY() >= this.startY + 5.0D || this.harpy.verticalCollision) {
+            if (this.liftTicks > 100 || this.harpy.getY() >= this.startY + 8.0D || (this.liftTicks > 20 && this.harpy.verticalCollision)) {
+                this.harpy.setNoGravity(false);
                 this.harpy.setPickupCooldown(100);
                 if (this.target != null) {
                     RECENTLY_DROPPED_TARGETS.put(this.target.getUUID(), this.harpy.level().getGameTime() + 80L);
@@ -115,6 +118,7 @@ public class HarpyPickupGoal extends Goal {
 
     @Override
     public void stop() {
+        this.harpy.setNoGravity(false);
         if (this.target != null) {
             if (this.target.getVehicle() == this.harpy) {
                 this.target.stopRiding();
