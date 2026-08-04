@@ -3,6 +3,7 @@ package com.cf28.adaptedmobs.common.registries;
 import com.blackgear.platform.core.helper.BlockEntityRegistry;
 import com.blackgear.platform.core.helper.BlockEntityTypeBuilder;
 import com.cf28.adaptedmobs.common.level.block_entity.AMSkullBlockEntity;
+import com.cf28.adaptedmobs.common.level.block_entity.HarpyEggBlockEntity;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
@@ -10,7 +11,10 @@ import java.util.function.Supplier;
 
 public class AMBlockEntityTypes {
     public static final BlockEntityRegistry REGISTRIES = BlockEntityRegistry.create(AdaptedMobs.MOD_ID);
-    
+
+    public static final Supplier<BlockEntityType<HarpyEggBlockEntity>> HARPY_EGG = REGISTRIES.register("harpy_egg",
+        BlockEntityTypeBuilder.create(HarpyEggBlockEntity::new, AMBlocks.HARPY_EGG));
+
     public static final Supplier<BlockEntityType<AMSkullBlockEntity>> SKULL = REGISTRIES.register("creeper_skull",
         BlockEntityTypeBuilder.create(
             AMSkullBlockEntity::new,

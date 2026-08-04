@@ -37,5 +37,13 @@ public class BiomeTagGenerator extends FabricTagProvider<Biome> {
                 .add(Biomes.FROZEN_RIVER)
                 .add(Biomes.SNOWY_TAIGA)
                 .add(Biomes.SNOWY_BEACH);
+
+        this.getOrCreateTagBuilder(AMBiomeTags.HAS_HARPY_NEST)
+                .forceAddTag(BiomeTags.IS_MOUNTAIN);
+
+        this.getOrCreateTagBuilder(AMBiomeTags.HARPY_DAYTIME_SPAWNS)
+                .add(Biomes.JAGGED_PEAKS)
+                .add(Biomes.FROZEN_PEAKS)
+                .add(Biomes.STONY_PEAKS);
     }
 }

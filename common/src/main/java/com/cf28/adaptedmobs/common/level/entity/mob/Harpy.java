@@ -1,18 +1,25 @@
 package com.cf28.adaptedmobs.common.level.entity.mob;
 
-import com.cf28.adaptedmobs.common.level.entity.ai.HarpyDashGoal;
-import com.cf28.adaptedmobs.common.level.entity.ai.HarpyPickupGoal;
+import com.cf28.adaptedmobs.common.level.entity.ai.*;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
+import com.cf28.adaptedmobs.common.registries.AMStructureTypes;
+import com.cf28.adaptedmobs.core.AdaptedMobs;
+import com.cf28.adaptedmobs.core.tags.AMBiomeTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,46 +27,90 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class Harpy extends TamableAnimal implements FlyingAnimal {
-    private static final EntityDataAccessor<Boolean> DATA_DASHING = SynchedEntityData.defineId(Harpy.class, EntityDataSerializers.BOOLEAN);
+import java.util.Map;
+import java.util.WeakHashMap;
 
+public class Harpy extends TamableAnimal implements FlyingAnimal {
+    public static final byte STATE_NONE = 0;
+    public static final byte STATE_SWOOP_PREP = 1;
+    public static final byte STATE_SWOOPING = 2;
+    public static final int LIFT_CLEARANCE = 6;
+    private static final EntityDataAccessor<Byte> DATA_ATTACK_STATE = SynchedEntityData.defineId(Harpy.class, EntityDataSerializers.BYTE);
+    private static final int NEST_CHUNK_RADIUS = 3;
+    private static final int NEST_SCAN_INTERVAL = 100;
+    private static final float CARRY_DAMAGE_RELEASE = 4.0F;
+    private static final float WINGBEAT_RATE = 0.55F;
+    private static final float DESCENT_DAMPING = 0.8F;
+    private static final int GROUND_HYSTERESIS = 3;
+    private static final int GLIDE_TICKS = 30;
+    private static final double SLOW_FALL_DAMPING = 0.94D;
+    private static final int RIDE_TOGGLE_COOLDOWN = 20;
+    private static final double PERCH_HEIGHT_RATIO = 0.95D;
+    private static final int PASSENGER_RESYNC_INTERVAL = 100;
+    private static final int NATURAL_COUNT_CACHE_TICKS = 40;
+
+    private static final Map<ServerLevel, NaturalCount> NATURAL_COUNTS = new WeakHashMap<>();
+    private final FlyingPathNavigation flyingNavigation;
+    private final GroundPathNavigation groundNavigation;
+    private final MoveControl flyingMoveControl;
+    private final MoveControl groundMoveControl;
     public float flap;
     public float flapSpeed;
     public float oFlapSpeed;
     public float oFlap;
     private float flapping = 1.0F;
     private float nextFlap = 1.0F;
+    private int pickupCooldown;
+    private int regrabCooldown;
+    private int swoopCooldown;
+    private int nestScanCooldown;
+    private float carryDamage;
+    private boolean nestNearby;
+    private int groundedTicks;
+    private int rideToggleCooldown;
+    private boolean awaitingShiftRelease;
+    private int glideTicks;
+    private boolean fleeingGolem;
+    private boolean naturallySpawned;
 
     public Harpy(EntityType<? extends Harpy> type, Level level) {
         super(type, level);
-        this.moveControl = new FlyingMoveControl(this, 10, false);
+        this.flyingNavigation = (FlyingPathNavigation) this.navigation;
+        this.flyingMoveControl = new FlyingMoveControl(this, 20, false);
+        this.groundNavigation = new GroundPathNavigation(this, level);
+        this.groundMoveControl = new MoveControl(this);
+        this.moveControl = this.flyingMoveControl;
         this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
         this.setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
+        this.swoopCooldown = 60 + this.random.nextInt(60);
+        this.nestScanCooldown = this.random.nextInt(NEST_SCAN_INTERVAL);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -67,25 +118,89 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
                 .add(Attributes.MAX_HEALTH, 14.0)
                 .add(Attributes.FLYING_SPEED, 0.6F)
                 .add(Attributes.MOVEMENT_SPEED, 0.2F)
-                .add(Attributes.ATTACK_DAMAGE, 3.0);
+                .add(Attributes.ATTACK_DAMAGE, 2.0)
+                .add(Attributes.FOLLOW_RANGE, 24.0)
+                .add(Attributes.STEP_HEIGHT, 1.0);
     }
 
     public static boolean checkHarpySpawnRules(EntityType<? extends Mob> type, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+        if (isNaturalSpawn(spawnType)) {
+            if (pos.getY() < AdaptedMobs.CONFIG.harpyMinimumSpawnY.get()) {
+                return false;
+            }
+
+            if (level.getLevel().isDay() && !level.getBiome(pos).is(AMBiomeTags.HARPY_DAYTIME_SPAWNS)) {
+                return false;
+            }
+
+            if (spawnType == MobSpawnType.NATURAL && naturalHarpyCount(level.getLevel()) >= AdaptedMobs.CONFIG.maxNaturalHarpies.get()) {
+                return false;
+            }
+        }
+
         return level.getBlockState(pos.below()).isValidSpawn(level, pos, type);
+    }
+
+    private static boolean isNaturalSpawn(MobSpawnType spawnType) {
+        return spawnType == MobSpawnType.NATURAL || spawnType == MobSpawnType.CHUNK_GENERATION;
+    }
+
+    private static int naturalHarpyCount(ServerLevel level) {
+        long gameTime = level.getGameTime();
+        NaturalCount cached = NATURAL_COUNTS.get(level);
+        if (cached != null && gameTime - cached.gameTime() < NATURAL_COUNT_CACHE_TICKS) {
+            return cached.count();
+        }
+
+        int count = level.getEntities(AMEntityTypes.HARPY.get(), harpy -> harpy.isAlive() && harpy.isNaturallySpawned()).size();
+        NATURAL_COUNTS.put(level, new NaturalCount(count, gameTime));
+        return count;
+    }
+
+    private static void sendPassengerList(Player player) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundSetPassengersPacket(serverPlayer));
+        }
+    }
+
+    public boolean isNaturallySpawned() {
+        return this.naturallySpawned;
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        this.naturallySpawned = isNaturalSpawn(spawnType);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("NaturallySpawned", this.naturallySpawned);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.naturallySpawned = tag.getBoolean("NaturallySpawned");
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_DASHING, false);
+        builder.define(DATA_ATTACK_STATE, STATE_NONE);
     }
 
-    public boolean isDashing() {
-        return this.entityData.get(DATA_DASHING);
+    public void setAttackState(byte state) {
+        this.entityData.set(DATA_ATTACK_STATE, state);
     }
 
-    public void setDashing(boolean dashing) {
-        this.entityData.set(DATA_DASHING, dashing);
+    public boolean isPreparingSwoop() {
+        return this.entityData.get(DATA_ATTACK_STATE) == STATE_SWOOP_PREP;
+    }
+
+    public boolean isSwooping() {
+        return this.entityData.get(DATA_ATTACK_STATE) == STATE_SWOOPING;
     }
 
     @Override
@@ -100,30 +215,68 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new HarpyDashGoal(this));
-        this.goalSelector.addGoal(2, new HarpyPickupGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
+        this.goalSelector.addGoal(1, new HarpyAvoidGolemGoal(this));
+        this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(3, new PanicGoal(this, 1.5D) {
             @Override
             public boolean canUse() {
-                return !Harpy.this.isBaby() && !Harpy.this.isVehicle() && super.canUse();
-            }
-
-            @Override
-            public boolean canContinueToUse() {
-                return !Harpy.this.isBaby() && !Harpy.this.isVehicle() && super.canContinueToUse();
+                return Harpy.this.isBaby() && super.canUse();
             }
         });
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(4, new HarpySwoopGoal(this));
+        this.goalSelector.addGoal(5, new HarpyPickupGoal(this));
+        this.goalSelector.addGoal(6, new HarpyKiteGoal(this));
+        this.goalSelector.addGoal(7, new HarpyBroodGoal(this));
+        this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D) {
+            @Override
+            public boolean canUse() {
+                return Harpy.this.isBaby() && !Harpy.this.isTame() && super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(9, new TemptGoal(this, 1.1D, this::isFood, false) {
+            @Override
+            public boolean canUse() {
+                return Harpy.this.isBaby() && super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomFlyingGoal(this, 1.0D) {
+            @Override
+            public boolean canUse() {
+                return !Harpy.this.isBaby() && super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 1.0D) {
+            @Override
+            public boolean canUse() {
+                return Harpy.this.isBaby() && super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (entity) -> !this.isTame() && !this.isBaby()));
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this) {
+            @Override
+            public boolean canUse() {
+                return !Harpy.this.isBaby() && super.canUse();
+            }
+        });
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (entity) -> this.canHunt()));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Villager.class, 10, true, false, (entity) -> this.canHunt()));
     }
 
-    private int pickupCooldown;
+    private boolean canHunt() {
+        return !this.isTame() && !this.isBaby() && !this.fleeingGolem;
+    }
+
+    public boolean isFleeingGolem() {
+        return this.fleeingGolem;
+    }
+
+    public void setFleeingGolem(boolean fleeingGolem) {
+        this.fleeingGolem = fleeingGolem;
+    }
 
     public int getPickupCooldown() {
         return this.pickupCooldown;
@@ -133,42 +286,155 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
         this.pickupCooldown = pickupCooldown;
     }
 
+    public int getRegrabCooldown() {
+        return this.regrabCooldown;
+    }
+
+    public int getSwoopCooldown() {
+        return this.swoopCooldown;
+    }
+
+    public void setSwoopCooldown(int swoopCooldown) {
+        this.swoopCooldown = swoopCooldown;
+    }
+
     @Override
     public void aiStep() {
+        this.updateControlsForAge();
         super.aiStep();
+        this.updateGroundedTicks();
         this.calculateFlapping();
 
         if (this.pickupCooldown > 0) {
             this.pickupCooldown--;
         }
 
+        if (this.regrabCooldown > 0) {
+            this.regrabCooldown--;
+        }
+
+        if (this.swoopCooldown > 0) {
+            this.swoopCooldown--;
+        }
+
+        if (this.rideToggleCooldown > 0) {
+            this.rideToggleCooldown--;
+        }
+
+        if (!this.level().isClientSide) {
+            this.tickNestTracking();
+        }
+
         if (this.isTame() && this.getVehicle() instanceof Player player) {
-            if (player.isCrouching()) {
-                if (!this.level().isClientSide) {
-                    this.stopRiding();
-                }
-            } else if (!player.onGround() && player.getDeltaMovement().y < 0.0) {
-                Vec3 vec3 = player.getDeltaMovement();
-                player.setDeltaMovement(vec3.x, Math.max(vec3.y, -0.15D), vec3.z);
-                player.fallDistance = 0.0F;
+            this.tickCarriedByOwner(player);
+        } else {
+            this.glideTicks = 0;
+            this.awaitingShiftRelease = false;
+        }
+    }
+
+    private void updateGroundedTicks() {
+        if (this.onGround()) {
+            if (this.groundedTicks < GROUND_HYSTERESIS) {
+                this.groundedTicks++;
             }
+        } else if (this.groundedTicks > 0) {
+            this.groundedTicks--;
+        }
+    }
+
+    @Override
+    public void stopRiding() {
+        Entity vehicle = this.getVehicle();
+        super.stopRiding();
+        if (vehicle instanceof Player player) {
+            sendPassengerList(player);
+        }
+    }
+
+    @Override
+    public void rideTick() {
+        super.rideTick();
+
+        if (!(this.getVehicle() instanceof Player player)) {
+            return;
+        }
+
+        this.getNavigation().stop();
+        this.setDeltaMovement(Vec3.ZERO);
+        this.setPos(player.getX(), player.getY() + player.getBbHeight() * PERCH_HEIGHT_RATIO, player.getZ());
+
+        if (this.tickCount % PASSENGER_RESYNC_INTERVAL == 0) {
+            sendPassengerList(player);
+        }
+
+        this.yBodyRot = player.yBodyRot;
+        this.yBodyRotO = player.yBodyRotO;
+        this.setYRot(player.yBodyRot);
+        this.yRotO = player.yBodyRotO;
+        this.setYHeadRot(player.yBodyRot);
+        this.yHeadRotO = player.yBodyRotO;
+        this.setXRot(0.0F);
+        this.xRotO = 0.0F;
+    }
+
+    private void tickCarriedByOwner(Player player) {
+        if (player.isCrouching()) {
+            if (!this.awaitingShiftRelease && this.rideToggleCooldown <= 0 && !this.level().isClientSide) {
+                this.stopRiding();
+            }
+            return;
+        }
+
+        this.awaitingShiftRelease = false;
+
+        if (player.onGround()) {
+            this.glideTicks = 0;
+            return;
+        }
+
+        Vec3 motion = player.getDeltaMovement();
+        if (motion.y >= 0.0D) {
+            return;
+        }
+
+        this.glideTicks++;
+        if (this.glideTicks <= GLIDE_TICKS) {
+            player.setDeltaMovement(motion.x * 1.02D, Math.max(motion.y, -0.05D), motion.z * 1.02D);
+        } else {
+            player.setDeltaMovement(motion.x, motion.y * SLOW_FALL_DAMPING, motion.z);
+        }
+        player.fallDistance = 0.0F;
+    }
+
+    private void updateControlsForAge() {
+        if (this.isBaby()) {
+            if (this.navigation != this.groundNavigation) {
+                this.navigation = this.groundNavigation;
+                this.moveControl = this.groundMoveControl;
+                this.setNoGravity(false);
+            }
+        } else if (this.navigation != this.flyingNavigation) {
+            this.navigation = this.flyingNavigation;
+            this.moveControl = this.flyingMoveControl;
         }
     }
 
     private void calculateFlapping() {
         this.oFlap = this.flap;
         this.oFlapSpeed = this.flapSpeed;
-        this.flapSpeed = this.flapSpeed + (float) (!this.onGround() && !this.isPassenger() ? 4 : -1) * 0.3F;
+        boolean airborne = this.isFlying();
+        this.flapSpeed = this.flapSpeed + (float) (airborne ? 4 : -1) * 0.3F;
         this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
-        if (!this.onGround() && this.flapping < 1.0F) {
+        if (airborne && this.flapping < 1.0F) {
             this.flapping = 1.0F;
         }
         this.flapping *= 0.9F;
         Vec3 vec3 = this.getDeltaMovement();
-        if (!this.onGround() && vec3.y < 0.0) {
-            this.setDeltaMovement(vec3.multiply(1.0, 0.6, 1.0));
+        if (airborne && !this.isSwooping() && vec3.y < 0.0) {
+            this.setDeltaMovement(vec3.multiply(1.0, DESCENT_DAMPING, 1.0));
         }
-        this.flap = this.flap + this.flapping * 2.0F;
+        this.flap = this.flap + this.flapping * WINGBEAT_RATE;
     }
 
     @Override
@@ -184,7 +450,82 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
 
     @Override
     public boolean isFlying() {
-        return !this.onGround();
+        return !this.isBaby() && !this.isPassenger() && this.groundedTicks < GROUND_HYSTERESIS;
+    }
+
+    public boolean isPerched() {
+        return this.isInSittingPose() || this.isPassenger();
+    }
+
+    public boolean hasLiftRoom(BlockPos pos) {
+        return this.hasClearanceAbove(pos, LIFT_CLEARANCE);
+    }
+
+    public boolean hasClearanceAbove(BlockPos pos, int blocks) {
+        BlockPos.MutableBlockPos cursor = pos.mutable();
+        for (int i = 0; i < blocks; i++) {
+            cursor.move(Direction.UP);
+            if (!this.level().getBlockState(cursor).getCollisionShape(this.level(), cursor).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void startCarrying(LivingEntity target) {
+        target.startRiding(this, true);
+        this.carryDamage = 0.0F;
+    }
+
+    public void releaseCarriedTarget() {
+        this.setNoGravity(false);
+        Entity passenger = this.getFirstPassenger();
+        if (passenger != null) {
+            passenger.stopRiding();
+        }
+        this.carryDamage = 0.0F;
+        this.pickupCooldown = 100;
+        this.regrabCooldown = 80;
+    }
+
+    public boolean hasNestNearby() {
+        return this.nestNearby;
+    }
+
+    private void tickNestTracking() {
+        if (this.nestScanCooldown > 0) {
+            this.nestScanCooldown--;
+            return;
+        }
+        this.nestScanCooldown = NEST_SCAN_INTERVAL;
+        this.nestNearby = this.isNearNestStructure();
+    }
+
+    private boolean isNearNestStructure() {
+        if (!(this.level() instanceof ServerLevel serverLevel)) {
+            return false;
+        }
+
+        Structure nest = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE).get(AMStructureTypes.HARPY_NEST_STRUCTURE);
+        if (nest == null) {
+            return false;
+        }
+
+        ChunkPos center = this.chunkPosition();
+        for (int chunkX = center.x - NEST_CHUNK_RADIUS; chunkX <= center.x + NEST_CHUNK_RADIUS; chunkX++) {
+            for (int chunkZ = center.z - NEST_CHUNK_RADIUS; chunkZ <= center.z + NEST_CHUNK_RADIUS; chunkZ++) {
+                if (!serverLevel.hasChunk(chunkX, chunkZ)) {
+                    continue;
+                }
+
+                ChunkAccess chunk = serverLevel.getChunk(chunkX, chunkZ);
+                if (chunk.getStartForStructure(nest) != null || !chunk.getReferencesForStructure(nest).isEmpty()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -204,17 +545,30 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
 
-        if (this.isTame() && this.isOwnedBy(player) && !this.isBaby()) {
-            if (player.isShiftKeyDown() && itemstack.isEmpty()) {
+        if (this.isTame() && this.isOwnedBy(player) && itemstack.isEmpty()) {
+            if (player.isShiftKeyDown()) {
                 if (!this.level().isClientSide) {
                     if (this.isPassenger()) {
                         this.stopRiding();
                     } else {
+                        this.setOrderedToSit(false);
                         this.startRiding(player, true);
+                        sendPassengerList(player);
+                        this.rideToggleCooldown = RIDE_TOGGLE_COOLDOWN;
+                        this.awaitingShiftRelease = true;
+                        this.glideTicks = 0;
                     }
                 }
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
+
+            if (!this.level().isClientSide) {
+                this.setOrderedToSit(!this.isOrderedToSit());
+                this.jumping = false;
+                this.navigation.stop();
+                this.setTarget(null);
+            }
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
 
         return super.mobInteract(player, hand);
@@ -232,10 +586,17 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getEntity() != null && this.hasPassenger(source.getEntity())) {
-            return false;
+        boolean hurt = super.hurt(source, amount);
+
+        if (hurt && source.getEntity() != null && this.hasPassenger(source.getEntity())) {
+            this.carryDamage += amount;
+            if (this.carryDamage >= CARRY_DAMAGE_RELEASE) {
+                this.playSound(SoundEvents.PARROT_HURT, 1.5F, 0.7F);
+                this.releaseCarriedTarget();
+            }
         }
-        return super.hurt(source, amount);
+
+        return hurt;
     }
 
     @Override
@@ -249,18 +610,6 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(ItemTags.MEAT);
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putBoolean("Dashing", this.isDashing());
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.setDashing(compound.getBoolean("Dashing"));
     }
 
     @Override
@@ -295,19 +644,16 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
             }
             return !harpy.isTame() || harpy.getOwner() != owner;
         } else {
-            if (target instanceof Player player && owner instanceof Player player1 && !player1.canHarmPlayer(player)) {
-                return false;
-            }
+            return switch (target) {
+                case Player player when owner instanceof Player player1 && !player1.canHarmPlayer(player) -> false;
+                case AbstractHorse abstracthorse when abstracthorse.isTamed() -> false;
+                case TamableAnimal tamableanimal when tamableanimal.isTame() -> false;
+                default -> true;
+            };
 
-            if (target instanceof AbstractHorse abstracthorse && abstracthorse.isTamed()) {
-                return false;
-            }
-
-            if (target instanceof TamableAnimal tamableanimal && tamableanimal.isTame()) {
-                return false;
-            }
-
-            return true;
         }
+    }
+
+    private record NaturalCount(int count, long gameTime) {
     }
 }

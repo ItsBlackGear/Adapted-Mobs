@@ -38,7 +38,7 @@ public class AMItems {
             properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPER, 5999444, 0, properties));
 
     public static final Supplier<Item> HARPY_SPAWN_EGG = REGISTRIES.register("harpy_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.HARPY, 0x8a6f5e, 0xd0c4b4, properties));
+            properties -> createSpawnEgg(AMEntityTypes.HARPY, 0x333149, 0x9790a4, properties));
 
     public static final Supplier<Item> HARPY_EGG = REGISTRIES.register("harpy_egg",
             () -> new BlockItem(AMBlocks.HARPY_EGG.get(), new Properties()));

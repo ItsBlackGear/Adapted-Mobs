@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.fabric.data.server.loot;
 
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
+import com.cf28.adaptedmobs.common.registries.AMItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -145,6 +146,12 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                                                         .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
                                                         .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
                                         )
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(AMItems.HARPY_EGG.get()))
+                                        .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.01F))
                         )
         );
     }

@@ -1,0 +1,7 @@
+{
+  "type": "adaptedmobs:harpy_nest",
+  "biomes": "#adaptedmobs:has_structure/harpy_nest",
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
+  "spawn_overrides": {}
+}

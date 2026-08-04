@@ -10,6 +10,13 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 
 public class HarpyModel<T extends Harpy> extends EntityModel<T> {
+    private static final float TUCKED_LEG = -0.6F;
+    private static final float TALON_LEG = -1.2F;
+    private static final float KICK_SPEED = 0.6F;
+    private static final float KICK_AMOUNT = 0.5F;
+    private static final float SITTING_LEG = -0.9F;
+    private static final float SITTING_DROP = 3.0F;
+
     private final ModelPart head;
     private final ModelPart leg_right;
     private final ModelPart wing_left;
@@ -65,9 +72,32 @@ public class HarpyModel<T extends Harpy> extends EntityModel<T> {
         this.head.xRot = headPitch * ((float) Math.PI / 180F);
         this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
 
-        if (entity.isDashing()) {
-            this.leg_left.xRot = Mth.cos(ageInTicks * 0.9F) * 0.4F;
-            this.leg_right.xRot = Mth.cos(ageInTicks * 0.9F + (float) Math.PI) * 0.4F;
+        float time = entity.tickCount;
+        float bodyDrop = entity.isInSittingPose() ? SITTING_DROP : 0.0F;
+        this.body.y = 10.0F + bodyDrop;
+        this.head.y = 7.0F + bodyDrop;
+        this.tail.y = 17.5F + bodyDrop;
+        this.wing_left.y = 5.0F + bodyDrop;
+        this.wing_right.y = 5.0F + bodyDrop;
+
+        if (entity.isPerched()) {
+            this.leg_left.xRot = SITTING_LEG;
+            this.leg_right.xRot = SITTING_LEG;
+            this.wing_left.zRot = 0.0F;
+            this.wing_right.zRot = 0.0F;
+            return;
+        }
+
+        if (entity.isPreparingSwoop()) {
+            this.leg_left.xRot = TUCKED_LEG + Mth.cos(time * KICK_SPEED) * KICK_AMOUNT;
+            this.leg_right.xRot = TUCKED_LEG + Mth.cos(time * KICK_SPEED + (float) Math.PI) * KICK_AMOUNT;
+        } else if (entity.isSwooping()) {
+            this.leg_left.xRot = TALON_LEG;
+            this.leg_right.xRot = TALON_LEG;
+        } else if (entity.isFlying()) {
+            float sway = Mth.cos(time * 0.1F) * 0.05F;
+            this.leg_left.xRot = TUCKED_LEG + sway;
+            this.leg_right.xRot = TUCKED_LEG - sway;
         } else {
             this.leg_left.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
             this.leg_right.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
@@ -76,8 +106,6 @@ public class HarpyModel<T extends Harpy> extends EntityModel<T> {
         if (entity.isFlying()) {
             this.wing_left.zRot = -0.0873F - ageInTicks;
             this.wing_right.zRot = 0.0873F + ageInTicks;
-            this.leg_left.xRot += 0.5F;
-            this.leg_right.xRot += 0.5F;
         } else {
             this.wing_left.zRot = 0.0F;
             this.wing_right.zRot = 0.0F;

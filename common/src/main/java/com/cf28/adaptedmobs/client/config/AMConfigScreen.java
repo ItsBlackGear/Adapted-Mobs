@@ -67,10 +67,17 @@ public final class AMConfigScreen {
                 .option(intOption(values, "rocket_spore_count_night_random", 4, 0, 100, config.rocketSporeCountNightRandom))
                 .build();
 
+        ConfigCategory harpy = ConfigCategory.createBuilder()
+                .name(Component.translatable("config.adaptedmobs.category.harpy"))
+                .option(intOption(values, "harpy_minimum_spawn_y", 135, -64, 320, config.harpyMinimumSpawnY))
+                .option(intOption(values, "max_natural_harpy_count", 10, 0, 200, config.maxNaturalHarpies))
+                .build();
+
         return builder.category(general)
                 .category(festiveCreeper)
                 .category(supportCreeper)
                 .category(rocketCreeper)
+                .category(harpy)
                 .build()
                 .generateScreen(parent);
     }

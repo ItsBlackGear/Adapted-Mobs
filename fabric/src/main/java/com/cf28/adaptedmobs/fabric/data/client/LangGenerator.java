@@ -72,6 +72,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.category.festive_creeper", "Reaper");
         builder.add("config.adaptedmobs.category.support_creeper", "Seeper");
         builder.add("config.adaptedmobs.category.rocket_creeper", "Leaper");
+        builder.add("config.adaptedmobs.category.harpy", "Harpy");
 
         builder.add("config.adaptedmobs.option.enable_mystery_eggs", "Enable Mystery Eggs");
 
@@ -101,6 +102,9 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.option.rocket_spore_count_day_random", "Leaper Spore Count Day Random");
         builder.add("config.adaptedmobs.option.rocket_spore_count_night_base", "Leaper Spore Count Night Base");
         builder.add("config.adaptedmobs.option.rocket_spore_count_night_random", "Leaper Spore Count Night Random");
+
+        builder.add("config.adaptedmobs.option.harpy_minimum_spawn_y", "Harpy Minimum Spawn Y");
+        builder.add("config.adaptedmobs.option.max_natural_harpy_count", "Max Natural Harpy Count");
 
         builder.add("tag.item.adaptedmobs.creeper_food", "Creeper Food");
     }

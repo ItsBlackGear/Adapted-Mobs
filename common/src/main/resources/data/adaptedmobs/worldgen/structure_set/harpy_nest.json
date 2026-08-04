@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "adaptedmobs:harpy_nest",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 40231785,
+    "spacing": 22,
+    "separation": 7
+  }
+}

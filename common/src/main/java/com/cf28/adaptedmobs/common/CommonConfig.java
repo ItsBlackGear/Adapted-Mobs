@@ -38,6 +38,9 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> supportSporeCountNightBase;
     public final ConfigBuilder.ConfigValue<Integer> supportSporeCountNightRandom;
 
+    public final ConfigBuilder.ConfigValue<Integer> harpyMinimumSpawnY;
+    public final ConfigBuilder.ConfigValue<Integer> maxNaturalHarpies;
+
     public CommonConfig(ConfigBuilder builder) {
         builder.push("Mystery Eggs");
         this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death")
@@ -91,6 +94,13 @@ public class CommonConfig {
         this.supportSporeCountDayRandom = builder.comment("Upper bound (exclusive) of the random bonus added to the day base count").defineInRange("Support Spore Count Day Random", 2, 0, 100);
         this.supportSporeCountNightBase = builder.comment("Base number of Support Creepies a Support Creeper's spore cloud tries to spawn at night").defineInRange("Support Spore Count Night Base", 3, 0, 100);
         this.supportSporeCountNightRandom = builder.comment("Upper bound (exclusive) of the random bonus added to the night base count").defineInRange("Support Spore Count Night Random", 4, 0, 100);
+        builder.pop();
+
+        builder.push("Harpy");
+        this.harpyMinimumSpawnY = builder.comment("Lowest Y level Harpies can naturally spawn at")
+                .defineInRange("Harpy Minimum Spawn Y", 135, -64, 320);
+        this.maxNaturalHarpies = builder.comment("Largest number of naturally spawned Harpies alive at once per dimension. Harpies from nests and spawn eggs do not count")
+                .defineInRange("Max Natural Harpy Count", 10, 0, 200);
         builder.pop();
     }
 }

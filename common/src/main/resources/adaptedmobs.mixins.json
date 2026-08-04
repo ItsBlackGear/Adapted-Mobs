@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "client": [
     "client.GuiMixin",
+    "client.HumanoidModelMixin",
     "client.LivingEntityRendererMixin"
   ],
   "mixins": [
@@ -13,6 +14,7 @@
     "common.festive_tnt.ExplosionMixin",
     "common.potted_spores.FlowerPotBlockMixin",
     "common.support_buff_particles.LivingEntityParticleMixin",
+    "common.villager_fear.VillagerHostilesSensorMixin",
     "common.ProjectileUtilMixin",
     "common.PlayerDismountMixin"
   ],

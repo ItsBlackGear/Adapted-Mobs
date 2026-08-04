@@ -37,6 +37,8 @@ public final class AdaptedMobs {
         AMParticles.REGISTRIES.register();
         AMMobEffects.REGISTRIES.register();
         AMSoundEvents.REGISTRIES.register();
+        AMStructureTypes.REGISTRIES.register();
+        AMStructurePieceTypes.REGISTRIES.register();
 
         AMBiomeTags.REGISTRY.register();
         AMItemTags.REGISTRY.register();
