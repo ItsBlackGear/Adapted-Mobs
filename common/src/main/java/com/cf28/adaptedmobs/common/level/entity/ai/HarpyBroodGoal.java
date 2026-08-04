@@ -6,9 +6,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
+import java.util.List;
 
 public class HarpyBroodGoal extends Goal {
     private static final double PLAYER_SPOT_RANGE = 16.0D;
@@ -48,16 +50,18 @@ public class HarpyBroodGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.egg != null && this.isEgg(this.egg) && this.canBrood(PLAYER_FLUSH_RANGE);
+        return this.egg != null && this.isEgg(this.egg) && !this.isEggClaimed(this.egg) && this.canBrood(PLAYER_FLUSH_RANGE);
     }
 
     @Override
     public void start() {
+        this.harpy.setBroodingEggPos(this.egg);
         this.harpy.getNavigation().stop();
     }
 
     @Override
     public void tick() {
+        this.harpy.setBroodingEggPos(this.egg);
         Vec3 perch = Vec3.atBottomCenterOf(this.egg.above());
         this.harpy.getLookControl().setLookAt(perch.x, perch.y, perch.z);
 
@@ -67,7 +71,9 @@ public class HarpyBroodGoal extends Goal {
 
         if (distance > APPROACH_RANGE) {
             this.harpy.setInSittingPose(false);
-            this.harpy.getMoveControl().setWantedPosition(perch.x, perch.y, perch.z, APPROACH_SPEED);
+            if (!this.harpy.getNavigation().moveTo(perch.x, perch.y, perch.z, APPROACH_SPEED)) {
+                this.harpy.getMoveControl().setWantedPosition(perch.x, perch.y, perch.z, APPROACH_SPEED);
+            }
             return;
         }
 
@@ -85,6 +91,7 @@ public class HarpyBroodGoal extends Goal {
 
     @Override
     public void stop() {
+        this.harpy.setBroodingEggPos(null);
         this.harpy.setInSittingPose(false);
         this.harpy.setNoGravity(false);
         this.egg = null;
@@ -103,6 +110,20 @@ public class HarpyBroodGoal extends Goal {
         return player == null;
     }
 
+    private boolean isEggClaimed(BlockPos pos) {
+        AABB searchArea = new AABB(pos).inflate(16.0D);
+        List<Harpy> nearbyHarpies = this.harpy.level().getEntitiesOfClass(Harpy.class, searchArea, h -> h != this.harpy && h.isAlive());
+        for (Harpy other : nearbyHarpies) {
+            if (pos.equals(other.getBroodingEggPos())) {
+                return true;
+            }
+            if (other.isInSittingPose() && (other.blockPosition().equals(pos.above()) || other.blockPosition().equals(pos))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private BlockPos findEgg() {
         BlockPos origin = this.harpy.blockPosition();
         BlockPos best = null;
@@ -111,7 +132,7 @@ public class HarpyBroodGoal extends Goal {
         for (BlockPos candidate : BlockPos.betweenClosed(
                 origin.offset(-SEARCH_HORIZONTAL, -SEARCH_VERTICAL, -SEARCH_HORIZONTAL),
                 origin.offset(SEARCH_HORIZONTAL, SEARCH_VERTICAL, SEARCH_HORIZONTAL))) {
-            if (!this.isEgg(candidate)) {
+            if (!this.isEgg(candidate) || this.isEggClaimed(candidate)) {
                 continue;
             }
 

@@ -99,6 +99,7 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     private int glideTicks;
     private boolean fleeingGolem;
     private boolean naturallySpawned;
+    private BlockPos broodingEggPos;
 
     public Harpy(EntityType<? extends Harpy> type, Level level) {
         super(type, level);
@@ -278,6 +279,15 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
         this.fleeingGolem = fleeingGolem;
     }
 
+    @Nullable
+    public BlockPos getBroodingEggPos() {
+        return this.broodingEggPos;
+    }
+
+    public void setBroodingEggPos(@Nullable BlockPos broodingEggPos) {
+        this.broodingEggPos = broodingEggPos;
+    }
+
     public int getPickupCooldown() {
         return this.pickupCooldown;
     }
@@ -430,10 +440,6 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
             this.flapping = 1.0F;
         }
         this.flapping *= 0.9F;
-        Vec3 vec3 = this.getDeltaMovement();
-        if (airborne && !this.isSwooping() && vec3.y < 0.0) {
-            this.setDeltaMovement(vec3.multiply(1.0, DESCENT_DAMPING, 1.0));
-        }
         this.flap = this.flap + this.flapping * WINGBEAT_RATE;
     }
 

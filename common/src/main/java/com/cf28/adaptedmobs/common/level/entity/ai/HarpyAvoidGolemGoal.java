@@ -1,9 +1,8 @@
 package com.cf28.adaptedmobs.common.level.entity.ai;
 
 import com.cf28.adaptedmobs.common.level.entity.mob.Harpy;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -43,8 +42,12 @@ public class HarpyAvoidGolemGoal extends Goal {
     public void start() {
         this.harpy.setFleeingGolem(true);
         this.harpy.setTarget(null);
+        this.harpy.setInSittingPose(false);
         this.harpy.setOrderedToSit(false);
-        this.harpy.playSound(SoundEvents.PARROT_HURT, 1.2F, 1.6F);
+
+        if (this.harpy.onGround()) {
+            this.harpy.setDeltaMovement(this.harpy.getDeltaMovement().add(0.0D, 0.4D, 0.0D));
+        }
 
         if (this.harpy.isVehicle()) {
             this.harpy.releaseCarriedTarget();
@@ -65,7 +68,14 @@ public class HarpyAvoidGolemGoal extends Goal {
 
         Vec3 destination = this.golem.position().add(heading.normalize().scale(FLEE_DISTANCE)).add(0.0D, FLEE_ALTITUDE, 0.0D);
         this.harpy.getLookControl().setLookAt(destination.x, destination.y, destination.z);
-        this.harpy.getMoveControl().setWantedPosition(destination.x, destination.y, destination.z, FLEE_SPEED);
+
+        if (!this.harpy.getNavigation().moveTo(destination.x, destination.y, destination.z, FLEE_SPEED)) {
+            this.harpy.getMoveControl().setWantedPosition(destination.x, destination.y, destination.z, FLEE_SPEED);
+        }
+
+        if (this.harpy.onGround()) {
+            this.harpy.setDeltaMovement(this.harpy.getDeltaMovement().add(0.0D, 0.35D, 0.0D));
+        }
     }
 
     @Override
