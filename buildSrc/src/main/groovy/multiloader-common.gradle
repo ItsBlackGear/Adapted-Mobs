@@ -68,6 +68,11 @@ repositories {
         name = 'Quilt'
         url = 'https://maven.quiltmc.org/repository/release/'
     }
+
+    maven {
+        name = 'Gegy'
+        url = uri('https://maven.gegy.dev')
+    }
 }
 
 ['apiElements', 'runtimeElements'].each { variant ->

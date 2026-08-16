@@ -24,6 +24,9 @@ dependencies {
     include "org.quiltmc.parsers:json:0.3.0"
     include "org.quiltmc.parsers:gson:0.3.0"
     modImplementation "com.terraformersmc:modmenu:${mod_menu_version}"
+
+    // LDL
+    modCompileOnly "dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}"
 }
 
 loom {

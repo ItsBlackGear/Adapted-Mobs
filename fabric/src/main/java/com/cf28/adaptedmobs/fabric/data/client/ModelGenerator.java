@@ -25,6 +25,7 @@ public class ModelGenerator extends FabricModelProvider {
         gen.delegateItemModel(AMItems.SUPPORT_CREEPIE_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.ROCKET_CREEPIE_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.HARPY_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
+        gen.delegateItemModel(AMItems.ENTOMBED_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
     }
     
     @Override
@@ -33,5 +34,12 @@ public class ModelGenerator extends FabricModelProvider {
         gen.generateFlatItem(AMItems.YELLOW_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.BLUE_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.GREEN_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
+
+        gen.generateFlatItem(AMItems.DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.GRINNING_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.WEEPING_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.WRATH_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ANCIENT_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.SCREAMING_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
     }
 }

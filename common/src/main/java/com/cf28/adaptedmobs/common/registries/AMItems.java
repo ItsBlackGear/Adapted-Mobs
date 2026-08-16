@@ -4,6 +4,8 @@ import com.blackgear.platform.core.helper.ItemRegistry;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.level.item.MysteryEggItem;
+import com.cf28.adaptedmobs.common.level.item.mask.DeepslateMaskItem;
+import com.cf28.adaptedmobs.common.level.item.mask.MaskVariant;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -40,20 +42,36 @@ public class AMItems {
     public static final Supplier<Item> HARPY_SPAWN_EGG = REGISTRIES.register("harpy_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.HARPY, 0x333149, 0x9790a4, properties));
 
+    public static final Supplier<Item> ENTOMBED_SPAWN_EGG = REGISTRIES.register("entombed_spawn_egg",
+            properties -> createSpawnEgg(AMEntityTypes.ENTOMBED, 0x3c3d42, 0x6e737c, properties));
+
+    public static final Supplier<Item> DEEPSLATE_MASK = REGISTRIES.register("deepslate_mask",
+            properties -> new DeepslateMaskItem(MaskVariant.BLANK, properties));
+    public static final Supplier<Item> GRINNING_DEEPSLATE_MASK = REGISTRIES.register("grinning_deepslate_mask",
+            properties -> new DeepslateMaskItem(MaskVariant.GRINNING, properties));
+    public static final Supplier<Item> WEEPING_DEEPSLATE_MASK = REGISTRIES.register("weeping_deepslate_mask",
+            properties -> new DeepslateMaskItem(MaskVariant.WEEPING, properties));
+    public static final Supplier<Item> WRATH_DEEPSLATE_MASK = REGISTRIES.register("wrath_deepslate_mask",
+            properties -> new DeepslateMaskItem(MaskVariant.WRATH, properties));
+    public static final Supplier<Item> ANCIENT_DEEPSLATE_MASK = REGISTRIES.register("ancient_deepslate_mask",
+            properties -> new DeepslateMaskItem(MaskVariant.ANCIENT, properties));
+    public static final Supplier<Item> SCREAMING_DEEPSLATE_MASK = REGISTRIES.register("screaming_deepslate_mask",
+            properties -> new DeepslateMaskItem(MaskVariant.SCREAMING, properties));
+
     public static final Supplier<Item> HARPY_EGG = REGISTRIES.register("harpy_egg",
             () -> new BlockItem(AMBlocks.HARPY_EGG.get(), new Properties()));
 
     public static final Supplier<Item> FESTIVE_CREEPIE_SPAWN_EGG = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("festive_creepie_spawn_egg",
-                    properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 10571065, 8754737, properties))
+            properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 10571065, 8754737, properties))
             : null;
     public static final Supplier<Item> SUPPORT_CREEPIE_SPAWN_EGG = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("support_creepie_spawn_egg",
-                    properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPIE, 7110705, 10895394, properties))
+            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPIE, 7110705, 10895394, properties))
             : null;
     public static final Supplier<Item> ROCKET_CREEPIE_SPAWN_EGG = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("rocket_creepie_spawn_egg",
-                    properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPIE, 5999444, 10800234, properties))
+            properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPIE, 5999444, 10800234, properties))
             : null;
 
     public static final Supplier<Item> FESTIVE_CREEPER_SPORES = TolerableCreepersCompat.isLoaded()
@@ -67,4 +85,15 @@ public class AMItems {
     public static final Supplier<Item> SUPPORT_CREEPER_SPORES = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("support_creeper_spores", TolerableCreepersIntegration::createSupportSporesItem, new Properties())
             : null;
+
+    public static Item getMaskByVariant(MaskVariant variant) {
+        return switch (variant) {
+            case BLANK -> DEEPSLATE_MASK.get();
+            case GRINNING -> GRINNING_DEEPSLATE_MASK.get();
+            case WEEPING -> WEEPING_DEEPSLATE_MASK.get();
+            case WRATH -> WRATH_DEEPSLATE_MASK.get();
+            case ANCIENT -> ANCIENT_DEEPSLATE_MASK.get();
+            case SCREAMING -> SCREAMING_DEEPSLATE_MASK.get();
+        };
+    }
 }

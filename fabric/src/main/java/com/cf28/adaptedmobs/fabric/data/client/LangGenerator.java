@@ -22,11 +22,21 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMEntityTypes.ROCKET_CREEPER.get(), "Leaper");
         builder.add(AMEntityTypes.CREEPER.get(), "Creeper");
         builder.add(AMEntityTypes.HARPY.get(), "Harpy");
+        builder.add(AMEntityTypes.ENTOMBED.get(), "Entombed");
 
         builder.add(AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(), "Reaper Spawn Egg");
         builder.add(AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(), "Seeper Spawn Egg");
         builder.add(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), "Leaper Spawn Egg");
         builder.add(AMItems.HARPY_SPAWN_EGG.get(), "Harpy Spawn Egg");
+        builder.add(AMItems.ENTOMBED_SPAWN_EGG.get(), "Entombed Spawn Egg");
+
+        builder.add(AMItems.DEEPSLATE_MASK.get(), "Deepslate Mask");
+        builder.add(AMItems.GRINNING_DEEPSLATE_MASK.get(), "Grinning Deepslate Mask");
+        builder.add(AMItems.WEEPING_DEEPSLATE_MASK.get(), "Weeping Deepslate Mask");
+        builder.add(AMItems.WRATH_DEEPSLATE_MASK.get(), "Wrath Deepslate Mask");
+        builder.add(AMItems.ANCIENT_DEEPSLATE_MASK.get(), "Ancient Deepslate Mask");
+        builder.add(AMItems.SCREAMING_DEEPSLATE_MASK.get(), "Screaming Deepslate Mask");
+
         builder.add(AMBlocks.HARPY_EGG.get(), "Harpy Egg");
 
         builder.add(AMItems.RED_MYSTERY_EGG.get(), "Red Mystery Egg");
@@ -73,6 +83,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.category.support_creeper", "Seeper");
         builder.add("config.adaptedmobs.category.rocket_creeper", "Leaper");
         builder.add("config.adaptedmobs.category.harpy", "Harpy");
+        builder.add("config.adaptedmobs.category.entombed", "Entombed");
 
         builder.add("config.adaptedmobs.option.enable_mystery_eggs", "Enable Mystery Eggs");
 
@@ -105,6 +116,10 @@ public class LangGenerator extends FabricLanguageProvider {
 
         builder.add("config.adaptedmobs.option.harpy_minimum_spawn_y", "Harpy Minimum Spawn Y");
         builder.add("config.adaptedmobs.option.max_natural_harpy_count", "Max Natural Harpy Count");
+
+        builder.add("config.adaptedmobs.option.spawn_entombed", "Spawn Entombed");
+        builder.add("config.adaptedmobs.option.entombed_spawn_weight", "Entombed Spawn Weight");
+        builder.add("config.adaptedmobs.option.entombed_maximum_spawn_y", "Entombed Maximum Spawn Y");
 
         builder.add("tag.item.adaptedmobs.creeper_food", "Creeper Food");
     }

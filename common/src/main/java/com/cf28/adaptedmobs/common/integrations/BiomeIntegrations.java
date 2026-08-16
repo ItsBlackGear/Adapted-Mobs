@@ -6,6 +6,7 @@ import com.blackgear.platform.common.worldgen.modifier.FeatureManager;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.cf28.adaptedmobs.core.tags.AMBiomeTags;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -44,8 +45,14 @@ public class BiomeIntegrations extends FeatureManager {
             }
         });
         
-        this.addIf(context -> context.is(net.minecraft.tags.BiomeTags.IS_MOUNTAIN), (context, writer) -> {
+        this.addIf(context -> context.is(BiomeTags.IS_MOUNTAIN), (context, writer) -> {
             writer.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(AMEntityTypes.HARPY.get(), 15, 1, 2));
+        });
+
+        this.addIf(context -> context.hasEntity(() -> EntityType.ZOMBIE), (context, writer) -> {
+            if (AdaptedMobs.CONFIG.spawnEntombed.get()) {
+                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.ENTOMBED.get(), AdaptedMobs.CONFIG.entombedSpawnWeight.get(), 1, 2));
+            }
         });
 
     }

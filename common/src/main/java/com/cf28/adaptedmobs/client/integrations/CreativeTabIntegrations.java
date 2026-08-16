@@ -47,12 +47,24 @@ public interface CreativeTabIntegrations {
         }
     };
 
+    CreativeTabs.Modifier COMBAT = (flag, output, operator) -> {
+        output.addAllAfter(Items.TURTLE_HELMET, List.of(
+                AMItems.DEEPSLATE_MASK.get(),
+                AMItems.GRINNING_DEEPSLATE_MASK.get(),
+                AMItems.WEEPING_DEEPSLATE_MASK.get(),
+                AMItems.WRATH_DEEPSLATE_MASK.get(),
+                AMItems.ANCIENT_DEEPSLATE_MASK.get(),
+                AMItems.SCREAMING_DEEPSLATE_MASK.get()
+        ));
+    };
+
     CreativeTabs.Modifier SPAWN_EGGS = (flag, output, operator) -> {
         output.addAllAfter(Items.CREEPER_SPAWN_EGG, List.of(
                 AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(),
                 AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(),
                 AMItems.ROCKET_CREEPER_SPAWN_EGG.get(),
-                AMItems.HARPY_SPAWN_EGG.get()
+                AMItems.HARPY_SPAWN_EGG.get(),
+                AMItems.ENTOMBED_SPAWN_EGG.get()
         ));
 
         if (TolerableCreepersCompat.isLoaded()) {
@@ -67,6 +79,7 @@ public interface CreativeTabIntegrations {
     static void bootstrap() {
         CreativeTabs.modify(CreativeModeTabs.FUNCTIONAL_BLOCKS, FUNCTIONAL_BLOCKS);
         CreativeTabs.modify(CreativeModeTabs.INGREDIENTS, INGREDIENTS);
+        CreativeTabs.modify(CreativeModeTabs.COMBAT, COMBAT);
         CreativeTabs.modify(CreativeModeTabs.SPAWN_EGGS, SPAWN_EGGS);
     }
 }

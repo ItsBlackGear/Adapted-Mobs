@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
@@ -44,7 +46,23 @@ public final class LootIntegrations implements LootModifier.LootTableModifier {
             this.addMysteryEggPool(context, AMItems.YELLOW_MYSTERY_EGG);
         } else if (loot.equals(AMEntityTypes.ROCKET_CREEPER.get().getDefaultLootTable())) {
             this.addMysteryEggPool(context, AMItems.BLUE_MYSTERY_EGG);
+        } else if (loot.equals(BuiltInLootTables.ANCIENT_CITY)) {
+            this.addAncientCityMaskPool(context);
         }
+    }
+
+    private void addAncientCityMaskPool(LootModifier.LootTableContext context) {
+        context.addPool(
+                LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .when(LootItemRandomChanceCondition.randomChance(0.35F))
+                        .add(LootItem.lootTableItem(AMItems.DEEPSLATE_MASK.get()).setWeight(2))
+                        .add(LootItem.lootTableItem(AMItems.GRINNING_DEEPSLATE_MASK.get()).setWeight(1))
+                        .add(LootItem.lootTableItem(AMItems.WEEPING_DEEPSLATE_MASK.get()).setWeight(1))
+                        .add(LootItem.lootTableItem(AMItems.WRATH_DEEPSLATE_MASK.get()).setWeight(1))
+                        .add(LootItem.lootTableItem(AMItems.ANCIENT_DEEPSLATE_MASK.get()).setWeight(1))
+                        .add(LootItem.lootTableItem(AMItems.SCREAMING_DEEPSLATE_MASK.get()).setWeight(1))
+        );
     }
 
     private void addMysteryEggPool(LootModifier.LootTableContext context, Supplier<Item> egg) {

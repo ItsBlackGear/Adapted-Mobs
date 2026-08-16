@@ -1,5 +1,6 @@
 package com.cf28.adaptedmobs.common.integrations;
 
+import com.cf28.adaptedmobs.common.level.entity.mob.Entombed;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
@@ -20,6 +21,7 @@ public class MobIntegrations {
         event.registerAttributes(AMEntityTypes.ROCKET_CREEPER, RocketCreeper::createAttributes);
         event.registerAttributes(AMEntityTypes.CREEPER, TamableCreeper::createAttributes);
         event.registerAttributes(AMEntityTypes.HARPY, Harpy::createAttributes);
+        event.registerAttributes(AMEntityTypes.ENTOMBED, Entombed::createAttributes);
 
         if (TolerableCreepersCompat.isLoaded()) {
             event.registerAttributes(AMEntityTypes.SUPPORT_CREEPIE, Creepie::createAttributes);
@@ -33,5 +35,6 @@ public class MobIntegrations {
         event.registerPlacement(AMEntityTypes.SUPPORT_CREEPER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
         event.registerPlacement(AMEntityTypes.ROCKET_CREEPER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
         event.registerPlacement(AMEntityTypes.HARPY, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Harpy::checkHarpySpawnRules);
+        event.registerPlacement(AMEntityTypes.ENTOMBED, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Entombed::checkEntombedSpawnRules);
     }
 }

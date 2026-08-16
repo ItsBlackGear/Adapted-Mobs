@@ -41,6 +41,10 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> harpyMinimumSpawnY;
     public final ConfigBuilder.ConfigValue<Integer> maxNaturalHarpies;
 
+    public final ConfigBuilder.ConfigValue<Boolean> spawnEntombed;
+    public final ConfigBuilder.ConfigValue<Integer> entombedSpawnWeight;
+    public final ConfigBuilder.ConfigValue<Integer> entombedMaximumSpawnY;
+
     public CommonConfig(ConfigBuilder builder) {
         builder.push("Mystery Eggs");
         this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death")
@@ -101,6 +105,15 @@ public class CommonConfig {
                 .defineInRange("Harpy Minimum Spawn Y", 135, -64, 320);
         this.maxNaturalHarpies = builder.comment("Largest number of naturally spawned Harpies alive at once per dimension. Harpies from nests and spawn eggs do not count")
                 .defineInRange("Max Natural Harpy Count", 10, 0, 200);
+        builder.pop();
+
+        builder.push("Entombed");
+        this.spawnEntombed = builder.comment("Determines if Entombed should spawn in deep caves")
+                .define("Spawn Entombed", true);
+        this.entombedSpawnWeight = builder.comment("Determines how often Entombed spawn")
+                .defineInRange("Entombed Spawn Weight", 30, 0, 100);
+        this.entombedMaximumSpawnY = builder.comment("Highest Y level Entombed can naturally spawn at")
+                .defineInRange("Entombed Maximum Spawn Y", 0, -64, 320);
         builder.pop();
     }
 }

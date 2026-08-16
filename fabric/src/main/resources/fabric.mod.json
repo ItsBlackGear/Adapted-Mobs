@@ -34,6 +34,9 @@
     ],
     "modmenu": [
       "com.cf28.adaptedmobs.fabric.client.ModMenuIntegration"
+    ],
+    "lambdynlights:initializer": [
+      "com.cf28.adaptedmobs.common.integrations.LambDynamicLightsIntegration"
     ]
   },
   "mixins": [
