@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "adaptedmobs:item/grinning_deepslate_mask"
+    "layer0": "adaptedmobs:item/archaic_mask_traveler"
   }
 }

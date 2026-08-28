@@ -35,11 +35,15 @@ public class ModelGenerator extends FabricModelProvider {
         gen.generateFlatItem(AMItems.BLUE_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.GREEN_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
 
-        gen.generateFlatItem(AMItems.DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
-        gen.generateFlatItem(AMItems.GRINNING_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
-        gen.generateFlatItem(AMItems.WEEPING_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
-        gen.generateFlatItem(AMItems.WRATH_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
-        gen.generateFlatItem(AMItems.ANCIENT_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
-        gen.generateFlatItem(AMItems.SCREAMING_DEEPSLATE_MASK.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_ALCHEMIST.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_ARCHITECT.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_BUILDER.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_CLERIC.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_CRANIAL.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_ODDITY.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_SPIRAL.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_TRAVELER.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_WARRIOR.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_WEAVER.get(), ModelTemplates.FLAT_ITEM);
     }
 }

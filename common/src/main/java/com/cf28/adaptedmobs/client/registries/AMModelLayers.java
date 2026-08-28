@@ -35,7 +35,7 @@ public class AMModelLayers {
     public static final ModelLayerLocation HARPY_CHICK = create("harpy_chick");
 
     public static final ModelLayerLocation ENTOMBED = create("entombed");
-    public static final ModelLayerLocation DEEPSLATE_MASK = create("deepslate_mask");
+    public static final ModelLayerLocation ARCHAIC_MASK = create("archaic_mask");
 
     private static ModelLayerLocation create(String name) {
         return create(name, "main");

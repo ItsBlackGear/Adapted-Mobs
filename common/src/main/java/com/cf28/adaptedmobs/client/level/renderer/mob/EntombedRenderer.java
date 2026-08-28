@@ -14,7 +14,7 @@ public class EntombedRenderer extends MobRenderer<Entombed, EntombedModel<Entomb
 
     public EntombedRenderer(EntityRendererProvider.Context context) {
         super(context, new EntombedModel<>(context.bakeLayer(AMModelLayers.ENTOMBED)), 0.5F);
-        this.addLayer(new EntombedMaskLayer(this));
+        this.addLayer(new EntombedMaskLayer(this, context.getModelSet()));
     }
 
     @Override

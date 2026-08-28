@@ -49,12 +49,16 @@ public interface CreativeTabIntegrations {
 
     CreativeTabs.Modifier COMBAT = (flag, output, operator) -> {
         output.addAllAfter(Items.TURTLE_HELMET, List.of(
-                AMItems.DEEPSLATE_MASK.get(),
-                AMItems.GRINNING_DEEPSLATE_MASK.get(),
-                AMItems.WEEPING_DEEPSLATE_MASK.get(),
-                AMItems.WRATH_DEEPSLATE_MASK.get(),
-                AMItems.ANCIENT_DEEPSLATE_MASK.get(),
-                AMItems.SCREAMING_DEEPSLATE_MASK.get()
+                AMItems.ARCHAIC_MASK_ALCHEMIST.get(),
+                AMItems.ARCHAIC_MASK_ARCHITECT.get(),
+                AMItems.ARCHAIC_MASK_BUILDER.get(),
+                AMItems.ARCHAIC_MASK_CLERIC.get(),
+                AMItems.ARCHAIC_MASK_CRANIAL.get(),
+                AMItems.ARCHAIC_MASK_ODDITY.get(),
+                AMItems.ARCHAIC_MASK_SPIRAL.get(),
+                AMItems.ARCHAIC_MASK_TRAVELER.get(),
+                AMItems.ARCHAIC_MASK_WARRIOR.get(),
+                AMItems.ARCHAIC_MASK_WEAVER.get()
         ));
     };
 

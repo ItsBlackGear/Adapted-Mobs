@@ -46,7 +46,9 @@ public class BiomeIntegrations extends FeatureManager {
         });
         
         this.addIf(context -> context.is(BiomeTags.IS_MOUNTAIN), (context, writer) -> {
-            writer.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(AMEntityTypes.HARPY.get(), 15, 1, 2));
+            if (AdaptedMobs.CONFIG.spawnHarpies.get()) {
+                writer.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(AMEntityTypes.HARPY.get(), AdaptedMobs.CONFIG.harpySpawnWeight.get(), 1, 2));
+            }
         });
 
         this.addIf(context -> context.hasEntity(() -> EntityType.ZOMBIE), (context, writer) -> {

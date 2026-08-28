@@ -101,5 +101,6 @@ public class EntityRenderer {
         event.register(AMModelLayers.HARPY, HarpyModel::createBodyLayer);
         event.register(AMModelLayers.HARPY_CHICK, HarpyChickModel::createBodyLayer);
         event.register(AMModelLayers.ENTOMBED, EntombedModel::createBodyLayer);
+        event.register(AMModelLayers.ARCHAIC_MASK, ArchaicMaskModel::createBodyLayer);
     }
 }

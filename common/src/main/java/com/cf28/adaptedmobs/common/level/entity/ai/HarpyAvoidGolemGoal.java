@@ -50,7 +50,7 @@ public class HarpyAvoidGolemGoal extends Goal {
         }
 
         if (this.harpy.isVehicle()) {
-            this.harpy.releaseCarriedTarget();
+            this.harpy.ejectPassengers();
         }
     }
 

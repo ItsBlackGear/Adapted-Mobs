@@ -69,8 +69,17 @@ public final class AMConfigScreen {
 
         ConfigCategory harpy = ConfigCategory.createBuilder()
                 .name(Component.translatable("config.adaptedmobs.category.harpy"))
+                .option(boolOption(values, "spawn_harpies", true, config.spawnHarpies))
+                .option(intOption(values, "harpy_spawn_weight", 15, 0, 100, config.harpySpawnWeight))
                 .option(intOption(values, "harpy_minimum_spawn_y", 135, -64, 320, config.harpyMinimumSpawnY))
                 .option(intOption(values, "max_natural_harpy_count", 10, 0, 200, config.maxNaturalHarpies))
+                .build();
+
+        ConfigCategory entombed = ConfigCategory.createBuilder()
+                .name(Component.translatable("config.adaptedmobs.category.entombed"))
+                .option(boolOption(values, "spawn_entombed", true, config.spawnEntombed))
+                .option(intOption(values, "entombed_spawn_weight", 30, 0, 100, config.entombedSpawnWeight))
+                .option(intOption(values, "entombed_maximum_spawn_y", 0, -64, 320, config.entombedMaximumSpawnY))
                 .build();
 
         return builder.category(general)
@@ -78,6 +87,7 @@ public final class AMConfigScreen {
                 .category(supportCreeper)
                 .category(rocketCreeper)
                 .category(harpy)
+                .category(entombed)
                 .build()
                 .generateScreen(parent);
     }

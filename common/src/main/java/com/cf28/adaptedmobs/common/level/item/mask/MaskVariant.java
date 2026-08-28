@@ -5,12 +5,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 
 public enum MaskVariant implements StringRepresentable {
-    BLANK(0, "blank"),
-    GRINNING(1, "grinning"),
-    WEEPING(2, "weeping"),
-    WRATH(3, "wrath"),
-    ANCIENT(4, "ancient"),
-    SCREAMING(5, "screaming");
+    ALCHEMIST(0, "alchemist"),
+    ARCHITECT(1, "architect"),
+    BUILDER(2, "builder"),
+    CLERIC(3, "cleric"),
+    CRANIAL(4, "cranial"),
+    ODDITY(5, "oddity"),
+    SPIRAL(6, "spiral"),
+    TRAVELER(7, "traveler"),
+    WARRIOR(8, "warrior"),
+    WEAVER(9, "weaver");
 
     private final int id;
     private final String name;
@@ -19,13 +23,13 @@ public enum MaskVariant implements StringRepresentable {
     MaskVariant(int id, String name) {
         this.id = id;
         this.name = name;
-        this.texture = ResourceLocation.fromNamespaceAndPath(AdaptedMobs.MOD_ID, "textures/entity/mask/deepslate_mask_" + name + ".png");
+        this.texture = ResourceLocation.fromNamespaceAndPath(AdaptedMobs.MOD_ID, "textures/models/armor/archaic_mask_" + name + ".png");
     }
 
     public static MaskVariant byId(int id) {
         MaskVariant[] values = values();
         if (id < 0 || id >= values.length) {
-            return BLANK;
+            return ALCHEMIST;
         }
         return values[id];
     }

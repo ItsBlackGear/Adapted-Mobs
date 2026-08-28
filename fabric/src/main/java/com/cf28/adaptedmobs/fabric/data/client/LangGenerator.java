@@ -30,12 +30,16 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMItems.HARPY_SPAWN_EGG.get(), "Harpy Spawn Egg");
         builder.add(AMItems.ENTOMBED_SPAWN_EGG.get(), "Entombed Spawn Egg");
 
-        builder.add(AMItems.DEEPSLATE_MASK.get(), "Deepslate Mask");
-        builder.add(AMItems.GRINNING_DEEPSLATE_MASK.get(), "Grinning Deepslate Mask");
-        builder.add(AMItems.WEEPING_DEEPSLATE_MASK.get(), "Weeping Deepslate Mask");
-        builder.add(AMItems.WRATH_DEEPSLATE_MASK.get(), "Wrath Deepslate Mask");
-        builder.add(AMItems.ANCIENT_DEEPSLATE_MASK.get(), "Ancient Deepslate Mask");
-        builder.add(AMItems.SCREAMING_DEEPSLATE_MASK.get(), "Screaming Deepslate Mask");
+        builder.add(AMItems.ARCHAIC_MASK_ALCHEMIST.get(), "Alchemist Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_ARCHITECT.get(), "Architect Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_BUILDER.get(), "Builder Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_CLERIC.get(), "Cleric Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_CRANIAL.get(), "Cranial Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_ODDITY.get(), "Oddity Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_SPIRAL.get(), "Spiral Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_TRAVELER.get(), "Traveler Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_WARRIOR.get(), "Warrior Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_WEAVER.get(), "Weaver Archaic Mask");
 
         builder.add(AMBlocks.HARPY_EGG.get(), "Harpy Egg");
 
@@ -114,6 +118,8 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.option.rocket_spore_count_night_base", "Leaper Spore Count Night Base");
         builder.add("config.adaptedmobs.option.rocket_spore_count_night_random", "Leaper Spore Count Night Random");
 
+        builder.add("config.adaptedmobs.option.spawn_harpies", "Spawn Harpies");
+        builder.add("config.adaptedmobs.option.harpy_spawn_weight", "Harpy Spawn Weight");
         builder.add("config.adaptedmobs.option.harpy_minimum_spawn_y", "Harpy Minimum Spawn Y");
         builder.add("config.adaptedmobs.option.max_natural_harpy_count", "Max Natural Harpy Count");
 

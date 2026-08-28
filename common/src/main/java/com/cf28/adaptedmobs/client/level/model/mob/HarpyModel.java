@@ -11,9 +11,6 @@ import net.minecraft.util.Mth;
 
 public class HarpyModel<T extends Harpy> extends EntityModel<T> {
     private static final float TUCKED_LEG = -0.6F;
-    private static final float TALON_LEG = -1.2F;
-    private static final float KICK_SPEED = 0.6F;
-    private static final float KICK_AMOUNT = 0.5F;
     private static final float SITTING_LEG = -0.9F;
     private static final float SITTING_DROP = 3.0F;
 
@@ -88,13 +85,7 @@ public class HarpyModel<T extends Harpy> extends EntityModel<T> {
             return;
         }
 
-        if (entity.isPreparingSwoop()) {
-            this.leg_left.xRot = TUCKED_LEG + Mth.cos(time * KICK_SPEED) * KICK_AMOUNT;
-            this.leg_right.xRot = TUCKED_LEG + Mth.cos(time * KICK_SPEED + (float) Math.PI) * KICK_AMOUNT;
-        } else if (entity.isSwooping()) {
-            this.leg_left.xRot = TALON_LEG;
-            this.leg_right.xRot = TALON_LEG;
-        } else if (entity.isFlying()) {
+        if (entity.isFlying()) {
             float sway = Mth.cos(time * 0.1F) * 0.05F;
             this.leg_left.xRot = TUCKED_LEG + sway;
             this.leg_right.xRot = TUCKED_LEG - sway;

@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.neoforge;
 
 import com.cf28.adaptedmobs.core.AdaptedMobs;
+import com.cf28.adaptedmobs.neoforge.client.AdaptedMobsNeoForgeClient;
 import com.cf28.adaptedmobs.neoforge.client.ClientConfigSetup;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -13,6 +14,7 @@ public final class AdaptedMobsNeoForge {
 
         if (FMLEnvironment.dist.isClient()) {
             ClientConfigSetup.register(modContainer);
+            AdaptedMobsNeoForgeClient.init(modContainer);
         }
     }
 }

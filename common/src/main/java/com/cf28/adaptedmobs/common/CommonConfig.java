@@ -38,6 +38,8 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> supportSporeCountNightBase;
     public final ConfigBuilder.ConfigValue<Integer> supportSporeCountNightRandom;
 
+    public final ConfigBuilder.ConfigValue<Boolean> spawnHarpies;
+    public final ConfigBuilder.ConfigValue<Integer> harpySpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> harpyMinimumSpawnY;
     public final ConfigBuilder.ConfigValue<Integer> maxNaturalHarpies;
 
@@ -101,6 +103,10 @@ public class CommonConfig {
         builder.pop();
 
         builder.push("Harpy");
+        this.spawnHarpies = builder.comment("Determines if Harpies should spawn")
+                .define("Spawn Harpies", true);
+        this.harpySpawnWeight = builder.comment("Determines how often Harpies spawn")
+                .defineInRange("Harpy Spawn Weight", 15, 0, 100);
         this.harpyMinimumSpawnY = builder.comment("Lowest Y level Harpies can naturally spawn at")
                 .defineInRange("Harpy Minimum Spawn Y", 135, -64, 320);
         this.maxNaturalHarpies = builder.comment("Largest number of naturally spawned Harpies alive at once per dimension. Harpies from nests and spawn eggs do not count")

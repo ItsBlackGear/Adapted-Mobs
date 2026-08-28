@@ -1,6 +1,6 @@
 package com.cf28.adaptedmobs.common.level.entity.mob;
 
-import com.cf28.adaptedmobs.common.integrations.LambDynamicLightsIntegration;
+import com.cf28.adaptedmobs.common.integrations.LambDynLightsCompat;
 import com.cf28.adaptedmobs.common.level.entity.ai.EntombedAvoidLightGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.EntombedStalkTargetGoal;
 import com.cf28.adaptedmobs.common.level.item.mask.MaskVariant;
@@ -70,7 +70,7 @@ public class Entombed extends Monster {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_VARIANT_ID, MaskVariant.BLANK.getId());
+        builder.define(DATA_VARIANT_ID, MaskVariant.ALCHEMIST.getId());
         builder.define(DATA_STALKING, false);
     }
 
@@ -182,14 +182,14 @@ public class Entombed extends Monster {
         if (this.getLightLevelAt(target.blockPosition()) > MAX_COMFORT_LIGHT) {
             return true;
         }
-        return LambDynamicLightsIntegration.getLivingEntityLuminance(target) > 0;
+        return LambDynLightsCompat.getLivingEntityLuminance(target) > 0;
     }
 
     public boolean isPositionInTargetLight(BlockPos pos, LivingEntity target) {
         if (target == null) {
             return false;
         }
-        int luminance = LambDynamicLightsIntegration.getLivingEntityLuminance(target);
+        int luminance = LambDynLightsCompat.getLivingEntityLuminance(target);
         if (luminance > 0) {
             double distanceSq = target.blockPosition().distSqr(pos);
             int safeRadius = Math.max(1, luminance - MAX_COMFORT_LIGHT);
