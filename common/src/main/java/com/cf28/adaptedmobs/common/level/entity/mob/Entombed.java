@@ -17,8 +17,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -114,14 +112,6 @@ public class Entombed extends Monster {
         this.entityData.set(DATA_VARIANT_ID, variant.getId());
     }
 
-    public boolean isStalking() {
-        return this.entityData.get(DATA_STALKING);
-    }
-
-    public void setStalking(boolean stalking) {
-        this.entityData.set(DATA_STALKING, stalking);
-    }
-
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
@@ -170,22 +160,6 @@ public class Entombed extends Monster {
                 this.igniteForSeconds(8);
             }
         }
-    }
-
-    @Override
-    public boolean doHurtTarget(Entity entity) {
-        boolean hurt = super.doHurtTarget(entity);
-        if (hurt && entity instanceof LivingEntity living) {
-            float chance = switch (this.level().getDifficulty()) {
-                case HARD -> 0.8F;
-                case NORMAL -> 0.4F;
-                default -> 0.2F;
-            };
-            if (this.random.nextFloat() < chance) {
-                living.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 140, 0), this);
-            }
-        }
-        return hurt;
     }
 
     public int getLightLevelAt(BlockPos pos) {
@@ -246,7 +220,7 @@ public class Entombed extends Monster {
 
         @Override
         public void playDestroyProgressSound(LevelAccessor level, BlockPos pos) {
-            level.playSound(null, pos, SoundEvents.ZOMBIE_DESTROY_EGG, SoundSource.HOSTILE, 0.5F, 0.9F + ((Entombed) this.mob).getRandom().nextFloat() * 0.2F);
+            level.playSound(null, pos, SoundEvents.ZOMBIE_DESTROY_EGG, SoundSource.HOSTILE, 0.5F, 0.9F + this.mob.getRandom().nextFloat() * 0.2F);
         }
 
         @Override
