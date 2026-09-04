@@ -30,16 +30,27 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMItems.HARPY_SPAWN_EGG.get(), "Harpy Spawn Egg");
         builder.add(AMItems.ENTOMBED_SPAWN_EGG.get(), "Entombed Spawn Egg");
 
-        builder.add(AMItems.ARCHAIC_MASK_ALCHEMIST.get(), "Alchemist Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_ARCHITECT.get(), "Architect Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_BUILDER.get(), "Builder Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_CLERIC.get(), "Cleric Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_CRANIAL.get(), "Cranial Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_ODDITY.get(), "Oddity Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_SPIRAL.get(), "Spiral Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_TRAVELER.get(), "Traveler Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_WARRIOR.get(), "Warrior Archaic Mask");
-        builder.add(AMItems.ARCHAIC_MASK_WEAVER.get(), "Weaver Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_ALCHEMIST.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_ARCHITECT.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_BUILDER.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_CLERIC.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_CRANIAL.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_ODDITY.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_SPIRAL.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_TRAVELER.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_WARRIOR.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_WEAVER.get(), "Archaic Mask");
+
+        builder.add("item.adaptedmobs.archaic_mask.design.alchemist", "Alchemist");
+        builder.add("item.adaptedmobs.archaic_mask.design.architect", "Architect");
+        builder.add("item.adaptedmobs.archaic_mask.design.builder", "Builder");
+        builder.add("item.adaptedmobs.archaic_mask.design.cleric", "Cleric");
+        builder.add("item.adaptedmobs.archaic_mask.design.cranial", "Cranial");
+        builder.add("item.adaptedmobs.archaic_mask.design.oddity", "Oddity");
+        builder.add("item.adaptedmobs.archaic_mask.design.spiral", "Spiral");
+        builder.add("item.adaptedmobs.archaic_mask.design.traveler", "Traveler");
+        builder.add("item.adaptedmobs.archaic_mask.design.warrior", "Warrior");
+        builder.add("item.adaptedmobs.archaic_mask.design.weaver", "Weaver");
 
         builder.add(AMBlocks.HARPY_EGG.get(), "Harpy Egg");
 
@@ -90,6 +101,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.category.entombed", "Entombed");
 
         builder.add("config.adaptedmobs.option.enable_mystery_eggs", "Enable Mystery Eggs");
+        builder.add("config.adaptedmobs.option.ancient_city_mask_rarity", "Ancient City Mask Rarity");
 
         builder.add("config.adaptedmobs.option.spawn_festive_creepers", "Spawn Reapers");
         builder.add("config.adaptedmobs.option.festive_creeper_spawn_weight", "Reaper Spawn Weight");

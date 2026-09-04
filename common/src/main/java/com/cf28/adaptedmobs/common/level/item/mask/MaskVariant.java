@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.common.level.item.mask;
 
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 
 public enum MaskVariant implements StringRepresentable {
@@ -16,6 +17,10 @@ public enum MaskVariant implements StringRepresentable {
     WARRIOR(8, "warrior"),
     WEAVER(9, "weaver");
 
+    private static final MaskVariant[] COMMON_VARIANTS = {
+            ARCHITECT, BUILDER, CLERIC, CRANIAL, ODDITY, TRAVELER, WARRIOR, WEAVER
+    };
+
     private final int id;
     private final String name;
     private final ResourceLocation texture;
@@ -24,6 +29,17 @@ public enum MaskVariant implements StringRepresentable {
         this.id = id;
         this.name = name;
         this.texture = ResourceLocation.fromNamespaceAndPath(AdaptedMobs.MOD_ID, "textures/models/armor/archaic_mask_" + name + ".png");
+    }
+
+    public static MaskVariant getRandomVariant(RandomSource random) {
+        int roll = random.nextInt(66);
+        if (roll == 0) {
+            return ALCHEMIST;
+        } else if (roll == 1) {
+            return SPIRAL;
+        } else {
+            return COMMON_VARIANTS[(roll - 2) / 8];
+        }
     }
 
     public static MaskVariant byId(int id) {

@@ -53,7 +53,7 @@ public class BiomeIntegrations extends FeatureManager {
 
         this.addIf(context -> context.hasEntity(() -> EntityType.ZOMBIE), (context, writer) -> {
             if (AdaptedMobs.CONFIG.spawnEntombed.get()) {
-                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.ENTOMBED.get(), AdaptedMobs.CONFIG.entombedSpawnWeight.get(), 1, 2));
+                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.ENTOMBED.get(), AdaptedMobs.CONFIG.entombedSpawnWeight.get(), 3, 5));
             }
         });
 

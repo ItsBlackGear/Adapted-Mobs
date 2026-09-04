@@ -5,6 +5,7 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 
 public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Boolean> enableMysteryEggs;
+    public final ConfigBuilder.ConfigValue<Double> ancientCityMaskRarity;
 
     public final ConfigBuilder.ConfigValue<Boolean> spawnFestiveCreepers;
     public final ConfigBuilder.ConfigValue<Integer> festiveCreeperSpawnWeight;
@@ -51,6 +52,11 @@ public class CommonConfig {
         builder.push("Mystery Eggs");
         this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death")
                 .define("Enable Mystery Eggs", !TolerableCreepersCompat.isLoaded());
+        builder.pop();
+
+        builder.push("Archaic Masks");
+        this.ancientCityMaskRarity = builder.comment("Chance of Archaic Masks generating in Ancient City loot chests")
+                .defineInRange("Ancient City Mask Rarity", 0.15, 0.0, 1.0);
         builder.pop();
 
         builder.push("Festive Creeper");

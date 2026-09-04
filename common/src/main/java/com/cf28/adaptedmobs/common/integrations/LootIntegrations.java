@@ -52,20 +52,25 @@ public final class LootIntegrations implements LootModifier.LootTableModifier {
     }
 
     private void addAncientCityMaskPool(LootModifier.LootTableContext context) {
+        float rarity = AdaptedMobs.CONFIG.ancientCityMaskRarity.get().floatValue();
+        if (rarity <= 0.0F) {
+            return;
+        }
+
         context.addPool(
                 LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))
-                        .when(LootItemRandomChanceCondition.randomChance(0.35F))
+                        .when(LootItemRandomChanceCondition.randomChance(rarity))
                         .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_ALCHEMIST.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_ARCHITECT.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_BUILDER.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_CLERIC.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_CRANIAL.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_ODDITY.get()).setWeight(1))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_ARCHITECT.get()).setWeight(8))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_BUILDER.get()).setWeight(8))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_CLERIC.get()).setWeight(8))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_CRANIAL.get()).setWeight(8))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_ODDITY.get()).setWeight(8))
                         .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_SPIRAL.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_TRAVELER.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_WARRIOR.get()).setWeight(1))
-                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_WEAVER.get()).setWeight(1))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_TRAVELER.get()).setWeight(8))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_WARRIOR.get()).setWeight(8))
+                        .add(LootItem.lootTableItem(AMItems.ARCHAIC_MASK_WEAVER.get()).setWeight(8))
         );
     }
 

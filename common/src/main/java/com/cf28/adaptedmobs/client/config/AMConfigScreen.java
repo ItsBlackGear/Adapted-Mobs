@@ -7,6 +7,7 @@ import com.cf28.adaptedmobs.core.AdaptedMobs;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.client.gui.screens.Screen;
@@ -29,6 +30,7 @@ public final class AMConfigScreen {
         ConfigCategory general = ConfigCategory.createBuilder()
                 .name(Component.translatable("config.adaptedmobs.category.general"))
                 .option(boolOption(values, "enable_mystery_eggs", !TolerableCreepersCompat.isLoaded(), config.enableMysteryEggs))
+                .option(doubleOption(values, "ancient_city_mask_rarity", 0.15, 0.0, 1.0, 0.01, config.ancientCityMaskRarity))
                 .build();
 
         ConfigCategory festiveCreeper = ConfigCategory.createBuilder()
@@ -107,6 +109,15 @@ public final class AMConfigScreen {
                 .name(Component.translatable("config.adaptedmobs.option." + name))
                 .binding(defaultValue, value::get, value::set)
                 .controller(option -> IntegerSliderControllerBuilder.create(option).range(min, max).step(1))
+                .build();
+    }
+
+    private static Option<Double> doubleOption(List<ConfigBuilder.ConfigValue<?>> values, String name, double defaultValue, double min, double max, double step, ConfigBuilder.ConfigValue<Double> value) {
+        values.add(value);
+        return Option.<Double>createBuilder()
+                .name(Component.translatable("config.adaptedmobs.option." + name))
+                .binding(defaultValue, value::get, value::set)
+                .controller(option -> DoubleSliderControllerBuilder.create(option).range(min, max).step(step))
                 .build();
     }
 }
