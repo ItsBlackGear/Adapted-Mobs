@@ -7,9 +7,11 @@ import com.cf28.adaptedmobs.client.integrations.CreativeTabIntegrations;
 import com.cf28.adaptedmobs.client.integrations.EntityRenderer;
 import com.cf28.adaptedmobs.client.integrations.ItemLikeRenderer;
 import com.cf28.adaptedmobs.client.particle.AMFlowerParticle;
+import com.cf28.adaptedmobs.client.particle.AMMindmouldParticle;
 import com.cf28.adaptedmobs.client.particle.AMSporeParticle;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
+import net.minecraft.client.particle.BreakingItemParticle;
 
 public class ClientSetup {
     public static void setup() {
@@ -31,6 +33,7 @@ public class ClientSetup {
         event.register(AMParticles.SUPPORTED_YELLOW, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
         event.register(AMParticles.SUPPORTED_GREY, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
         event.register(AMParticles.CREEPER_HEAL, sprites -> new AMFlowerParticle.Provider(sprites, 0.5F, false));
+        event.register(AMParticles.BRAIN_GOO, AMMindmouldParticle.Provider::new);
     }
 
     public static void asyncSetup(ParallelDispatch dispatch) {

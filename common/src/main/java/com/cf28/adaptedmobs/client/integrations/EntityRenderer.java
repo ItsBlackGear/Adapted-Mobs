@@ -32,6 +32,7 @@ public class EntityRenderer {
         event.register(AMEntityTypes.CREEPER.get(), SimpleCreeperRenderer::new);
         event.register(AMEntityTypes.HARPY.get(), HarpyRenderer::new);
         event.register(AMEntityTypes.ENTOMBED.get(), EntombedRenderer::new);
+        event.register(AMEntityTypes.MINDMOULD.get(), MindmouldRenderer::new);
 
         event.register(AMEntityTypes.FESTIVE_TNT.get(), FestiveTntRenderer::new);
         event.register(AMEntityTypes.MYSTERY_EGG.get(), ThrownItemRenderer::new);
@@ -101,6 +102,7 @@ public class EntityRenderer {
         event.register(AMModelLayers.HARPY, HarpyModel::createBodyLayer);
         event.register(AMModelLayers.HARPY_CHICK, HarpyChickModel::createBodyLayer);
         event.register(AMModelLayers.ENTOMBED, EntombedModel::createBodyLayer);
+        event.register(AMModelLayers.MINDMOULD, MindmouldModel::createBodyLayer);
         event.register(AMModelLayers.ARCHAIC_MASK, ArchaicMaskModel::createBodyLayer);
     }
 }

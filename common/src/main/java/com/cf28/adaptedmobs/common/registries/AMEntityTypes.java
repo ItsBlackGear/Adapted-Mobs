@@ -8,6 +8,7 @@ import com.cf28.adaptedmobs.common.level.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.level.entity.ThrownMysteryEgg;
 import com.cf28.adaptedmobs.common.level.entity.mob.Entombed;
 import com.cf28.adaptedmobs.common.level.entity.mob.Harpy;
+import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
@@ -115,4 +116,8 @@ public class AMEntityTypes {
             EntityType.Builder.of(Entombed::new, MobCategory.MONSTER)
                     .sized(0.6F, 2.1F)
                     .clientTrackingRange(8));
+
+    public static final Supplier<EntityType<Mindmould>> MINDMOULD = REGISTRIES.entity("mindmould",
+        EntityType.Builder.of(Mindmould::new, MobCategory.MONSTER).sized(1f, 1f)
+    );
 }

@@ -26,6 +26,7 @@ public class ModelGenerator extends FabricModelProvider {
         gen.delegateItemModel(AMItems.ROCKET_CREEPIE_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.HARPY_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.ENTOMBED_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
+        gen.delegateItemModel(AMItems.MINDMOULD_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
     }
     
     @Override

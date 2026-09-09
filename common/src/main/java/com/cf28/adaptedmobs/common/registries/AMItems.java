@@ -45,6 +45,9 @@ public class AMItems {
     public static final Supplier<Item> ENTOMBED_SPAWN_EGG = REGISTRIES.register("entombed_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.ENTOMBED, 0x3c3d42, 0x6e737c, properties));
 
+    public static final Supplier<Item> MINDMOULD_SPAWN_EGG = REGISTRIES.register("mindmould_spawn_egg",
+        properties -> createSpawnEgg(AMEntityTypes.MINDMOULD, 0x92959B, 0x6F6078, properties));
+
     public static final Supplier<Item> ARCHAIC_MASK_ALCHEMIST = REGISTRIES.register("archaic_mask_alchemist",
             properties -> new ArchaicMaskItem(MaskVariant.ALCHEMIST, properties));
     public static final Supplier<Item> ARCHAIC_MASK_ARCHITECT = REGISTRIES.register("archaic_mask_architect",

@@ -68,7 +68,8 @@ public interface CreativeTabIntegrations {
                 AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(),
                 AMItems.ROCKET_CREEPER_SPAWN_EGG.get(),
                 AMItems.HARPY_SPAWN_EGG.get(),
-                AMItems.ENTOMBED_SPAWN_EGG.get()
+                AMItems.ENTOMBED_SPAWN_EGG.get(),
+                AMItems.MINDMOULD_SPAWN_EGG.get()
         ));
 
         if (TolerableCreepersCompat.isLoaded()) {

@@ -37,6 +37,8 @@ public class AMModelLayers {
     public static final ModelLayerLocation ENTOMBED = create("entombed");
     public static final ModelLayerLocation ARCHAIC_MASK = create("archaic_mask");
 
+    public static final ModelLayerLocation MINDMOULD = create("mindmould");
+
     private static ModelLayerLocation create(String name) {
         return create(name, "main");
     }

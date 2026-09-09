@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.common.integrations;
 
 import com.cf28.adaptedmobs.common.level.entity.mob.Entombed;
+import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
@@ -22,6 +23,7 @@ public class MobIntegrations {
         event.registerAttributes(AMEntityTypes.CREEPER, TamableCreeper::createAttributes);
         event.registerAttributes(AMEntityTypes.HARPY, Harpy::createAttributes);
         event.registerAttributes(AMEntityTypes.ENTOMBED, Entombed::createAttributes);
+        event.registerAttributes(AMEntityTypes.MINDMOULD, Mindmould::createAttributes);
 
         if (TolerableCreepersCompat.isLoaded()) {
             event.registerAttributes(AMEntityTypes.SUPPORT_CREEPIE, Creepie::createAttributes);
