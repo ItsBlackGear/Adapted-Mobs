@@ -2,12 +2,9 @@ package com.cf28.adaptedmobs.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class AMMindmouldParticle extends BreakingItemParticle {
@@ -20,12 +17,7 @@ public class AMMindmouldParticle extends BreakingItemParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class Provider implements ParticleProvider<SimpleParticleType> {
-        private final SpriteSet spriteSet;
-        public Provider(SpriteSet spriteSet) {
-            this.spriteSet = spriteSet;
-        }
-
+    public record Provider(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
         public Particle createParticle(
             SimpleParticleType type, ClientLevel level,
             double x, double y, double z, double xSpeed,

@@ -29,7 +29,7 @@ repositories {
         forRepository {
             maven {
                 name = 'ParchmentMC'
-                url = 'https://maven.parchmentmc.org/'
+                url = 'https://maven.neoforged.net/releases/'
             }
         }
         filter { includeGroup('org.parchmentmc.data') }
