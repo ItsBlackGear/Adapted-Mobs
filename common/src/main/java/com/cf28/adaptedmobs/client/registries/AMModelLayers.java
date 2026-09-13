@@ -38,6 +38,7 @@ public class AMModelLayers {
     public static final ModelLayerLocation ARCHAIC_MASK = create("archaic_mask");
 
     public static final ModelLayerLocation MINDMOULD = create("mindmould");
+    public static final ModelLayerLocation MINDMOULD_SMALL = create("mindmould_small");
 
     private static ModelLayerLocation create(String name) {
         return create(name, "main");

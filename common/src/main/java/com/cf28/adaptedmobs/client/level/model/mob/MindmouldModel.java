@@ -30,6 +30,21 @@ public class MindmouldModel<T extends Mindmould> extends HierarchicalModel<T> {
         this.brain = this.all.getChild("brain");
     }
 
+    public static LayerDefinition createSmallBodyLayer() {
+        MeshDefinition meshdefinition = new MeshDefinition();
+        PartDefinition partdefinition = meshdefinition.getRoot();
+
+        PartDefinition all = partdefinition.addOrReplaceChild("all", CubeListBuilder.create(), PartPose.offset(0.0F, 20.0F, 0.0F));
+        PartDefinition vessel = all.addOrReplaceChild("vessel", CubeListBuilder.create().texOffs(0, 0)
+            .addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition brain = all.addOrReplaceChild("brain", CubeListBuilder.create().texOffs(0, 16)
+            .addBox(-3.0F, -3.0F, -3.0F, 6.0F, 5.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition stem_r1 = brain.addOrReplaceChild("stem_r1", CubeListBuilder.create().texOffs(41, 0)
+            .addBox(-1.0F, 0.0F, 0.0F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 2.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
+
+        return LayerDefinition.create(meshdefinition, 64, 32);
+    }
+
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -52,7 +67,5 @@ public class MindmouldModel<T extends Mindmould> extends HierarchicalModel<T> {
     }
 
     @Override
-    public ModelPart root() {
-        return all;
-    }
+    public ModelPart root() { return all; }
 }
