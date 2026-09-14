@@ -1,5 +1,5 @@
 {
-  "vertex": "minecraft:rendertype_entity_translucent",
+  "vertex": "adaptedmobs:rendertype_mindmould_facade",
   "fragment": "adaptedmobs:rendertype_mindmould_facade",
   "samplers": [
     { "name": "Sampler0" },

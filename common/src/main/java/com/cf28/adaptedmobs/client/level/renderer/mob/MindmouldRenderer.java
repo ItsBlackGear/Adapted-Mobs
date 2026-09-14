@@ -67,7 +67,7 @@ public class MindmouldRenderer extends MobRenderer<Mindmould, EntityModel<Mindmo
             BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
             dispatcher.renderBatched(blockState, mindmould.blockPosition(),
                 mindmould.level(), poseStack,
-                buffer.getBuffer(RenderType.cutout()),
+                buffer.getBuffer(MindmouldRenderType.mindmould()),
                 false, mindmould.getRandom()
             );
             poseStack.popPose();
@@ -79,7 +79,7 @@ public class MindmouldRenderer extends MobRenderer<Mindmould, EntityModel<Mindmo
 
     @Override
     protected @Nullable RenderType getRenderType(@NotNull Mindmould livingEntity, boolean bodyVisible, boolean translucent, boolean glowing) {
-        if (bodyVisible) return MindmouldRenderType.get(this.getTextureLocation(livingEntity));
+        if (bodyVisible) return RenderType.entityTranslucent(this.getTextureLocation(livingEntity));
         return super.getRenderType(livingEntity, false, translucent, glowing);
     }
 
