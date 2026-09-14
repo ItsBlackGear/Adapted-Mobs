@@ -2,10 +2,13 @@ package com.cf28.adaptedmobs.fabric.client;
 
 import com.cf28.adaptedmobs.client.level.model.mob.ArchaicMaskModel;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
+import com.cf28.adaptedmobs.client.registries.AMShadersRegistry;
 import com.cf28.adaptedmobs.common.level.item.mask.ArchaicMaskItem;
 import com.cf28.adaptedmobs.common.registries.AMItems;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.EquipmentSlot;
 
@@ -14,6 +17,8 @@ public final class AdaptedMobsFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CoreShaderRegistrationCallback.EVENT.register(context -> AMShadersRegistry.bootstrap(context::register));
+
         ArmorRenderer.register((matrices, vertexConsumers, stack, entity, slot, light, contextModel) -> {
             if (slot == EquipmentSlot.HEAD && stack.getItem() instanceof ArchaicMaskItem maskItem) {
                 if (maskModel == null) {

@@ -7,6 +7,8 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 
+import java.util.Objects;
+
 @Mod(AdaptedMobs.MOD_ID)
 public final class AdaptedMobsNeoForge {
     public AdaptedMobsNeoForge(ModContainer modContainer) {
@@ -14,7 +16,9 @@ public final class AdaptedMobsNeoForge {
 
         if (FMLEnvironment.dist.isClient()) {
             ClientConfigSetup.register(modContainer);
-            AdaptedMobsNeoForgeClient.init(modContainer);
+            AdaptedMobsNeoForgeClient.init(
+                Objects.requireNonNull(modContainer.getEventBus())
+            );
         }
     }
 }

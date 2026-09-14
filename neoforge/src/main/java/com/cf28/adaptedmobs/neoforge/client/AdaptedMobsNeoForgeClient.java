@@ -2,25 +2,45 @@ package com.cf28.adaptedmobs.neoforge.client;
 
 import com.cf28.adaptedmobs.client.level.model.mob.ArchaicMaskModel;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
+import com.cf28.adaptedmobs.client.registries.AMShadersRegistry;
 import com.cf28.adaptedmobs.common.level.item.mask.ArchaicMaskItem;
 import com.cf28.adaptedmobs.common.registries.AMItems;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class AdaptedMobsNeoForgeClient {
     private static ArchaicMaskModel maskModel;
 
-    public static void init(ModContainer modContainer) {
-        modContainer.getEventBus().addListener(RegisterClientExtensionsEvent.class, AdaptedMobsNeoForgeClient::onRegisterClientExtensions);
+    public static void init(IEventBus eventBus) {
+        eventBus.addListener(RegisterClientExtensionsEvent.class, AdaptedMobsNeoForgeClient::onRegisterClientExtensions);
+        eventBus.addListener(AdaptedMobsNeoForgeClient::registerShaders);
+    }
+
+    static void registerShaders(final RegisterShadersEvent event) {
+        try {
+            AMShadersRegistry.bootstrap(
+                (location, vertexFormat, consumer)
+                    -> event.registerShader(new ShaderInstance(event.getResourceProvider(), location, vertexFormat), consumer)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {

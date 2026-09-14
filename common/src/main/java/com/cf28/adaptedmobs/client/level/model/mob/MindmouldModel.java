@@ -63,7 +63,6 @@ public class MindmouldModel<T extends Mindmould> extends HierarchicalModel<T> {
     @Override public void setupAnim(@NotNull Mindmould entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
     @Override public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int packedColor) {
         all.render(poseStack, vertexConsumer, packedLight, packedOverlay, packedColor);
-//        vessel.render(poseStack, vertexConsumer, packedLight, packedOverlay, packedColor);
     }
 
     @Override
