@@ -65,10 +65,12 @@ public class MindmouldRenderer extends MobRenderer<Mindmould, EntityModel<Mindmo
             poseStack.translate(-0.5f, 0f, -0.5f);
 
             BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-            dispatcher.renderBatched(blockState, mindmould.blockPosition(),
-                mindmould.level(), poseStack,
-                buffer.getBuffer(MindmouldRenderType.mindmould()),
-                false, mindmould.getRandom()
+            int packedOverlay = getOverlayCoords(mindmould, this.getWhiteOverlayProgress(mindmould, partialTicks));
+            dispatcher.getModelRenderer().tesselateBlock(
+                mindmould.level(), dispatcher.getBlockModel(blockState),
+                blockState, mindmould.blockPosition(), poseStack,
+                buffer.getBuffer(MindmouldRenderType.mindmould()), false, mindmould.getRandom(),
+                blockState.getSeed(mindmould.blockPosition()), packedOverlay
             );
             poseStack.popPose();
             return;

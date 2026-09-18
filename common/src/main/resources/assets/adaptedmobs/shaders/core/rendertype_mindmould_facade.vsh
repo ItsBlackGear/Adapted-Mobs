@@ -13,25 +13,52 @@ in vec3 Normal;
 uniform sampler2D Sampler1;
 uniform sampler2D Sampler2;
 
+uniform float GameTime;
+
 uniform mat4 ModelViewMat;
 uniform mat4 ProjMat;
+uniform vec3 ChunkOffset;
 uniform int FogShape;
-
-uniform vec3 Light0_Direction;
-uniform vec3 Light1_Direction;
 
 out float vertexDistance;
 out vec4 vertexColor;
-out vec4 lightMapColor;
 out vec4 overlayColor;
 out vec2 texCoord0;
 
-void main() {
-    gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
+float Hash(in float p, in float scale) {
+    p = mod(p, scale);
+    return fract(sin(dot(vec2(p), vec2(27.16898, 38.90563))) * 5151.5473453);
+}
 
-    vertexDistance = fog_distance(Position, FogShape);
-    vertexColor = minecraft_mix_light(Light0_Direction, Light1_Direction, Normal, Color);
-    lightMapColor = texelFetch(Sampler2, UV2 / 16, 0);
+float noise(in float p, in float scale ) {
+    float f;
+    p *= scale;
+
+    f = fract(p);
+    p = floor(p);
+
+    f = f*f*(3.0-2.0*f);
+
+    float res = mix(mix(Hash(p, scale),
+    Hash(p + 1.0, scale), f),
+    mix(Hash(p, scale),
+    Hash(p + 1.0, scale), f), f);
+    return res;
+}
+
+vec3 sampleJitter(in float timeStep) {
+    return vec3(
+        noise(timeStep * 0.37, 64.0), 0.0,
+        noise(timeStep * 0.71 + 43.0, 64.0)
+    ) * 2.0 - 1.0;
+}
+
+void main() {
+    vec3 pos = Position + ChunkOffset;
+    gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
+
+    vertexDistance = fog_distance(pos, FogShape);
+    vertexColor = Color * minecraft_sample_lightmap(Sampler2, UV2);
     overlayColor = texelFetch(Sampler1, UV1, 0);
     texCoord0 = UV0;
 }
