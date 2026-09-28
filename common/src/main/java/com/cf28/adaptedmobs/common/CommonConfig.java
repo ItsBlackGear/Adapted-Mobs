@@ -123,7 +123,7 @@ public class CommonConfig {
         this.spawnEntombed = builder.comment("Determines if Entombed should spawn in deep caves")
                 .define("Spawn Entombed", true);
         this.entombedSpawnWeight = builder.comment("Determines how often Entombed spawn")
-                .defineInRange("Entombed Spawn Weight", 30, 0, 100);
+                .defineInRange("Entombed Spawn Weight", 80, 0, 100);
         this.entombedMaximumSpawnY = builder.comment("Highest Y level Entombed can naturally spawn at")
                 .defineInRange("Entombed Maximum Spawn Y", 0, -64, 320);
         builder.pop();

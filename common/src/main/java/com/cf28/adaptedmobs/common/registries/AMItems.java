@@ -68,6 +68,8 @@ public class AMItems {
             properties -> new ArchaicMaskItem(MaskVariant.WARRIOR, properties));
     public static final Supplier<Item> ARCHAIC_MASK_WEAVER = REGISTRIES.register("archaic_mask_weaver",
             properties -> new ArchaicMaskItem(MaskVariant.WEAVER, properties));
+    public static final Supplier<Item> ARCHAIC_MASK_UNKNOWN = REGISTRIES.register("archaic_mask_unknown",
+            properties -> new ArchaicMaskItem(MaskVariant.UNKNOWN, properties));
 
     public static final Supplier<Item> HARPY_EGG = REGISTRIES.register("harpy_egg",
             () -> new BlockItem(AMBlocks.HARPY_EGG.get(), new Properties()));
@@ -109,6 +111,7 @@ public class AMItems {
             case TRAVELER -> ARCHAIC_MASK_TRAVELER.get();
             case WARRIOR -> ARCHAIC_MASK_WARRIOR.get();
             case WEAVER -> ARCHAIC_MASK_WEAVER.get();
+            case UNKNOWN -> ARCHAIC_MASK_UNKNOWN.get();
         };
     }
 }

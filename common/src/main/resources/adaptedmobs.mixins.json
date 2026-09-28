@@ -16,7 +16,11 @@
     "common.support_buff_particles.LivingEntityParticleMixin",
     "common.villager_fear.VillagerHostilesSensorMixin",
     "common.ProjectileUtilMixin",
-    "common.PlayerDismountMixin"
+    "common.PlayerDismountMixin",
+    "common.sun_protection.ZombieSunProtectionMixin",
+    "common.sun_protection.SkeletonSunProtectionMixin",
+    "common.sun_protection.RestrictSunGoalMixin",
+    "common.sun_protection.FleeSunGoalMixin"
   ],
   "injectors": {
     "defaultRequire": 1

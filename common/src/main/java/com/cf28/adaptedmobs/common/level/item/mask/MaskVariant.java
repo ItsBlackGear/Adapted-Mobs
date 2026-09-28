@@ -15,7 +15,8 @@ public enum MaskVariant implements StringRepresentable {
     SPIRAL(6, "spiral"),
     TRAVELER(7, "traveler"),
     WARRIOR(8, "warrior"),
-    WEAVER(9, "weaver");
+    WEAVER(9, "weaver"),
+    UNKNOWN(10, "unknown");
 
     private static final MaskVariant[] COMMON_VARIANTS = {
             ARCHITECT, BUILDER, CLERIC, CRANIAL, ODDITY, TRAVELER, WARRIOR, WEAVER
@@ -32,6 +33,10 @@ public enum MaskVariant implements StringRepresentable {
     }
 
     public static MaskVariant getRandomVariant(RandomSource random) {
+        if (random.nextFloat() < 0.35F) {
+            return UNKNOWN;
+        }
+
         int roll = random.nextInt(66);
         if (roll == 0) {
             return ALCHEMIST;

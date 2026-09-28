@@ -46,5 +46,6 @@ public class ModelGenerator extends FabricModelProvider {
         gen.generateFlatItem(AMItems.ARCHAIC_MASK_TRAVELER.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.ARCHAIC_MASK_WARRIOR.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.ARCHAIC_MASK_WEAVER.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.ARCHAIC_MASK_UNKNOWN.get(), ModelTemplates.FLAT_ITEM);
     }
 }

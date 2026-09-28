@@ -32,7 +32,8 @@ public final class AdaptedMobsFabricClient implements ClientModInitializer {
                 AMItems.ARCHAIC_MASK_SPIRAL.get(),
                 AMItems.ARCHAIC_MASK_TRAVELER.get(),
                 AMItems.ARCHAIC_MASK_WARRIOR.get(),
-                AMItems.ARCHAIC_MASK_WEAVER.get()
+                AMItems.ARCHAIC_MASK_WEAVER.get(),
+                AMItems.ARCHAIC_MASK_UNKNOWN.get()
         );
     }
 }

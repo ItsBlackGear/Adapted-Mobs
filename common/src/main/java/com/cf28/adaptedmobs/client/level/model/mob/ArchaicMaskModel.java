@@ -22,7 +22,7 @@ public class ArchaicMaskModel extends Model {
 
         partdefinition.addOrReplaceChild("head", CubeListBuilder.create()
                         .texOffs(0, 0)
-                        .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.25F)),
+                        .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(1.0F)),
                 PartPose.ZERO);
 
         return LayerDefinition.create(meshdefinition, 32, 16);

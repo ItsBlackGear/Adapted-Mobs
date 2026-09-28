@@ -10,7 +10,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 
 public class HarpyModel<T extends Harpy> extends EntityModel<T> {
-    private static final float TUCKED_LEG = -0.6F;
+    private static final float TUCKED_LEG = 0.6F;
     private static final float SITTING_LEG = -0.9F;
     private static final float SITTING_DROP = 3.0F;
 

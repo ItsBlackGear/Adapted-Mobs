@@ -114,7 +114,10 @@ public class AMEntityTypes {
 
     public static final Supplier<EntityType<Entombed>> ENTOMBED = REGISTRIES.entity("entombed",
             EntityType.Builder.of(Entombed::new, MobCategory.MONSTER)
-                    .sized(0.6F, 2.1F)
+                    .sized(0.6F, 1.95F)
+                    .eyeHeight(1.74F)
+                    .passengerAttachments(2.0125F)
+                    .ridingOffset(-0.7F)
                     .clientTrackingRange(8));
 
     public static final Supplier<EntityType<Mindmould>> MINDMOULD = REGISTRIES.entity("mindmould",

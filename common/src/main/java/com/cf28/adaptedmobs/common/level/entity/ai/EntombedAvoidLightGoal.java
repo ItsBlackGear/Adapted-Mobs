@@ -1,10 +1,12 @@
 package com.cf28.adaptedmobs.common.level.entity.ai;
 
+import com.cf28.adaptedmobs.common.integrations.LambDynLightsCompat;
 import com.cf28.adaptedmobs.common.level.entity.mob.Entombed;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -22,9 +24,27 @@ public class EntombedAvoidLightGoal extends Goal {
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
+    private int recheckTicks;
+
+    public boolean isSafePos(BlockPos pos) {
+        if (this.mob.isPosLit(pos) || this.mob.isPosLit(pos.above())) {
+            return false;
+        }
+        if (this.mob.isPositionInPlayerLight(pos)) {
+            return false;
+        }
+        LivingEntity target = this.mob.getTarget();
+        if (target != null && this.mob.isPositionInTargetLight(pos, target)) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public boolean canUse() {
-        if (!this.mob.isLit() && !this.mob.isOnFire()) {
+        BlockPos currentPos = this.mob.blockPosition();
+        BlockPos eyePos = BlockPos.containing(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        if (this.isSafePos(currentPos) && this.isSafePos(eyePos)) {
             return false;
         }
         Vec3 hidePos = this.findDarkPos();
@@ -39,61 +59,104 @@ public class EntombedAvoidLightGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (this.mob.getNavigation().isDone()) {
-            return false;
-        }
-        if (this.mob.isOnFire()) {
-            return true;
-        }
-        if (this.mob.level().isDay() && this.mob.level().canSeeSky(this.mob.blockPosition())) {
-            return true;
-        }
-        return this.mob.isLit();
+        BlockPos currentPos = this.mob.blockPosition();
+        BlockPos eyePos = BlockPos.containing(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        return !this.isSafePos(currentPos) || !this.isSafePos(eyePos);
     }
 
     @Override
     public void start() {
+        this.recheckTicks = 0;
         this.mob.getNavigation().moveTo(this.posX, this.posY, this.posZ, this.speedModifier);
+    }
+
+    @Override
+    public void stop() {
+        this.mob.getNavigation().stop();
+    }
+
+    @Override
+    public void tick() {
+        this.recheckTicks++;
+        if (this.recheckTicks >= 10 || this.mob.getNavigation().isDone()) {
+            this.recheckTicks = 0;
+            BlockPos currentPos = this.mob.blockPosition();
+            BlockPos eyePos = BlockPos.containing(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+            if (!this.isSafePos(currentPos) || !this.isSafePos(eyePos)) {
+                Vec3 hidePos = this.findDarkPos();
+                if (hidePos != null) {
+                    this.posX = hidePos.x;
+                    this.posY = hidePos.y;
+                    this.posZ = hidePos.z;
+                    this.mob.getNavigation().moveTo(this.posX, this.posY, this.posZ, this.speedModifier);
+                }
+            }
+        }
     }
 
     private Vec3 findDarkPos() {
         BlockPos mobPos = this.mob.blockPosition();
-        RandomSource random = this.mob.getRandom();
-        boolean currentlyInSun = this.mob.level().isDay() && this.mob.level().canSeeSky(mobPos);
-        int currentLight = this.mob.getLightLevelAt(mobPos);
+        BlockPos mobEyePos = BlockPos.containing(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        int currentLight = Math.max(this.mob.getLightLevelAt(mobPos), this.mob.getLightLevelAt(mobEyePos));
 
-        for (int i = 0; i < 20; i++) {
-            Vec3 randomPos = DefaultRandomPos.getPos(this.mob, 12, 6);
-            if (randomPos != null) {
-                BlockPos pos = BlockPos.containing(randomPos);
-                if (this.mob.getLightLevelAt(pos) <= Entombed.MAX_COMFORT_LIGHT) {
-                    return randomPos;
-                }
-            }
+        Player lightingPlayer = null;
+        if (LambDynLightsCompat.isLoaded()) {
+            lightingPlayer = this.mob.getNearestLightingPlayer(16.0D);
         }
 
-        BlockPos bestShade = null;
-        int lowestLight = currentLight;
+        BlockPos bestSafePos = null;
+        double bestSafeScore = Double.MAX_VALUE;
 
-        for (int dx = -12; dx <= 12; dx += 2) {
-            for (int dz = -12; dz <= 12; dz += 2) {
-                for (int dy = -4; dy <= 4; dy++) {
+        BlockPos bestDarkerPos = null;
+        int lowestDarkerLight = currentLight;
+        double bestDarkerScore = Double.MAX_VALUE;
+
+        LivingEntity target = this.mob.getTarget();
+        Vec3 targetPos = target != null ? target.position() : null;
+
+        for (int dx = -14; dx <= 14; dx += 2) {
+            for (int dz = -14; dz <= 14; dz += 2) {
+                for (int dy = -4; dy <= 4; dy += 2) {
                     BlockPos candidate = mobPos.offset(dx, dy, dz);
-                    if (this.isValidStandable(candidate)) {
-                        int candidateLight = this.mob.getLightLevelAt(candidate);
-                        if (candidateLight <= Entombed.MAX_COMFORT_LIGHT) {
-                            return Vec3.atBottomCenterOf(candidate);
+                    if (!this.isValidStandable(candidate)) {
+                        continue;
+                    }
+
+                    double distSq = mobPos.distSqr(candidate);
+                    boolean isSafe = this.isSafePos(candidate);
+
+                    if (isSafe) {
+                        double score = distSq;
+                        if (lightingPlayer != null) {
+                            double distToLightPlayerSq = candidate.distToCenterSqr(lightingPlayer.position());
+                            score -= distToLightPlayerSq;
+                        } else if (targetPos != null) {
+                            double distToTargetSq = candidate.distToCenterSqr(targetPos);
+                            score -= distToTargetSq * 0.25;
                         }
-                        boolean shaded = !this.mob.level().canSeeSky(candidate);
-                        if (currentlyInSun) {
-                            if (shaded && (bestShade == null || candidateLight < lowestLight || mobPos.distSqr(candidate) < mobPos.distSqr(bestShade))) {
-                                lowestLight = candidateLight;
-                                bestShade = candidate;
+                        if (score < bestSafeScore) {
+                            bestSafeScore = score;
+                            bestSafePos = candidate;
+                        }
+                    } else if (bestSafePos == null) {
+                        int candidateLight = Math.max(this.mob.getLightLevelAt(candidate), this.mob.getLightLevelAt(candidate.above()));
+                        if (lightingPlayer != null) {
+                            double distToLightPlayerSq = candidate.distToCenterSqr(lightingPlayer.position());
+                            double currentDistToPlayerSq = mobPos.distToCenterSqr(lightingPlayer.position());
+                            if (distToLightPlayerSq > currentDistToPlayerSq) {
+                                double score = distSq - distToLightPlayerSq + candidateLight * 4.0;
+                                if (score < bestDarkerScore) {
+                                    lowestDarkerLight = candidateLight;
+                                    bestDarkerPos = candidate;
+                                    bestDarkerScore = score;
+                                }
                             }
-                        } else {
-                            if (shaded && candidateLight < lowestLight) {
-                                lowestLight = candidateLight;
-                                bestShade = candidate;
+                        } else if (candidateLight < currentLight) {
+                            double score = distSq + candidateLight * 4.0;
+                            if (candidateLight < lowestDarkerLight || (candidateLight == lowestDarkerLight && score < bestDarkerScore)) {
+                                lowestDarkerLight = candidateLight;
+                                bestDarkerPos = candidate;
+                                bestDarkerScore = score;
                             }
                         }
                     }
@@ -101,25 +164,32 @@ public class EntombedAvoidLightGoal extends Goal {
             }
         }
 
-        if (bestShade != null) {
-            return Vec3.atBottomCenterOf(bestShade);
+        if (bestSafePos != null) {
+            return Vec3.atBottomCenterOf(bestSafePos);
         }
 
-        if (currentlyInSun) {
-            for (int i = 0; i < 16; i++) {
-                BlockPos randomCandidate = mobPos.offset(random.nextInt(20) - 10, random.nextInt(8) - 4, random.nextInt(20) - 10);
-                if (this.isValidStandable(randomCandidate) && !this.mob.level().canSeeSky(randomCandidate)) {
-                    return Vec3.atBottomCenterOf(randomCandidate);
-                }
-            }
+        if (bestDarkerPos != null) {
+            return Vec3.atBottomCenterOf(bestDarkerPos);
         }
 
         return null;
     }
 
     private boolean isValidStandable(BlockPos pos) {
-        return (this.mob.level().getBlockState(pos).isAir() || this.mob.level().getBlockState(pos).canBeReplaced())
-                && this.mob.level().getBlockState(pos.above()).isAir()
-                && this.mob.level().getBlockState(pos.below()).isSolidRender(this.mob.level(), pos.below());
+        BlockPos below = pos.below();
+        BlockState stateBelow = this.mob.level().getBlockState(below);
+        BlockState stateAt = this.mob.level().getBlockState(pos);
+        BlockPos above = pos.above();
+        BlockState stateAbove = this.mob.level().getBlockState(above);
+
+        if (stateBelow.getCollisionShape(this.mob.level(), below).isEmpty()) {
+            return false;
+        }
+
+        if (!stateAt.getCollisionShape(this.mob.level(), pos).isEmpty()) {
+            return false;
+        }
+
+        return stateAbove.getCollisionShape(this.mob.level(), above).isEmpty();
     }
 }

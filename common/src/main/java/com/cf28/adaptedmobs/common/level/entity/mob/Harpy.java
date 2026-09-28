@@ -57,7 +57,7 @@ import java.util.WeakHashMap;
 public class Harpy extends TamableAnimal implements FlyingAnimal {
     private static final int NEST_CHUNK_RADIUS = 3;
     private static final int NEST_SCAN_INTERVAL = 100;
-    private static final float WINGBEAT_RATE = 0.55F;
+    private static final float WINGBEAT_RATE = 0.85F;
     private static final int GROUND_HYSTERESIS = 3;
     private static final int GLIDE_TICKS = 30;
     private static final double SLOW_FALL_DAMPING = 0.94D;
@@ -101,7 +101,7 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 14.0)
+                .add(Attributes.MAX_HEALTH, 20.0)
                 .add(Attributes.FLYING_SPEED, 0.5F)
                 .add(Attributes.MOVEMENT_SPEED, 0.2F)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
@@ -257,7 +257,7 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     public void tick() {
         if (this.isVehicle()) {
             this.setDeltaMovement(this.getDeltaMovement().x, 0.25D, this.getDeltaMovement().z);
-            if (!this.level().isClientSide && (this.getDistanceToGround(this.blockPosition()) >= 20.0D || !this.level().isEmptyBlock(this.blockPosition().above()))) {
+            if (!this.level().isClientSide && (this.getDistanceToGround(this.blockPosition()) >= 20.0D || this.level().getBlockState(this.blockPosition().above()).isSolid())) {
                 this.ejectPassengers();
             }
         }
@@ -269,10 +269,10 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
         for (int i = 0; i < 64; ++i) {
             BlockPos currentPos = pos.below(i);
             if (!this.level().isEmptyBlock(currentPos)) {
-                return this.distanceToSqr(currentPos.getX(), currentPos.getY(), currentPos.getZ());
+                return this.getY() - (currentPos.getY() + 1);
             }
         }
-        return 20.0D;
+        return 64.0D;
     }
 
     @Override

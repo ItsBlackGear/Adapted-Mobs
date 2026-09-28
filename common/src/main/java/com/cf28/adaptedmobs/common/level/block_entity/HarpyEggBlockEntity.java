@@ -84,6 +84,19 @@ public class HarpyEggBlockEntity extends BlockEntity {
         return level.getEntitiesOfClass(Player.class, above).isEmpty() ? 1 : WARMED_RATE;
     }
 
+    public int getHatchProgress() {
+        return this.hatchProgress;
+    }
+
+    public void setHatchProgress(int hatchProgress) {
+        this.hatchProgress = hatchProgress;
+        this.setChanged();
+    }
+
+    public static int getTotalHatchTicks(Level level, BlockPos pos) {
+        return HarpyEggBlock.hatchBoost(level, pos) ? BOOSTED_HATCH_TICKS : BASE_HATCH_TICKS;
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
