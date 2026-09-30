@@ -10,4 +10,5 @@ public class AMBlockTags {
     public static final TagRegistry<Block> REGISTRY = TagRegistry.create(Registries.BLOCK, AdaptedMobs.MOD_ID);
 
     public static final TagKey<Block> HARPY_EGG_HATCH_BOOST = REGISTRY.register("harpy_egg_hatch_boost");
+    public static final TagKey<Block> MINDMOULD_FACADE_BLACKLIST = REGISTRY.register("mindmould_facade_blacklist");
 }

@@ -6,6 +6,7 @@ import com.cf28.adaptedmobs.client.level.model.block_entity.RocketCreeperSkullMo
 import com.cf28.adaptedmobs.client.level.model.block_entity.SupportCreeperSkullModel;
 import com.cf28.adaptedmobs.client.level.model.mob.*;
 import com.cf28.adaptedmobs.client.level.renderer.mob.*;
+import com.cf28.adaptedmobs.client.level.renderer.mob.mindmould.MindmouldRenderer;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.SupportCreepieEntity;

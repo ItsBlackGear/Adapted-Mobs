@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.common.level.entity.mob;
 
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
+import com.cf28.adaptedmobs.core.tags.AMBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -59,13 +60,24 @@ public class Mindmould extends AgeableMob implements Enemy {
         builder.define(DISGUISED_BLOCK, Blocks.AIR.defaultBlockState());
     }
 
+    private void attemptDisguise() {
+        if (!this.onGround()) return;
+
+        if (this.level() instanceof ServerLevel serverLevel) {
+            BlockPos blockPos = this.blockPosition().below();
+            BlockState blockState = serverLevel.getBlockState(blockPos);
+
+            if (blockState.is(AMBlockTags.MINDMOULD_FACADE_BLACKLIST)) return;
+            if (!blockState.isCollisionShapeFullBlock(serverLevel, blockPos)) return;
+
+            this.setDisguiseBlock(blockState);
+        }
+    }
+
     @Override
     public void tick() {
-        // disguised block
-        if (this.level() instanceof ServerLevel serverLevel) {
-            BlockState blockState = serverLevel.getBlockState(this.blockPosition().below());
-            if (!blockState.is(Blocks.AIR)) this.setDisguiseBlock(blockState);
-        }
+        this.attemptDisguise();
+
         super.tick();
     }
 
@@ -84,7 +96,7 @@ public class Mindmould extends AgeableMob implements Enemy {
     }
 
     @Override
-    public @Nullable SpawnGroupData finalizeSpawn(
+    public @NotNull SpawnGroupData finalizeSpawn(
         @NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty,
         @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData
     ) {
