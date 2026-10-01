@@ -48,6 +48,9 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> entombedSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> entombedMaximumSpawnY;
 
+    // TODO remove
+    public final ConfigBuilder.ConfigValue<Double> strangerChance;
+
     public CommonConfig(ConfigBuilder builder) {
         builder.push("Mystery Eggs");
         this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death")
@@ -126,6 +129,11 @@ public class CommonConfig {
                 .defineInRange("Entombed Spawn Weight", 80, 0, 100);
         this.entombedMaximumSpawnY = builder.comment("Highest Y level Entombed can naturally spawn at")
                 .defineInRange("Entombed Maximum Spawn Y", 0, -64, 320);
+        builder.pop();
+
+        builder.push("Debug");
+        this.strangerChance = builder.comment("Temporary testing option. Chance per player, checked every 30 seconds")
+                .defineInRange("Stranger Chance", 0.002, 0.0, 1.0);
         builder.pop();
     }
 }

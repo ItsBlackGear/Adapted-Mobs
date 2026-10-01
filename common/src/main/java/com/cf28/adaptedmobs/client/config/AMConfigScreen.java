@@ -7,6 +7,7 @@ import com.cf28.adaptedmobs.core.AdaptedMobs;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.controller.DoubleFieldControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
@@ -84,12 +85,24 @@ public final class AMConfigScreen {
                 .option(intOption(values, "entombed_maximum_spawn_y", 0, -64, 320, config.entombedMaximumSpawnY))
                 .build();
 
+        // TODO remove
+        values.add(config.strangerChance);
+        ConfigCategory debug = ConfigCategory.createBuilder()
+                .name(Component.literal("Debug"))
+                .option(Option.<Double>createBuilder()
+                        .name(Component.literal("Stranger Chance"))
+                        .binding(0.002, config.strangerChance::get, config.strangerChance::set)
+                        .controller(option -> DoubleFieldControllerBuilder.create(option).range(0.0, 1.0))
+                        .build())
+                .build();
+
         return builder.category(general)
                 .category(festiveCreeper)
                 .category(supportCreeper)
                 .category(rocketCreeper)
                 .category(harpy)
                 .category(entombed)
+                .category(debug)
                 .build()
                 .generateScreen(parent);
     }
