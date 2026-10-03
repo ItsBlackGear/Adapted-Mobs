@@ -34,9 +34,9 @@ public class HarpyLiftGoal extends MeleeAttackGoal {
         double attackReachSqr = this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + target.getBbWidth();
         if (this.mob.distanceToSqr(target) <= attackReachSqr && this.getTicksUntilNextAttack() <= 0) {
             this.resetAttackCooldown();
-            if (!target.isVehicle() && !target.isPassenger() && this.mob.level().canSeeSky(this.mob.blockPosition())) {
+            if (!target.isVehicle() && !target.isPassenger()) {
                 target.startRiding(this.mob, true);
-            } else {
+            } else if (target.getVehicle() != this.mob) {
                 this.mob.swing(InteractionHand.MAIN_HAND);
                 this.mob.doHurtTarget(target);
             }

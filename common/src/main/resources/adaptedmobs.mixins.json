@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "client.ClientLevelMixin",
     "client.GuiMixin",
     "client.HumanoidModelMixin",
     "client.LivingEntityRendererMixin"
@@ -16,7 +17,11 @@
     "common.support_buff_particles.LivingEntityParticleMixin",
     "common.villager_fear.VillagerHostilesSensorMixin",
     "common.ProjectileUtilMixin",
-    "common.PlayerDismountMixin"
+    "common.PlayerDismountMixin",
+    "common.sun_protection.ZombieSunProtectionMixin",
+    "common.sun_protection.SkeletonSunProtectionMixin",
+    "common.sun_protection.RestrictSunGoalMixin",
+    "common.sun_protection.FleeSunGoalMixin"
   ],
   "injectors": {
     "defaultRequire": 1

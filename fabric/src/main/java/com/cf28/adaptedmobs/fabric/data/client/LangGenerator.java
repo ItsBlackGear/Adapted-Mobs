@@ -42,6 +42,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMItems.ARCHAIC_MASK_TRAVELER.get(), "Archaic Mask");
         builder.add(AMItems.ARCHAIC_MASK_WARRIOR.get(), "Archaic Mask");
         builder.add(AMItems.ARCHAIC_MASK_WEAVER.get(), "Archaic Mask");
+        builder.add(AMItems.ARCHAIC_MASK_UNKNOWN.get(), "Archaic Mask");
 
         builder.add("item.adaptedmobs.archaic_mask.design.alchemist", "Alchemist");
         builder.add("item.adaptedmobs.archaic_mask.design.architect", "Architect");
@@ -53,6 +54,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("item.adaptedmobs.archaic_mask.design.traveler", "Traveler");
         builder.add("item.adaptedmobs.archaic_mask.design.warrior", "Warrior");
         builder.add("item.adaptedmobs.archaic_mask.design.weaver", "Weaver");
+        builder.add("item.adaptedmobs.archaic_mask.design.unknown", "Unknown");
 
         builder.add(AMBlocks.HARPY_EGG.get(), "Harpy Egg");
 

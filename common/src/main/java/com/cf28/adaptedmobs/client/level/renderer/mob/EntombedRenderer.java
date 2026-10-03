@@ -21,4 +21,9 @@ public class EntombedRenderer extends MobRenderer<Entombed, EntombedModel<Entomb
     public ResourceLocation getTextureLocation(Entombed entity) {
         return ENTOMBED_LOCATION;
     }
+
+    @Override
+    protected boolean isShaking(Entombed entity) {
+        return super.isShaking(entity) || entity.isAfraidOfLight();
+    }
 }

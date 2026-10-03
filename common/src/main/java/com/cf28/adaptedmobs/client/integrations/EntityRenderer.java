@@ -34,6 +34,7 @@ public class EntityRenderer {
         event.register(AMEntityTypes.HARPY.get(), HarpyRenderer::new);
         event.register(AMEntityTypes.ENTOMBED.get(), EntombedRenderer::new);
         event.register(AMEntityTypes.MINDMOULD.get(), MindmouldRenderer::new);
+        event.register(AMEntityTypes.STRANGER.get(), StrangerRenderer::new);
 
         event.register(AMEntityTypes.FESTIVE_TNT.get(), FestiveTntRenderer::new);
         event.register(AMEntityTypes.MYSTERY_EGG.get(), ThrownItemRenderer::new);

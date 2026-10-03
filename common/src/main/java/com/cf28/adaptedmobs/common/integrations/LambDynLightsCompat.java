@@ -11,8 +11,11 @@ public final class LambDynLightsCompat {
     }
 
     public static int getLivingEntityLuminance(LivingEntity entity) {
-        if (!isLoaded()) {
+        if (!isLoaded() || entity == null) {
             return 0;
+        }
+        if (entity.isOnFire()) {
+            return 15;
         }
         return Helper.getLuminance(entity);
     }
