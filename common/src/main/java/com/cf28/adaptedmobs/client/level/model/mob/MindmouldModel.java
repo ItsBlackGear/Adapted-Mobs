@@ -60,14 +60,15 @@ public class MindmouldModel<T extends Mindmould> extends HierarchicalModel<T> {
 
     public ModelPart.Cube vesselCube() { return vesselCube; }
 
+    public static final float BLOCK_SIZE = 16f;
     public void transformFacade(PoseStack poseStack) {
         all.translateAndRotate(poseStack);
         vessel.translateAndRotate(poseStack);
-        poseStack.translate(vesselCube.maxX / 16.0F, vesselCube.maxY / 16.0F, vesselCube.minZ / 16.0F);
+        poseStack.translate(vesselCube.maxX / BLOCK_SIZE, vesselCube.maxY / BLOCK_SIZE, vesselCube.minZ / BLOCK_SIZE);
         poseStack.scale(
-            (vesselCube.minX - vesselCube.maxX) / 16.0F,
-            (vesselCube.minY - vesselCube.maxY) / 16.0F,
-            (vesselCube.maxZ - vesselCube.minZ) / 16.0F
+            (vesselCube.minX - vesselCube.maxX) / BLOCK_SIZE,
+            (vesselCube.minY - vesselCube.maxY) / BLOCK_SIZE,
+            (vesselCube.maxZ - vesselCube.minZ) / BLOCK_SIZE
         );
     }
 

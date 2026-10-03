@@ -18,10 +18,15 @@ import org.joml.Vector3f;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.cf28.adaptedmobs.client.level.model.mob.MindmouldModel.BLOCK_SIZE;
+
+// TODO: probably cache these as well so they're not reconstructed every frame
+// would require clearing on reload and since we're on multiloader I'm too lazy right now
+// TODO: also baking regardless of direction later to sell the illusion if it always being correctly the block below
 public final class MindmouldFacadeModel {
     private static final FaceBakery FACE_BAKERY = new FaceBakery();
     private static final Vector3f CUBE_MIN = new Vector3f(0.0F, 0.0F, 0.0F);
-    private static final Vector3f CUBE_MAX = new Vector3f(16.0F, 16.0F, 16.0F);
+    private static final Vector3f CUBE_MAX = new Vector3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 
     private MindmouldFacadeModel() {}
 
@@ -55,15 +60,10 @@ public final class MindmouldFacadeModel {
 
             int anchorOffset = FaceBakery.UV_INDEX;
             if (corner != null) {
-                int xFace = (corner == FacadeCorner.NORTH_EAST
-                    || corner == FacadeCorner.SOUTH_EAST)
-                    ? FaceInfo.Constants.MAX_X
-                    : FaceInfo.Constants.MIN_X;
-
-                int zFace = (corner == FacadeCorner.SOUTH_WEST
-                    || corner == FacadeCorner.SOUTH_EAST)
-                    ? FaceInfo.Constants.MAX_Z
-                    : FaceInfo.Constants.MIN_Z;
+                int xFace = (corner == FacadeCorner.NORTH_EAST || corner == FacadeCorner.SOUTH_EAST)
+                    ? FaceInfo.Constants.MAX_X : FaceInfo.Constants.MIN_X;
+                int zFace = (corner == FacadeCorner.SOUTH_WEST || corner == FacadeCorner.SOUTH_EAST)
+                    ? FaceInfo.Constants.MAX_Z : FaceInfo.Constants.MIN_Z;
 
                 for (int i = 0; i < FaceBakery.VERTEX_COUNT; i++) {
                     FaceInfo.VertexInfo vertexInfo = FaceInfo.fromFacing(direction).getVertexInfo(i);
@@ -77,12 +77,13 @@ public final class MindmouldFacadeModel {
                 }
             }
 
-            List<BakedQuad> quads = new ArrayList<>(Math.max(1, largestQuads.size()));
-            for (int i = 0; i < Math.max(1, largestQuads.size()); i++) {
+            int quadAmount = Math.max(1, largestQuads.size());
+            List<BakedQuad> quads = new ArrayList<>(quadAmount);
+            for (int i = 0; i < quadAmount; i++) {
                 BakedQuad source = largestQuads.isEmpty() ? null : largestQuads.get(i);
                 BlockElementFace face = new BlockElementFace(
                     direction, source == null ? BlockElementFace.NO_TINT : source.getTintIndex(), "",
-                    new BlockFaceUV(new float[]{0.0F, 0.0F, 16.0F, 16.0F}, 0)
+                    new BlockFaceUV(new float[]{0.0F, 0.0F, BLOCK_SIZE, BLOCK_SIZE}, 0)
                 );
 
                 BakedQuad quad = FACE_BAKERY.bakeQuad(

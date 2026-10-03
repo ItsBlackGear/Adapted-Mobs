@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.FaceInfo;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -12,12 +13,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class FacadeVertexConsumer implements VertexConsumer {
-    private final VertexConsumer vertexConsumer;
-    private final ModelPart.Cube vessel;
-
+    private final Function<TextureAtlasSprite, VertexConsumer> consumerFactory;
     private final Map<Direction, ModelPart.Polygon> vesselFaces = new EnumMap<>(Direction.class);
+
+    private VertexConsumer vertexConsumer;
+    private final ModelPart.Cube vessel;
 
     private float[] brightness;
     private int vertices;
@@ -25,9 +28,9 @@ public final class FacadeVertexConsumer implements VertexConsumer {
     private Direction facadeFace;
     private ModelPart.Polygon vesselFace;
 
-    public FacadeVertexConsumer(VertexConsumer vertexConsumer, ModelPart.Cube vessel) {
-        this.vertexConsumer = vertexConsumer;
+    public FacadeVertexConsumer(Function<TextureAtlasSprite, VertexConsumer> consumerFactory, ModelPart.Cube vessel) {
         this.vessel = vessel;
+        this.consumerFactory = consumerFactory;
         for (ModelPart.Polygon polygon : vessel.polygons) {
             Direction direction = Direction.getNearest(
                 polygon.normal.x(), polygon.normal.y(), polygon.normal.z()
@@ -48,6 +51,7 @@ public final class FacadeVertexConsumer implements VertexConsumer {
         ));
         if (this.vesselFace == null) return;
 
+        this.vertexConsumer = this.consumerFactory.apply(quad.getSprite());
         this.brightness = brightness;
         this.vertices = 0;
 
