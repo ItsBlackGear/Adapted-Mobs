@@ -67,10 +67,12 @@ public final class MindmouldVesselLayer extends RenderLayer<Mindmould, Mindmould
         poseStack.pushPose();
         model.transformFacade(poseStack);
 
-        float bodyYaw = Mth.rotLerp(partialTick, mindmould.yBodyRotO, mindmould.yBodyRot);
-        poseStack.translate(0.5F, 0.5F, 0.5F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(bodyYaw - 180.0F));
-        poseStack.translate(-0.5F, -0.5F, -0.5F);
+//        float bodyYaw = Mth.rotLerp(partialTick, mindmould.yBodyRotO, mindmould.yBodyRot);
+//        poseStack.translate(0.5F, 0.5F, 0.5F);
+//        poseStack.mulPose(Axis.YP.rotationDegrees(bodyYaw - 180.0F));
+        // reapply but modulod
+//        poseStack.mulPose(Axis.YP.rotationDegrees(-(Mth.wrapDegrees(bodyYaw) % 90)));
+//        poseStack.translate(-0.5F, -0.5F, -0.5F);
 
         // Messing around with some variance to make the vertex warping unique per Mindmould
         // but I wasn't able to get that working currently
