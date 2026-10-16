@@ -16,7 +16,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -30,6 +32,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -118,10 +122,15 @@ public class Mindmould extends AgeableMob implements Enemy {
     public BlockState getClientBlock() { return clientTransformContext.transformTo; }
 
     public BlockState getDisguiseBlock() { return this.getEntityData().get(DISGUISED_BLOCK); }
-    void setDisguiseBlock(BlockState blockState) { this.getEntityData().set(DISGUISED_BLOCK, blockState); }
+    public void setDisguiseBlock(BlockState blockState) { this.getEntityData().set(DISGUISED_BLOCK, blockState); }
 
+    private int onGroundTicks = 0;
+    public int getGroundTicks() { return onGroundTicks; }
     public boolean isDisguised() { return !this.getDisguiseBlock().isAir(); }
-    public void clearDisguise() { this.getEntityData().set(DISGUISED_BLOCK, Blocks.AIR.defaultBlockState());}
+    public void clearDisguise() {
+        this.getEntityData().set(DISGUISED_BLOCK, Blocks.AIR.defaultBlockState());
+        this.onGroundTicks = 0;
+    }
 
     private static final String DUMMY_NAME = "Lizzy"; // callie said I could have the easter egg :)
     public boolean isDummy() { return this.getEntityData().get(IS_DUMMY); }
@@ -157,25 +166,22 @@ public class Mindmould extends AgeableMob implements Enemy {
         return super.getSoundVolume();
     }
 
-    public void attemptDisguise() {
-        if (this.level() instanceof ServerLevel serverLevel) {
-            // mace :)
-            if (!this.onGround()) {
-                this.clearDisguise();
-                return;
-            }
+    private static boolean canAlign(ServerLevel level, Mindmould mindmould, BlockPos feetPosition) {
+        Vec3 center = Vec3.atBottomCenterOf(feetPosition);
+        AABB bounds = mindmould.getBoundingBox().expandTowards(center.subtract(mindmould.position()));
+        return level.noCollision(mindmould, bounds);
+    }
 
-            BlockPos blockPos = this.attemptDisguiseBlockPosition();
-            BlockState blockState = serverLevel.getBlockState(blockPos);
-            if (this.getDisguiseBlock().is(blockState.getBlock())) return;
-            if (!isValidDisguiseBlock(serverLevel, blockPos)) return;
-
-            this.setDisguiseBlock(blockState);
-        }
+    public static @Nullable BlockState attemptDisguise(ServerLevel serverLevel, Mindmould mindmould) {
+        BlockPos blockPos = mindmould.attemptDisguiseBlockPosition();
+        BlockState blockState = serverLevel.getBlockState(blockPos);
+        if (!isValidDisguiseBlock(serverLevel, blockPos)) return null;
+        if (!canAlign(serverLevel, mindmould, blockPos.above())) return null;
+        return blockState;
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         if (super.hurt(source, amount)) {
             this.clearDisguise();
             return true;
@@ -219,37 +225,44 @@ public class Mindmould extends AgeableMob implements Enemy {
 //        this.oSquish = this.squish;
         super.tick();
 
-//        if (this.onGround() && !this.wasOnGround) {
-//            float f = this.getDimensions(this.getPose()).width() * 2.0F;
-//            float f1 = f / 2.0F;
-//            if (!this.spawnCustomParticles()) {
-//                for(int i = 0; (float)i < f * 16.0F; ++i) {
-//                    float f2 = this.random.nextFloat() * ((float)Math.PI * 2F);
-//                    float f3 = this.random.nextFloat() * 0.5F + 0.5F;
-//                    float f4 = Mth.sin(f2) * f1 * f3;
-//                    float f5 = Mth.cos(f2) * f1 * f3;
-//                    this.level().addParticle(this.getParticleType(), this.getX() + (double)f4, this.getY(), this.getZ() + (double)f5, (double)0.0F, (double)0.0F, (double)0.0F);
-//                }
-//            }
-//
-//            this.playSound(this.getSquishSound(), this.getSoundVolume(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+        if (this.onGround()) {
+            if (this.onGroundTicks <= 0) {
+                float f = this.getDimensions(this.getPose()).width() * 2.0F;
+                float f1 = f / 2.0F;
+
+                for (int i = 0; i < f * 16.0F; ++i) {
+                    float f2 = this.random.nextFloat() * ((float) Math.PI * 2F);
+                    float f3 = this.random.nextFloat() * 0.5F + 0.5F;
+                    float f4 = Mth.sin(f2) * f1 * f3;
+                    float f5 = Mth.cos(f2) * f1 * f3;
+                    this.level().addParticle(
+                        this.getParticleType(), this.getX() + f4,
+                        this.getY(), this.getZ() + f5,
+                        0.0F, 0.0F, 0.0F
+                    );
+                }
+
+                this.playSound(
+                    this.isBaby() ? SoundEvents.SLIME_JUMP_SMALL : SoundEvents.SLIME_JUMP,
+                    this.getSoundVolume(), ((this.random.nextFloat()
+                        - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F
+                );
 //            this.targetSquish = -0.5F;
-//        } else if (!this.onGround() && this.wasOnGround) {
+            }
+            this.onGroundTicks = Math.min(this.onGroundTicks + 1, 20);
+        } else {
+            // mace :)
+//            this.clearDisguise();
+
 //            this.targetSquish = 1.0F;
-//        }
-//
-//        this.wasOnGround = this.onGround();
+            if (this.onGroundTicks > 0) this.onGroundTicks = 0;
+        }
 //        this.decreaseSquish();
     }
 
     private void toCardinalDirection() {
-        float yaw = this.getYRot();
-        while (yaw < 0f) yaw += 360f;
-        yaw = yaw % 360;
-
-        float snappedYaw = Math.round(yaw / 90.0f) * 90.0f;
-        while (snappedYaw <= 360.0f) snappedYaw += 360.0f;
-        snappedYaw = snappedYaw % 360;
+        float yaw = Mth.wrapDegrees(this.getYRot());
+        float snappedYaw = Mth.wrapDegrees(Math.round(yaw / 90.0f) * 90.0f);
 
         this.setYRot(snappedYaw);
         this.setYBodyRot(snappedYaw);

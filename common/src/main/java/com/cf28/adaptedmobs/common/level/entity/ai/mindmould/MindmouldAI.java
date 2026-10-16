@@ -83,12 +83,17 @@ public class MindmouldAI {
                     GateBehavior.OrderPolicy.ORDERED,
                     GateBehavior.RunningPolicy.TRY_ALL,
                     ImmutableList.of(
-                        Pair.of(new MindmouldBehaviors.FindDisguiseGround(8, 1.0F), 1)
-//                        Pair.of(MindmouldBehaviors.disguiseBehavior(), 1)
+                        Pair.of(new MindmouldBehaviors.FindDisguiseGround(8, 1.0F), 1),
+                        Pair.of(MindmouldBehaviors.disguiseBehavior(), 1)
                     )
                 )
             )
         );
+
+        brain.addActivity(Activity.REST, 0, ImmutableList.of(
+            StartAttacking.<Mindmould>create(MindmouldAI::findAttackTarget),
+            MindmouldBehaviors.disguiseBehavior()
+        ));
 
         brain.addActivityAndRemoveMemoryWhenStopped(
             Activity.FIGHT,
@@ -139,8 +144,8 @@ public class MindmouldAI {
 
     public static void updateActivity(Mindmould mindmould) {
         Brain<Mindmould> brain = mindmould.getBrain();
-        brain.setActiveActivityToFirstValid(
-            ImmutableList.of(Activity.FIGHT, Activity.IDLE)
-        );
+        brain.setActiveActivityToFirstValid(ImmutableList.of(Activity.FIGHT,
+            mindmould.isDisguised() ? Activity.REST : Activity.IDLE
+        ));
     }
 }

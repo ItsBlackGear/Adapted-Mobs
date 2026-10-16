@@ -10,6 +10,7 @@ import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -89,7 +90,9 @@ public final class MindmouldVesselLayer extends RenderLayer<Mindmould, Mindmould
             sprite -> buffer.getBuffer(renderTypes.computeIfAbsent(sprite, key
                 -> MindmouldRenderType.mindmould(MindmouldRenderer.getVesselTexture(mindmould), mindmould.getTransformTime(), key,
                     origin.x(), origin.y(), origin.z(), inverseTransform))
-            ), model.vesselCube()
+            ), model.vesselCube(), mindmould.level(), blockState, Minecraft.useAmbientOcclusion()
+            && facadeModel.useAmbientOcclusion() && blockState.getLightEmission() == 0,
+            Minecraft.getInstance().gameRenderer.getMainCamera().getPosition()
         );
 
         Vec3 offset = blockState.getOffset(mindmould.level(), pos);
