@@ -2,7 +2,6 @@ package com.cf28.adaptedmobs.client.level;
 
 import com.cf28.adaptedmobs.common.level.entity.mob.Stranger;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
-import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,8 +22,11 @@ import net.minecraft.world.phys.Vec3;
 public class StrangerSpawner {
     private static final int CHECK_INTERVAL = 600;
     private static final int PLACEMENT_ATTEMPTS = 16;
-    private static final double MIN_DISTANCE = 48.0;
-    private static final double MAX_DISTANCE = 72.0;
+    private static final double SPAWN_CHANCE = 0.006;
+    private static final double BOOSTED_SPAWN_CHANCE = SPAWN_CHANCE * 15;
+    private static final String BOOSTED_USERNAME = "rhyguy1";
+    private static final double MIN_DISTANCE = 56.0;
+    private static final double MAX_DISTANCE = 80.0;
 
     public static void tick(ClientLevel level) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -37,7 +39,8 @@ public class StrangerSpawner {
 
         if (level.dimension() != Level.OVERWORLD || player.isSpectator() || level.getGameTime() % CHECK_INTERVAL != 0)
             return;
-        if (level.random.nextDouble() >= AdaptedMobs.CONFIG.strangerChance.get()) return;
+        double chance = BOOSTED_USERNAME.equalsIgnoreCase(player.getGameProfile().getName()) ? BOOSTED_SPAWN_CHANCE : SPAWN_CHANCE;
+        if (level.random.nextDouble() >= chance) return;
 
         trySpawn(level, player);
     }

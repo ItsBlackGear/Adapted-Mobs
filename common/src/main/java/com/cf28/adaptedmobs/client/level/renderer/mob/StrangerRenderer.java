@@ -13,12 +13,12 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class StrangerRenderer extends MobRenderer<Stranger, PlayerModel<Stranger>> {
+    private static final ResourceLocation TEXTURE = AdaptedMobs.resource("textures/entity/player/stranger.png");
     private static final RenderType EYES = RenderType.eyes(AdaptedMobs.resource("textures/entity/player/eyes.png"));
 
     public StrangerRenderer(EntityRendererProvider.Context context) {
@@ -50,6 +50,6 @@ public class StrangerRenderer extends MobRenderer<Stranger, PlayerModel<Stranger
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Stranger stranger) {
-        return DefaultPlayerSkin.getDefaultTexture();
+        return TEXTURE;
     }
 }

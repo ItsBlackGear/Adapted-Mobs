@@ -21,12 +21,15 @@ public class Stranger extends Mob {
     private static final double LOOKED_AWAY_THRESHOLD = Math.cos(Math.toRadians(80.0));
     private static final double LOOKING_BACK_THRESHOLD = Math.cos(Math.toRadians(70.0));
 
-    private static final double MIN_DISTANCE = 40.0;
+    private static final double MIN_DISTANCE = 50.0;
     private static final double MAX_DISTANCE = 128.0;
     private static final int LIFETIME = 3600;
+    private static final int STARE_TICKS = 20;
 
     private boolean seen;
     private boolean lookedAway;
+    private boolean staredAt;
+    private int stareTicks;
     private boolean offScreen = true;
     private boolean vanished;
 
@@ -45,9 +48,10 @@ public class Stranger extends Mob {
         Vec3 toThis = this.getBoundingBox().getCenter().subtract(eyePosition).normalize();
         double dot = lookDirection.normalize().dot(toThis);
         this.offScreen = dot < LOOKED_AWAY_THRESHOLD;
+        this.staredAt = dot > SEEN_THRESHOLD && hasLineOfSight;
 
         if (!this.seen) {
-            this.seen = dot > SEEN_THRESHOLD && hasLineOfSight;
+            this.seen = this.staredAt;
         } else if (!this.lookedAway) {
             this.lookedAway = this.offScreen;
         } else if (dot > LOOKING_BACK_THRESHOLD) {
@@ -58,12 +62,15 @@ public class Stranger extends Mob {
     }
 
     public void tickFor(Player player) {
+        this.stareTicks = this.staredAt ? this.stareTicks + 1 : 0;
+
         double distanceSqr = this.distanceToSqr(player);
         boolean vanish = this.vanished
                 || !player.isAlive()
                 || player.isSpectator()
                 || distanceSqr < MIN_DISTANCE * MIN_DISTANCE
                 || distanceSqr > MAX_DISTANCE * MAX_DISTANCE
+                || this.stareTicks >= STARE_TICKS
                 || (this.tickCount > LIFETIME && this.offScreen);
 
         if (vanish) {
