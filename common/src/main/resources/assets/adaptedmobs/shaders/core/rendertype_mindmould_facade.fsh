@@ -73,11 +73,11 @@ void main() {
 //    effectUV.x += radial(originalUV - vec2(.5, 0.), cos(time / 25.)) * pixelScale.x;
 
     // clamp
-//    effectUV = (effectUV * shiftedBottomRight) + FacadeTopLeft;
-//    effectUV = clamp(effectUV, FacadeTopLeft, FacadeBottomRight - pixelScale);
+    effectUV = (effectUV * shiftedBottomRight) + FacadeTopLeft;
+    effectUV = clamp(effectUV, FacadeTopLeft, FacadeBottomRight - pixelScale);
 
     // wrap
-    effectUV = mod(effectUV, 1.) * shiftedBottomRight + FacadeTopLeft;
+//    effectUV = mod(effectUV, 1.) * shiftedBottomRight + FacadeTopLeft;
 
     vec4 facadeColor = texture(Sampler3, effectUV) * vec4(facadeLighting, 1.0);
     vec4 color = mix(vesselColor, facadeColor, facadeTime);

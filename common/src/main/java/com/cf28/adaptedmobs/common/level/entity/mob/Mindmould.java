@@ -225,6 +225,8 @@ public class Mindmould extends AgeableMob implements Enemy {
 //        this.oSquish = this.squish;
         super.tick();
 
+        if (this.isDummy() && this.isDisguised()) this.clearDisguise();
+
         if (this.onGround()) {
             if (this.onGroundTicks <= 0) {
                 float f = this.getDimensions(this.getPose()).width() * 2.0F;

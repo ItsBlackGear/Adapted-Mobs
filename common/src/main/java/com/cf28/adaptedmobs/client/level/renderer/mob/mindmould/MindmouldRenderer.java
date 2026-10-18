@@ -42,6 +42,8 @@ public class MindmouldRenderer extends MobRenderer<Mindmould, MindmouldModel<Min
         return super.getRenderType(livingEntity, false, translucent, glowing);
     }
 
+    @Override protected boolean isBodyVisible(@NotNull Mindmould mindmould) { return true; }
+
     @Override public @NotNull ResourceLocation getTextureLocation(@NotNull Mindmould mindmould) {
         return getVesselTexture(mindmould);
     }

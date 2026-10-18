@@ -27,6 +27,7 @@ public class MindmouldBehaviors {
     public static BehaviorControl<Mindmould> disguiseBehavior() {
         return BehaviorBuilder.triggerIf((ServerLevel level, Mindmould mindmould) -> {
             Brain<Mindmould> brain = mindmould.getBrain();
+            if (mindmould.isDummy()) return false;
 
             BlockState attemptDisguise = Mindmould.attemptDisguise(level, mindmould);
             if (attemptDisguise == null) return false;
