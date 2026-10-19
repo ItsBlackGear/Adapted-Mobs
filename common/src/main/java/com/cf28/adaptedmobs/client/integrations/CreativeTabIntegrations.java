@@ -38,6 +38,8 @@ public interface CreativeTabIntegrations {
             ));
         }
 
+        output.addAllAfter(Items.SLIME_BALL, List.of(AMItems.QUICKSILVER.get()));
+
         if (TolerableCreepersCompat.isLoaded()) {
             output.addAllAfter(Items.GUNPOWDER, List.of(
                     AMItems.SUPPORT_CREEPER_SPORES.get(),

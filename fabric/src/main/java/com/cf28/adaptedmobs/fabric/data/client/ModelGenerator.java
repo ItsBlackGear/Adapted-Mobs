@@ -35,6 +35,7 @@ public class ModelGenerator extends FabricModelProvider {
         gen.generateFlatItem(AMItems.YELLOW_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.BLUE_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.GREEN_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(AMItems.QUICKSILVER.get(), ModelTemplates.FLAT_ITEM);
 
         gen.generateFlatItem(AMItems.ARCHAIC_MASK_ALCHEMIST.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.ARCHAIC_MASK_ARCHITECT.get(), ModelTemplates.FLAT_ITEM);

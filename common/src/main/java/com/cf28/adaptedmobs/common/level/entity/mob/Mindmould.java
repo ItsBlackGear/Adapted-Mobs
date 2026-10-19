@@ -262,6 +262,12 @@ public class Mindmould extends AgeableMob implements Enemy {
 //        this.decreaseSquish();
     }
 
+    @Override
+    public void baseTick() {
+        this.setAirSupply(this.getMaxAirSupply());
+        super.baseTick();
+    }
+
     private void toCardinalDirection() {
         float yaw = Mth.wrapDegrees(this.getYRot());
         float snappedYaw = Mth.wrapDegrees(Math.round(yaw / 90.0f) * 90.0f);

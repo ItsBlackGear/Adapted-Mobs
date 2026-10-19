@@ -74,6 +74,8 @@ public class AMItems {
     public static final Supplier<Item> HARPY_EGG = REGISTRIES.register("harpy_egg",
             () -> new BlockItem(AMBlocks.HARPY_EGG.get(), new Properties()));
 
+    public static final Supplier<Item> QUICKSILVER = REGISTRIES.register("quicksilver", Item::new);
+
     public static final Supplier<Item> FESTIVE_CREEPIE_SPAWN_EGG = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("festive_creepie_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 10571065, 8754737, properties))

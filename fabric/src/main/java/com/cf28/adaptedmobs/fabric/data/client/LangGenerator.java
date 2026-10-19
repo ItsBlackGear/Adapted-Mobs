@@ -62,6 +62,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMItems.YELLOW_MYSTERY_EGG.get(), "Yellow Mystery Egg");
         builder.add(AMItems.BLUE_MYSTERY_EGG.get(), "Blue Mystery Egg");
         builder.add(AMItems.GREEN_MYSTERY_EGG.get(), "Green Mystery Egg");
+        builder.add(AMItems.QUICKSILVER.get(), "Quicksilver");
 
         builder.add(AMBlocks.FESTIVE_CREEPER_HEAD.getFirst().get(), "Reaper Head");
         builder.add(AMBlocks.SUPPORT_CREEPER_HEAD.getFirst().get(), "Seeper Head");
