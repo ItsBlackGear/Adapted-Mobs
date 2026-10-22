@@ -172,12 +172,17 @@ public class Mindmould extends AgeableMob implements Enemy {
         return level.noCollision(mindmould, bounds);
     }
 
-    public static @Nullable BlockState attemptDisguise(ServerLevel serverLevel, Mindmould mindmould) {
-        BlockPos blockPos = mindmould.attemptDisguiseBlockPosition();
-        BlockState blockState = serverLevel.getBlockState(blockPos);
-        if (!isValidDisguiseBlock(serverLevel, blockPos)) return null;
+    public static boolean canDisguiseOn(ServerLevel serverLevel, Mindmould mindmould, BlockPos blockPos) {
+        if (!isValidDisguiseBlock(serverLevel, blockPos)) return false;
+        AABB bounds = mindmould.getDimensions(mindmould.getPose())
+            .makeBoundingBox(Vec3.atBottomCenterOf(blockPos.above()));
+        return serverLevel.noCollision(mindmould, bounds);
+    }
+
+    public static @Nullable BlockState attemptDisguise(ServerLevel serverLevel, Mindmould mindmould, BlockPos blockPos) {
+        if (!canDisguiseOn(serverLevel, mindmould, blockPos)) return null;
         if (!canAlign(serverLevel, mindmould, blockPos.above())) return null;
-        return blockState;
+        return serverLevel.getBlockState(blockPos);
     }
 
     @Override

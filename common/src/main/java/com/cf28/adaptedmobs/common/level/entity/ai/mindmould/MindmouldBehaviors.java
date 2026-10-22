@@ -29,7 +29,9 @@ public class MindmouldBehaviors {
             Brain<Mindmould> brain = mindmould.getBrain();
             if (mindmould.isDummy()) return false;
 
-            BlockState attemptDisguise = Mindmould.attemptDisguise(level, mindmould);
+            BlockState attemptDisguise = Mindmould.attemptDisguise(
+                level, mindmould, mindmould.attemptDisguiseBlockPosition()
+            );
             if (attemptDisguise == null) return false;
 
             boolean validDisguise = mindmould.isDisguised()
@@ -102,9 +104,8 @@ public class MindmouldBehaviors {
         }
 
         @Override protected boolean checkExtraStartConditions(@NotNull ServerLevel level, Mindmould mindmould) {
-            return !mindmould.isDisguised() && mindmould.onGround()
-                && level.getGameTime() >= this.nextSearchTime
-                && (Mindmould.attemptDisguise(level, mindmould) == null);
+            return !mindmould.isDisguised() && mindmould.onGround() && level.getGameTime() >= this.nextSearchTime
+                && (Mindmould.attemptDisguise(level, mindmould, mindmould.attemptDisguiseBlockPosition()) == null);
         }
 
         private static final long SEARCH_INTERVAL = 40L;
@@ -113,14 +114,18 @@ public class MindmouldBehaviors {
             @NotNull Mindmould mindmould,
             long gameTime
         ) {
-            this.nextSearchTime = gameTime + SEARCH_INTERVAL;
+            BlockPos current = mindmould.blockPosition();
             Vec3 destination = LandRandomPos.getPos(
                 mindmould, this.range, this.range,
-                pos -> (Mindmould.attemptDisguise(level, mindmould) != null)
-                    ? mindmould.getWalkTargetValue(pos) : Double.NEGATIVE_INFINITY
+                pos -> !pos.equals(current)
+                    && Mindmould.canDisguiseOn(level, mindmould, pos.below())
+                    ? -pos.distSqr(current) : Double.NEGATIVE_INFINITY
             );
 
-            if (destination != null) mindmould.getBrain().setMemory(MemoryModuleType.WALK_TARGET,
+            if (destination == null) return;
+            
+            this.nextSearchTime = gameTime + SEARCH_INTERVAL;
+            mindmould.getBrain().setMemory(MemoryModuleType.WALK_TARGET,
                 new WalkTarget(destination, this.speedModifier, 0)
             );
         }
