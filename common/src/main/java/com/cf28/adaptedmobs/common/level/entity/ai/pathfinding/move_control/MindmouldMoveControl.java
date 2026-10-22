@@ -52,7 +52,14 @@ public class MindmouldMoveControl extends MoveControl {
     //                    this.jumpDelay /= 3;
     //                }
 
-                    this.mindmould.getJumpControl().jump();
+                    if (this.mob.isInWater()) {
+                        Vec3 direction = new Vec3(
+                            this.wantedX - this.mob.getX(), 0,
+                            this.wantedZ - this.mob.getZ()
+                        ).normalize().scale(0.25);
+                        this.mob.setDeltaMovement(direction.x, 0.3f, direction.z);
+                    } else this.mindmould.getJumpControl().jump();
+
                     this.mindmould.playSound(
                         SoundEvents.SLIME_JUMP,
                         this.mindmould.getSoundVolume(),
@@ -63,6 +70,10 @@ public class MindmouldMoveControl extends MoveControl {
                     this.mindmould.zza = 0.0F;
                     this.mob.setSpeed(0.0F);
                 }
+            } else if (this.mob.isInWater()) {
+                this.mindmould.xxa = 0.0F;
+                this.mindmould.zza = 0.0F;
+                this.mob.setSpeed(0.0F);
             }
         }
     }

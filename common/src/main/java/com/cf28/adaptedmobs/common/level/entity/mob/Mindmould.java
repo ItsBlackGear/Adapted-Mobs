@@ -44,7 +44,6 @@ public class Mindmould extends AgeableMob implements Enemy {
         this.fixupDimensions();
 
         this.moveControl = new MindmouldMoveControl(this);
-        this.getNavigation().setCanFloat(true);
     }
 
     protected @NotNull ParticleOptions getParticleType() { return AMParticles.BRAIN_GOO.get(); }

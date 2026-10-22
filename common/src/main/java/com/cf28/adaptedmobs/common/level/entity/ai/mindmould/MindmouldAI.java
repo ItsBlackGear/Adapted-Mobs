@@ -1,6 +1,5 @@
 package com.cf28.adaptedmobs.common.level.entity.ai.mindmould;
 
-import com.cf28.adaptedmobs.common.level.entity.ai.pathfinding.move_control.MindmouldMoveControl;
 import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
 import com.cf28.adaptedmobs.core.tags.AMEntityTags;
 import com.google.common.collect.ImmutableList;
@@ -9,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.sensing.Sensor;
@@ -18,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -123,8 +120,8 @@ public class MindmouldAI {
             -> visible.findClosest(entity -> {
                 if (!Sensor.isEntityAttackable(mindmould, entity)) return false;
                 if (entity instanceof Player player) {
-                    return (!mindmould.isDisguised() || (!staringAt(player, mindmould)
-                    && mindmould.distanceToSqr(player) <= (TARGET_RADIUS * TARGET_RADIUS)));
+                    return (!mindmould.isDisguised() || !staringAt(player, mindmould)
+                    || mindmould.distanceToSqr(player) <= (TARGET_RADIUS * TARGET_RADIUS));
                 }
                 return !mindmould.isDisguised() && entity.getType().is(AMEntityTags.MINDMOULD_TARGETS);
             })
@@ -132,7 +129,7 @@ public class MindmouldAI {
     }
 
     // Enderman Code
-    private static final double STARE_PRECISION = 0.75; // 0.05
+    private static final double STARE_PRECISION = 0.5; // 0.05
     public static boolean staringAt(LivingEntity player, Mindmould mindmould) {
         Vec3 vec3 = player.getViewVector(1.0F).normalize();
         Vec3 vec31 = new Vec3(mindmould.getX() - player.getX(), mindmould.getEyeY() - player.getEyeY(), mindmould.getZ() - player.getZ());
