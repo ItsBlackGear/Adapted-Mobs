@@ -12,10 +12,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -28,6 +30,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
@@ -37,6 +40,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public class Mindmould extends AgeableMob implements Enemy {
     @SuppressWarnings("deprecation")
     public Mindmould(EntityType<? extends AgeableMob> entityType, Level level) {
@@ -44,6 +49,12 @@ public class Mindmould extends AgeableMob implements Enemy {
         this.fixupDimensions();
 
         this.moveControl = new MindmouldMoveControl(this);
+    }
+
+    public Optional<Player> getTargetPlayer() {
+        if (!(this.getTargetFromBrain() instanceof Player player))
+            return Optional.empty();
+        return Optional.of(player);
     }
 
     protected @NotNull ParticleOptions getParticleType() { return AMParticles.BRAIN_GOO.get(); }
@@ -73,6 +84,11 @@ public class Mindmould extends AgeableMob implements Enemy {
         ServerLevel level = (ServerLevel) this.level();
         getBrain().tick(level, this);
         MindmouldAI.updateActivity(this);
+    }
+
+    @Override
+    public @NotNull Vec3 getVehicleAttachmentPoint(@NotNull Entity entity) {
+        return super.getVehicleAttachmentPoint(entity).add(0, 0.5, 0);
     }
 
     private static final class TransformContext {
@@ -188,9 +204,31 @@ public class Mindmould extends AgeableMob implements Enemy {
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (super.hurt(source, amount)) {
             this.clearDisguise();
+            this.stopRiding();
             return true;
         }
         return false;
+    }
+
+    // stolen from harpy but i dont want to change its code and also it should really be
+    // in like its own common / util class if you are reading this thanks :)
+    private void sendPassengers(ServerPlayer serverPlayer) {
+        serverPlayer.connection.send(new ClientboundSetPassengersPacket(serverPlayer));
+    }
+
+    @Override public boolean startRiding(@NotNull Entity vehicle, boolean force) {
+        boolean riding = super.startRiding(vehicle, force);
+        if (riding && vehicle instanceof ServerPlayer serverPlayer)
+            this.sendPassengers(serverPlayer);
+        return riding;
+    }
+
+    @Override public void stopRiding() {
+        Entity vehicle = this.getVehicle();
+        super.stopRiding();
+
+        if (vehicle instanceof ServerPlayer serverPlayer)
+            this.sendPassengers(serverPlayer);
     }
 
     @Override

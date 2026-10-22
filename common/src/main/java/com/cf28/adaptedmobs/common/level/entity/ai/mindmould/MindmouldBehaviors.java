@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class MindmouldBehaviors {
     public static BehaviorControl<Mindmould> disguiseBehavior() {
@@ -128,6 +130,58 @@ public class MindmouldBehaviors {
             mindmould.getBrain().setMemory(MemoryModuleType.WALK_TARGET,
                 new WalkTarget(destination, this.speedModifier, 0)
             );
+        }
+    }
+
+    public static class LeapOntoTarget extends Behavior<Mindmould> {
+        private static final double LEAP_RANGE = 2.75;
+        private static final double LEAP_VELOCITY = 0.6;
+
+        private int leapCooldown = 0;
+
+        public LeapOntoTarget() {
+            super(
+                Map.of(
+                    MemoryModuleType.ATTACK_TARGET,
+                    MemoryStatus.VALUE_PRESENT
+                ), 60
+            );
+        }
+
+        private boolean canRidePlayer(Mindmould mindmould, Player player) { return !mindmould.isBaby() && player.getPassengers().isEmpty(); }
+
+        @Override protected boolean checkExtraStartConditions(@NotNull ServerLevel level, Mindmould mindmould) {
+            boolean shouldLeap = mindmould.onGround() && !mindmould.isPassenger() && !mindmould.isInWater()
+                && mindmould.getTargetPlayer().filter(player -> this.canRidePlayer(mindmould, player)
+                    && player.position().subtract(mindmould.position()).horizontalDistance() <= LEAP_RANGE)
+                .isPresent();
+            if (shouldLeap && leapCooldown > 0) leapCooldown--;
+            return (shouldLeap && leapCooldown <= 0);
+        }
+
+        @Override protected void start(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            leapCooldown = 60;
+            mindmould.getNavigation().stop();
+            mindmould.setDeltaMovement(0, LEAP_VELOCITY, 0);
+        }
+
+        @Override protected boolean canStillUse(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            return (!mindmould.onGround() || mindmould.getDeltaMovement().y > 0)
+                && !mindmould.isPassenger() && mindmould.getTargetPlayer().isPresent();
+        }
+
+        @Override protected void tick(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            mindmould.getTargetPlayer().ifPresent(player -> {
+                Vec3 deltaMovement = mindmould.getDeltaMovement();
+                Vec3 toHead = player.position().subtract(mindmould.position()).multiply(0.2, 0, 0.2);
+                mindmould.setDeltaMovement(toHead.x, deltaMovement.y, toHead.z);
+
+                if (deltaMovement.y <= 0 && mindmould.getY() >= player.getEyeY()
+                    && mindmould.getBoundingBox().intersects(
+                        player.getBoundingBox().inflate(0, 0.5, 0)
+                    ) && this.canRidePlayer(mindmould, player)
+                ) mindmould.startRiding(player, true);
+            });
         }
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +43,10 @@ public class MindmouldRenderer extends MobRenderer<Mindmould, MindmouldModel<Min
         return super.getRenderType(livingEntity, false, translucent, glowing);
     }
 
-    @Override protected boolean isBodyVisible(@NotNull Mindmould mindmould) { return true; }
+    @Override protected boolean isBodyVisible(@NotNull Mindmould mindmould) {
+        // TODO stop using use instanceof here . I mean I haven't profiled but that's gotta be bad
+        return !(mindmould.getVehicle() instanceof Player);
+    }
 
     @Override public @NotNull ResourceLocation getTextureLocation(@NotNull Mindmould mindmould) {
         return getVesselTexture(mindmould);

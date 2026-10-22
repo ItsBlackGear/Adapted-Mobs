@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.core.mixin.common;
 
 import com.cf28.adaptedmobs.common.level.entity.mob.Harpy;
+import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
@@ -22,9 +23,13 @@ public class ProjectileUtilMixin {
         cancellable = true
     )
     private static void adaptedmobs$allowHittingHarpyVehicle(
-        Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, double distance, CallbackInfoReturnable<EntityHitResult> cir
+        Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox,
+        Predicate<Entity> filter, double distance,
+        CallbackInfoReturnable<EntityHitResult> cir
     ) {
-        if (cir.getReturnValue() == null && shooter != null && shooter.getVehicle() instanceof Harpy harpy) {
+        if (cir.getReturnValue() != null || shooter == null) return;
+
+        if (shooter.getVehicle() instanceof Harpy harpy) {
             if (filter.test(harpy)) {
                 AABB aabb = harpy.getBoundingBox().inflate(harpy.getPickRadius());
                 Optional<Vec3> clip = aabb.clip(startVec, endVec);
@@ -35,6 +40,14 @@ public class ProjectileUtilMixin {
                     }
                 }
             }
+            return;
         }
+
+        shooter.getPassengers().forEach((passenger) -> {
+            if (!(passenger instanceof Mindmould mindmould)) return;
+            mindmould.getBoundingBox().inflate(mindmould.getPickRadius()).clip(startVec, endVec)
+                .filter(hit -> startVec.distanceToSqr(hit) <= distance)
+                .ifPresent(hit -> cir.setReturnValue(new EntityHitResult(mindmould, hit)));
+        });
     }
 }

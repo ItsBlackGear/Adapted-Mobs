@@ -97,6 +97,7 @@ public class MindmouldAI {
             0,
             ImmutableList.of(
                 StopAttackingIfTargetInvalid.<Mindmould>create(),
+                new MindmouldBehaviors.LeapOntoTarget(),
                 SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.0F),
                 MeleeAttack.create(20)
             ),

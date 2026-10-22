@@ -75,6 +75,7 @@ public final class MindmouldRenderType extends RenderType {
                 .setTexturingState(getTexturingState(state))
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setOutputState(ITEM_ENTITY_TARGET) // fuuuck fabulous graphics
+                .setCullState(NO_CULL)
                 .createCompositeState(true)
         );
     }
