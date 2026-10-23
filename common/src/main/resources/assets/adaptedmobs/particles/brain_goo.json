@@ -1,5 +1,7 @@
 {
   "textures": [
-    "adaptedmobs:brain_goo"
+    "adaptedmobs:brain_goo_1",
+    "adaptedmobs:brain_goo_2",
+    "adaptedmobs:brain_goo_3"
   ]
 }

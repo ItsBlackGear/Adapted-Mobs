@@ -7,7 +7,9 @@ import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.tags.AMBlockTags;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -57,7 +59,12 @@ public class Mindmould extends AgeableMob implements Enemy {
         return Optional.of(player);
     }
 
-    protected @NotNull ParticleOptions getParticleType() { return AMParticles.BRAIN_GOO.get(); }
+    protected @NotNull ParticleOptions getParticleType() {
+        if (this.isDisguised()) {
+            return new BlockParticleOption(ParticleTypes.BLOCK, this.getDisguiseBlock());
+        }
+        return AMParticles.BRAIN_GOO.get();
+    }
     @Override public @NotNull SoundSource getSoundSource() { return SoundSource.HOSTILE; }
 
     public int getJumpDelay() {
@@ -261,6 +268,8 @@ public class Mindmould extends AgeableMob implements Enemy {
         super.remove(reason);
     }
 
+    @Override protected boolean shouldDropLoot() { return true; }
+
     private int mergeCooldown = 120;
     public int getMergeCooldown() { return mergeCooldown; }
 
@@ -285,21 +294,8 @@ public class Mindmould extends AgeableMob implements Enemy {
         if (this.isDummy() && this.isDisguised()) this.clearDisguise();
 
         if (this.onGround()) {
-            if (this.onGroundTicks <= 0) {
-                float f = this.getDimensions(this.getPose()).width() * 2.0F;
-                float f1 = f / 2.0F;
-
-                for (int i = 0; i < f * 16.0F; ++i) {
-                    float f2 = this.random.nextFloat() * ((float) Math.PI * 2F);
-                    float f3 = this.random.nextFloat() * 0.5F + 0.5F;
-                    float f4 = Mth.sin(f2) * f1 * f3;
-                    float f5 = Mth.cos(f2) * f1 * f3;
-                    this.level().addParticle(
-                        this.getParticleType(), this.getX() + f4,
-                        this.getY(), this.getZ() + f5,
-                        0.0F, 0.0F, 0.0F
-                    );
-                }
+            if (this.onGroundTicks == 0) {
+                this.spawnParticles();
 
                 this.playSound(
                     this.isBaby() ? SoundEvents.SLIME_JUMP_SMALL : SoundEvents.SLIME_JUMP,
@@ -314,10 +310,31 @@ public class Mindmould extends AgeableMob implements Enemy {
 //            this.clearDisguise();
 
 //            this.targetSquish = 1.0F;
-            if (this.onGroundTicks > 0) this.onGroundTicks = 0;
+            if (this.onGroundTicks > 0) this.onGroundTicks = -1;
         }
         mergeCooldown = Math.max(mergeCooldown - 1, 0);
 //        this.decreaseSquish();
+    }
+
+    private void spawnParticles() {
+        float spread = 1f;
+        int particleCount = 10;
+        if (this.isBaby()) {
+            particleCount = 6;
+            spread /= 2f;
+        }
+
+        for (int i = 0; i < particleCount; ++i) {
+            float f2 = this.random.nextFloat() * ((float) Math.PI * 2F);
+            float f3 = ((this.random.nextFloat() * 0.5F) + 0.5F) * spread;
+            float f4 = Mth.sin(f2) * f3;
+            float f5 = Mth.cos(f2) * f3;
+            this.level().addParticle(
+                this.getParticleType(), this.getX() + f4,
+                this.getY(), this.getZ() + f5,
+                0.0F, 0.0F, 0.0F
+            );
+        }
     }
 
     @Override
