@@ -261,6 +261,21 @@ public class Mindmould extends AgeableMob implements Enemy {
         super.remove(reason);
     }
 
+    private int mergeCooldown = 120;
+    public int getMergeCooldown() { return mergeCooldown; }
+
+    private @Nullable Mindmould mergePartner;
+    public @Nullable Mindmould getMergePartner() { return mergePartner; }
+    public void setMergePartner(@Nullable Mindmould mergePartner) { this.mergePartner = mergePartner; }
+
+    @Override public void push(@NotNull Entity entity) {
+        if (entity == this.mergePartner
+            || entity instanceof Mindmould potentialPartner
+            && potentialPartner.getMergePartner() == this
+        ) return;
+        super.push(entity);
+    }
+
     @Override
     public void tick() {
 //        this.squish += (this.targetSquish - this.squish) * 0.5F;
@@ -301,6 +316,7 @@ public class Mindmould extends AgeableMob implements Enemy {
 //            this.targetSquish = 1.0F;
             if (this.onGroundTicks > 0) this.onGroundTicks = 0;
         }
+        mergeCooldown = Math.max(mergeCooldown - 1, 0);
 //        this.decreaseSquish();
     }
 

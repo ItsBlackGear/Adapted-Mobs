@@ -3,11 +3,16 @@ package com.cf28.adaptedmobs.common.level.entity.ai.mindmould;
 import com.cf28.adaptedmobs.common.level.entity.ai.pathfinding.move_control.MindmouldMoveControl;
 import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
+import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -30,6 +35,7 @@ public class MindmouldBehaviors {
         return BehaviorBuilder.triggerIf((ServerLevel level, Mindmould mindmould) -> {
             Brain<Mindmould> brain = mindmould.getBrain();
             if (mindmould.isDummy()) return false;
+            if (mindmould.getMergePartner() != null) return true;
 
             BlockState attemptDisguise = Mindmould.attemptDisguise(
                 level, mindmould, mindmould.attemptDisguiseBlockPosition()
@@ -134,7 +140,7 @@ public class MindmouldBehaviors {
     }
 
     public static class LeapOntoTarget extends Behavior<Mindmould> {
-        private static final double LEAP_RANGE = 2.75;
+        private static final double LEAP_RANGE = 6.0;
         private static final double LEAP_VELOCITY = 0.6;
 
         private int leapCooldown = 0;
@@ -162,7 +168,16 @@ public class MindmouldBehaviors {
         @Override protected void start(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
             leapCooldown = 60;
             mindmould.getNavigation().stop();
-            mindmould.setDeltaMovement(0, LEAP_VELOCITY, 0);
+
+            Vec3 playerDistance = mindmould.getTargetPlayer().map(player
+                    -> player.position().subtract(mindmould.position())
+                ).orElse(Vec3.ZERO).multiply(1f, 0f, 1f);
+            Vec3 horizontalLeap = playerDistance.scale(0.15f);
+            mindmould.setDeltaMovement(
+                horizontalLeap.x, LEAP_VELOCITY
+                + (playerDistance.length() * 0.05),
+                horizontalLeap.z
+            );
         }
 
         @Override protected boolean canStillUse(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
@@ -182,6 +197,89 @@ public class MindmouldBehaviors {
                     ) && this.canRidePlayer(mindmould, player)
                 ) mindmould.startRiding(player, true);
             });
+        }
+    }
+
+    public static class MinimouldMerge extends Behavior<Mindmould> {
+        private static final double SYNC_DISTANCE = 1.5;
+        private static final int SYNC_INTERVAL = 20;
+        private boolean jumped;
+
+        public MinimouldMerge() {
+            super(Map.of(
+                MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
+                MemoryStatus.VALUE_PRESENT
+            ), 200);
+        }
+
+        private Optional<LivingEntity> getPotentialPartner(Mindmould mindmould) {
+            return mindmould.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).flatMap(visible
+                -> visible.findClosest(entity -> entity instanceof Mindmould other && other.isBaby()
+                    && other.getMergeCooldown() <= 0 && !other.isPassenger()
+                    && (other.getMergePartner() == null || other.getMergePartner() == mindmould))
+            );
+        }
+
+        @Override protected boolean checkExtraStartConditions(@NotNull ServerLevel level, Mindmould mindmould) {
+            return mindmould.isBaby() && mindmould.getMergeCooldown() <= 0
+                && !mindmould.isPassenger() && this.getPotentialPartner(mindmould).isPresent();
+        }
+
+        @Override protected void start(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            mindmould.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
+            mindmould.setMergePartner((Mindmould) this.getPotentialPartner(mindmould).orElseThrow());
+            mindmould.clearDisguise();
+            this.jumped = false;
+        }
+
+        @Override protected boolean canStillUse(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            Mindmould partner = mindmould.getMergePartner();
+            return partner != null && partner.isAlive() && partner.isBaby()
+                && (partner.getMergePartner() == null || partner.getMergePartner() == mindmould);
+        }
+
+        @Override protected void tick(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            Mindmould partner = mindmould.getMergePartner();
+            if (partner == null) return;
+
+            boolean paired = (partner.getMergePartner() == mindmould);
+            if (!this.jumped && (mindmould.distanceTo(partner) > SYNC_DISTANCE || !mindmould.onGround())) {
+                BehaviorUtils.setWalkAndLookTargetMemories(mindmould, partner, 1.0F, 1);
+                return;
+            }
+            mindmould.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+            mindmould.getNavigation().stop();
+
+            if (!paired || mindmould.getId() > partner.getId()) return;
+
+            if (!this.jumped) {
+                if (mindmould.onGround() && partner.onGround()
+                    && (gameTime % SYNC_INTERVAL == 0)
+                ) {
+                    this.launchTowards(mindmould, partner);
+                    this.launchTowards(partner, mindmould);
+                    this.jumped = true;
+                }
+            } else if (mindmould.getBoundingBox().intersects(partner.getBoundingBox())) {
+                partner.discard();
+                mindmould.setBaby(false);
+//                mindmould.jumpFromGround();
+
+                level.sendParticles(ParticleTypes.EXPLOSION,
+                    mindmould.getX(), mindmould.getY(),
+                    mindmould.getZ(), 1, 0, 0, 0, 0
+                );
+            } else if (mindmould.onGround() && partner.onGround()) this.jumped = false;
+        }
+
+        private void launchTowards(Mindmould mindmould, Mindmould partner) {
+            Vec3 toPartner = partner.position().subtract(mindmould.position()).multiply(0.2, 0, 0.2);
+            mindmould.setDeltaMovement(toPartner.x, 0.42, toPartner.z);
+        }
+
+        @Override protected void stop(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            mindmould.setMergePartner(null);
+            this.jumped = false;
         }
     }
 }

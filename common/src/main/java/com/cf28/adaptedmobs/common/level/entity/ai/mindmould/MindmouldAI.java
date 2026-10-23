@@ -64,7 +64,8 @@ public class MindmouldAI {
                     return true;
                 }),
                 new LookAtTargetSink(45, 90),
-                new MoveToTargetSink()
+                new MoveToTargetSink(),
+                new MindmouldBehaviors.MinimouldMerge()
             )
         );
 
@@ -113,6 +114,8 @@ public class MindmouldAI {
     private static final int TARGET_RADIUS = 6;
     private static Optional<? extends LivingEntity> findAttackTarget(Mindmould mindmould) {
         Brain<Mindmould> brain = mindmould.getBrain();
+        if (mindmould.getMergePartner() != null) return Optional.empty();
+
         Optional<LivingEntity> attacker = brain.getMemory(MemoryModuleType.HURT_BY_ENTITY).filter(entity -> entity != mindmould)
             .filter(entity -> Sensor.isEntityAttackableIgnoringLineOfSight(mindmould, entity));
         if (attacker.isPresent()) return attacker;

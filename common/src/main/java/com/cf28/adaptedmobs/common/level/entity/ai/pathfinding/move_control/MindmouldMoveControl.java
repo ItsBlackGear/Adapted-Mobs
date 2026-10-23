@@ -11,6 +11,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class MindmouldMoveControl extends MoveControl {
 
+    private static final double AIR_STEERING = 0.5;
+    static final double AIR_BRAKING = 0.25;
+
     private float yRotTo;
     private int jumpDelay;
     private final Mindmould mindmould;
@@ -35,7 +38,7 @@ public class MindmouldMoveControl extends MoveControl {
 //        AdaptedMobs.LOGGER.info("{}, ", this.yRot);
         this.mindmould.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).ifPresentOrElse(
             target -> this.mindmould.lookAt(target, 10.0F, 10.0F),
-            () -> this.mob.setYRot(this.rotlerp(this.mob.getYRot(), this.yRotTo, 10.0F))
+            () -> this.mob.setYRot(this.rotlerp(this.mob.getYRot(), this.yRotTo,  45.0F))
         );
 
         this.mob.yHeadRot = this.mob.getYRot();
@@ -70,11 +73,22 @@ public class MindmouldMoveControl extends MoveControl {
                     this.mindmould.zza = 0.0F;
                     this.mob.setSpeed(0.0F);
                 }
-            } else if (this.mob.isInWater()) {
+                return;
+            }
+
+            if (this.mob.isInWater()) {
                 this.mindmould.xxa = 0.0F;
                 this.mindmould.zza = 0.0F;
                 this.mob.setSpeed(0.0F);
+                return;
             }
+
+            // air movement
+            Vec3 deltaMovement = this.mob.getDeltaMovement();
+            Vec3 direction = new Vec3(this.wantedX - this.mob.getX(), 0, this.wantedZ - this.mob.getZ());
+            double speed = Math.min(deltaMovement.horizontalDistance(), (direction.length() * AIR_BRAKING));
+            Vec3 airSteering = new Vec3(deltaMovement.x, 0, deltaMovement.z).lerp(direction.normalize().scale(speed), AIR_STEERING);
+            this.mob.setDeltaMovement(airSteering.x, deltaMovement.y, airSteering.z);
         }
     }
 }
