@@ -167,10 +167,13 @@ public class Mindmould extends AgeableMob implements Enemy {
         SynchedEntityData.defineId(Mindmould.class, EntityDataSerializers.BLOCK_STATE);
     private static final EntityDataAccessor<Boolean> IS_DUMMY =
         SynchedEntityData.defineId(Mindmould.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> LEAP_CHARGE =
+        SynchedEntityData.defineId(Mindmould.class, EntityDataSerializers.FLOAT);
     @Override protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DISGUISED_BLOCK, Blocks.AIR.defaultBlockState());
         builder.define(IS_DUMMY, false);
+        builder.define(LEAP_CHARGE, 0.0F);
     }
 
     public static boolean isValidDisguiseBlock(ServerLevel serverLevel, BlockPos blockPos) {
@@ -186,6 +189,15 @@ public class Mindmould extends AgeableMob implements Enemy {
 
     @Override public float getSoundVolume() {
         return super.getSoundVolume();
+    }
+
+    boolean isLeaping = false;
+    public void setLeaping() { this.isLeaping = true; }
+    public float getLeapCharge() { return this.getEntityData().get(LEAP_CHARGE); }
+    public void setLeapCharge(float leapCharge) { this.getEntityData().set(LEAP_CHARGE, leapCharge); }
+    @Override protected double getDefaultGravity() {
+        if (isLeaping) return super.getDefaultGravity() * 0.75f;
+        return super.getDefaultGravity();
     }
 
     private static boolean canAlign(ServerLevel level, Mindmould mindmould, BlockPos feetPosition) {
@@ -285,15 +297,22 @@ public class Mindmould extends AgeableMob implements Enemy {
         super.push(entity);
     }
 
+    public float targetSquish;
+    public float squish;
+    public float oSquish;
+
+    protected void decreaseSquish() { this.targetSquish *= 0.6F; }
+
     @Override
     public void tick() {
-//        this.squish += (this.targetSquish - this.squish) * 0.5F;
-//        this.oSquish = this.squish;
+        this.squish += (this.targetSquish - this.squish) * 0.5F;
+        this.oSquish = this.squish;
         super.tick();
 
         if (this.isDummy() && this.isDisguised()) this.clearDisguise();
 
         if (this.onGround()) {
+            isLeaping = false;
             if (this.onGroundTicks == 0) {
                 this.spawnParticles();
 
@@ -302,18 +321,21 @@ public class Mindmould extends AgeableMob implements Enemy {
                     this.getSoundVolume(), ((this.random.nextFloat()
                         - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F
                 );
-//            this.targetSquish = -0.5F;
+                this.targetSquish = -0.5F;
             }
             this.onGroundTicks = Math.min(this.onGroundTicks + 1, 20);
         } else {
             // mace :)
 //            this.clearDisguise();
 
-//            this.targetSquish = 1.0F;
-            if (this.onGroundTicks > 0) this.onGroundTicks = -1;
+            if (this.onGroundTicks > 0) {
+                this.targetSquish = 1.0F;
+                this.onGroundTicks = -1;
+            }
         }
         mergeCooldown = Math.max(mergeCooldown - 1, 0);
-//        this.decreaseSquish();
+        this.decreaseSquish();
+        if (this.getLeapCharge() > 0) this.targetSquish = -(0.5F * this.getLeapCharge());
     }
 
     private void spawnParticles() {

@@ -25,6 +25,7 @@ public class MindmouldMoveControl extends MoveControl {
     }
 
     public void setDirection(float yRot) { this.yRotTo = yRot; }
+    public void stop() { this.operation = Operation.WAIT; }
 
     @Override public void setWantedPosition(double x, double y, double z, double speed) {
         super.setWantedPosition(x, y, z, speed);
@@ -46,11 +47,13 @@ public class MindmouldMoveControl extends MoveControl {
         if (this.operation != Operation.MOVE_TO) this.mob.setZza(0.0F);
         else {
             this.operation = MoveControl.Operation.WAIT;
-            this.mob.setSpeed((float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
+            float speed = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
+            speed *= 1.25f;
+            this.mob.setSpeed(speed);
 
             if (this.mob.onGround()) {
                 if (this.jumpDelay-- <= 0) {
-                    this.jumpDelay = this.mindmould.getJumpDelay() / 3;
+                    this.jumpDelay = this.mindmould.getJumpDelay();
     //                if (this.isAggressive) {
     //                    this.jumpDelay /= 3;
     //                }
@@ -84,11 +87,11 @@ public class MindmouldMoveControl extends MoveControl {
             }
 
             // air movement
-            Vec3 deltaMovement = this.mob.getDeltaMovement();
-            Vec3 direction = new Vec3(this.wantedX - this.mob.getX(), 0, this.wantedZ - this.mob.getZ());
-            double speed = Math.min(deltaMovement.horizontalDistance(), (direction.length() * AIR_BRAKING));
-            Vec3 airSteering = new Vec3(deltaMovement.x, 0, deltaMovement.z).lerp(direction.normalize().scale(speed), AIR_STEERING);
-            this.mob.setDeltaMovement(airSteering.x, deltaMovement.y, airSteering.z);
+//            Vec3 deltaMovement = this.mob.getDeltaMovement();
+//            Vec3 direction = new Vec3(this.wantedX - this.mob.getX(), 0, this.wantedZ - this.mob.getZ());
+//            double speed = Math.min(deltaMovement.horizontalDistance(), (direction.length() * AIR_BRAKING));
+//            Vec3 airSteering = new Vec3(deltaMovement.x, 0, deltaMovement.z).lerp(direction.normalize().scale(speed), AIR_STEERING);
+//            this.mob.setDeltaMovement(airSteering.x, deltaMovement.y, airSteering.z);
         }
     }
 }

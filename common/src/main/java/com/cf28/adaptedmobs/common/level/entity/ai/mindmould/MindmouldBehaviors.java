@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.common.level.entity.ai.mindmould;
 
 import com.cf28.adaptedmobs.common.level.entity.ai.pathfinding.move_control.MindmouldMoveControl;
 import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
+import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -141,9 +142,14 @@ public class MindmouldBehaviors {
 
     public static class LeapOntoTarget extends Behavior<Mindmould> {
         private static final double LEAP_RANGE = 6.0;
-        private static final double LEAP_VELOCITY = 0.6;
+        private static final int MAX_LEAP_TICKS = 40;
+        private static final int LEAP_CHARGE_TICKS = 20;
+
+        private static final double HORIZONTAL_DRAG = 0.91F;
+        private static final double VERTICAL_DRAG = 0.98F;
 
         private int leapCooldown = 0;
+        private int groundLeapCooldown = 0;
 
         public LeapOntoTarget() {
             super(
@@ -154,7 +160,7 @@ public class MindmouldBehaviors {
             );
         }
 
-        private boolean canRidePlayer(Mindmould mindmould, Player player) { return !mindmould.isBaby() && player.getPassengers().isEmpty(); }
+        private boolean canRidePlayer(Mindmould mindmould, Player player) { return player.getPassengers().isEmpty(); }
 
         @Override protected boolean checkExtraStartConditions(@NotNull ServerLevel level, Mindmould mindmould) {
             boolean shouldLeap = mindmould.onGround() && !mindmould.isPassenger() && !mindmould.isInWater()
@@ -162,34 +168,82 @@ public class MindmouldBehaviors {
                     && player.position().subtract(mindmould.position()).horizontalDistance() <= LEAP_RANGE)
                 .isPresent();
             if (shouldLeap && leapCooldown > 0) leapCooldown--;
-            return (shouldLeap && leapCooldown <= 0);
+            return (shouldLeap && leapCooldown <= 0 && mindmould.getTargetPlayer()
+                .flatMap(player -> this.getLeapMovement(mindmould, player)).isPresent());
+        }
+
+        private Optional<Vec3> getLeapMovement(Mindmould mindmould, Player player) {
+            double height = player.getBoundingBox().maxY - mindmould.getY();
+            double gravity = mindmould.getGravity();
+            double leapY = Math.sqrt(2 * gravity * (Math.max(height, 0) + .5f));
+
+            double friction = mindmould.level().getBlockState(
+                mindmould.getBlockPosBelowThatAffectsMyMovement()) // beautiful method name
+                .getBlock().getFriction();
+            double drag = mindmould.onGround() ? friction * HORIZONTAL_DRAG : HORIZONTAL_DRAG;
+            double y = 0, velocityY = leapY, reach = 0, speed = 1;
+
+            for (int ticks = 1; ticks <= MAX_LEAP_TICKS; ticks++) {
+                double previousY = y;
+                y += velocityY;
+
+                velocityY = (velocityY - gravity) * VERTICAL_DRAG;
+
+                reach += speed;
+                speed *= drag;
+                drag = HORIZONTAL_DRAG;
+                if (y > height || previousY < height) continue;
+
+                Vec3 landing = player.position().add(player.getKnownMovement().scale(ticks));
+                Vec3 leap = landing.subtract(mindmould.position())
+                    .multiply(1, 0, 1).scale(1 / reach);
+                return Optional.of(new Vec3(leap.x, leapY, leap.z));
+            }
+            return Optional.empty();
+        }
+
+        public void performChargeAttack(Mindmould mindmould) {
+            mindmould.setLeaping();
+            mindmould.getTargetPlayer().flatMap(player -> this.getLeapMovement(mindmould, player))
+                .ifPresent(mindmould::setDeltaMovement);
         }
 
         @Override protected void start(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
             leapCooldown = 60;
-            mindmould.getNavigation().stop();
+            groundLeapCooldown = LEAP_CHARGE_TICKS;
 
-            Vec3 playerDistance = mindmould.getTargetPlayer().map(player
-                    -> player.position().subtract(mindmould.position())
-                ).orElse(Vec3.ZERO).multiply(1f, 0f, 1f);
-            Vec3 horizontalLeap = playerDistance.scale(0.15f);
-            mindmould.setDeltaMovement(
-                horizontalLeap.x, LEAP_VELOCITY
-                + (playerDistance.length() * 0.05),
-                horizontalLeap.z
-            );
+            mindmould.getNavigation().stop();
+        }
+
+        @Override protected void stop(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
+            mindmould.setLeapCharge(0.0F);
         }
 
         @Override protected boolean canStillUse(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
-            return (!mindmould.onGround() || mindmould.getDeltaMovement().y > 0)
+            return (groundLeapCooldown >= 0 ? mindmould.onGround()
+                : !mindmould.onGround() || mindmould.getDeltaMovement().y > 0)
                 && !mindmould.isPassenger() && mindmould.getTargetPlayer().isPresent();
         }
 
         @Override protected void tick(@NotNull ServerLevel level, @NotNull Mindmould mindmould, long gameTime) {
             mindmould.getTargetPlayer().ifPresent(player -> {
+                if (groundLeapCooldown >= 0 && mindmould.getMoveControl() instanceof MindmouldMoveControl moveControl)
+                    moveControl.stop();
+
+                if (groundLeapCooldown > 0) {
+                    groundLeapCooldown--;
+                    mindmould.setLeapCharge(1.0F - (float) groundLeapCooldown / LEAP_CHARGE_TICKS);
+                    return;
+                } else if (groundLeapCooldown == 0) {
+                    mindmould.setLeapCharge(0.0F);
+                    this.performChargeAttack(mindmould);
+                    groundLeapCooldown = -1;
+                    return;
+                }
+
                 Vec3 deltaMovement = mindmould.getDeltaMovement();
-                Vec3 toHead = player.position().subtract(mindmould.position()).multiply(0.2, 0, 0.2);
-                mindmould.setDeltaMovement(toHead.x, deltaMovement.y, toHead.z);
+//                Vec3 toHead = player.position().subtract(mindmould.position()).multiply(0.2, 0, 0.2);
+//                mindmould.setDeltaMovement(toHead.x, deltaMovement.y, toHead.z);
 
                 if (deltaMovement.y <= 0 && mindmould.getY() >= player.getEyeY()
                     && mindmould.getBoundingBox().intersects(
@@ -199,7 +253,7 @@ public class MindmouldBehaviors {
             });
         }
     }
-
+    
     public static class MinimouldMerge extends Behavior<Mindmould> {
         private static final double SYNC_DISTANCE = 1.5;
         private static final int SYNC_INTERVAL = 20;
@@ -261,6 +315,7 @@ public class MindmouldBehaviors {
                     this.jumped = true;
                 }
             } else if (mindmould.getBoundingBox().intersects(partner.getBoundingBox())) {
+                // TODO : animation where they merge together
                 partner.discard();
                 mindmould.setBaby(false);
 //                mindmould.jumpFromGround();

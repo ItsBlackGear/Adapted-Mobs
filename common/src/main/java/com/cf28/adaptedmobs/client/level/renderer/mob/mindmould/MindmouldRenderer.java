@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +36,13 @@ public class MindmouldRenderer extends MobRenderer<Mindmould, MindmouldModel<Min
         else this.model = defaultModel;
 
         super.render(mindmould, entityYaw, partialTicks, poseStack, buffer, packedLight);
+    }
+
+    @Override protected void scale(@NotNull Mindmould mindmould, @NotNull PoseStack poseStack, float partialTickTime) {
+        float size = mindmould.isBaby() ? 1.0F : 2.0F;
+        float squish = Mth.lerp(partialTickTime, mindmould.oSquish, mindmould.squish) / (size * 0.5F + 1.0F);
+        float scale = 1.0F / (squish + 1.0F);
+        poseStack.scale(scale, 1.0F / scale, scale);
     }
 
     @Override
