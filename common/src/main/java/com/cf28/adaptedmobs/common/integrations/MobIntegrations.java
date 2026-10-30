@@ -1,17 +1,15 @@
 package com.cf28.adaptedmobs.common.integrations;
 
-import com.cf28.adaptedmobs.common.level.entity.mob.Entombed;
-import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
-import com.cf28.adaptedmobs.common.level.entity.mob.Stranger;
+import com.cf28.adaptedmobs.common.level.entity.mob.*;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.TamableCreeper;
-import com.cf28.adaptedmobs.common.level.entity.mob.Harpy;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 import static com.blackgear.platform.common.integration.MobIntegration.Event;
@@ -26,6 +24,7 @@ public class MobIntegrations {
         event.registerAttributes(AMEntityTypes.ENTOMBED, Entombed::createAttributes);
         event.registerAttributes(AMEntityTypes.MINDMOULD, Mindmould::createAttributes);
         event.registerAttributes(AMEntityTypes.STRANGER, Stranger::createAttributes);
+        event.registerAttributes(AMEntityTypes.ABANDONED, Skeleton::createAttributes);
 
         if (TolerableCreepersCompat.isLoaded()) {
             event.registerAttributes(AMEntityTypes.SUPPORT_CREEPIE, Creepie::createAttributes);
@@ -40,5 +39,6 @@ public class MobIntegrations {
         event.registerPlacement(AMEntityTypes.ROCKET_CREEPER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
         event.registerPlacement(AMEntityTypes.HARPY, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Harpy::checkHarpySpawnRules);
         event.registerPlacement(AMEntityTypes.ENTOMBED, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Entombed::checkEntombedSpawnRules);
+        event.registerPlacement(AMEntityTypes.ABANDONED, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Abandoned::checkAbandonedSpawnRules);
     }
 }

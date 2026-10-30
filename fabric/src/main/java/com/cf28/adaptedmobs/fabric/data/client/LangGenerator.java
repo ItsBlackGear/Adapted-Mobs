@@ -30,6 +30,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), "Leaper Spawn Egg");
         builder.add(AMItems.HARPY_SPAWN_EGG.get(), "Harpy Spawn Egg");
         builder.add(AMItems.ENTOMBED_SPAWN_EGG.get(), "Entombed Spawn Egg");
+        builder.add(AMItems.ABANDONED_SPAWN_EGG.get(), "Abandoned Spawn Egg");
         builder.add(AMItems.MINDMOULD_SPAWN_EGG.get(), "Mindmould Spawn Egg");
 
         builder.add(AMItems.ARCHAIC_MASK_ALCHEMIST.get(), "Archaic Mask");

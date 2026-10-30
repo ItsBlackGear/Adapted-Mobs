@@ -57,5 +57,11 @@ public class BiomeIntegrations extends FeatureManager {
             }
         });
 
+        this.addIf(context -> context.hasEntity(() -> EntityType.SKELETON), (context, writer) -> {
+            if (AdaptedMobs.CONFIG.spawnAbandoned.get()) {
+                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.ABANDONED.get(), AdaptedMobs.CONFIG.abandonedSpawnWeight.get(), 1, 2));
+            }
+        });
+
     }
 }

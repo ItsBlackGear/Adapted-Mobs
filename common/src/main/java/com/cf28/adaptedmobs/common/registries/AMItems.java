@@ -44,6 +44,9 @@ public class AMItems {
 
     public static final Supplier<Item> ENTOMBED_SPAWN_EGG = REGISTRIES.register("entombed_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.ENTOMBED, 0x3c3d42, 0x6e737c, properties));
+    
+    public static final Supplier<Item> ABANDONED_SPAWN_EGG = REGISTRIES.register("abandoned_spawn_egg",
+            properties -> createSpawnEgg(AMEntityTypes.ABANDONED, 0x3c3d42, 0x6e737c, properties));
 
     public static final Supplier<Item> MINDMOULD_SPAWN_EGG = REGISTRIES.register("mindmould_spawn_egg",
         properties -> createSpawnEgg(AMEntityTypes.MINDMOULD, 0x92959B, 0x6F6078, properties));

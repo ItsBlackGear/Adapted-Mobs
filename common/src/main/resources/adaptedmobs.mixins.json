@@ -18,6 +18,7 @@
     "common.creeper_head_detection.LivingEntityMixin",
     "common.festive_tnt.ExplosionMixin",
     "common.potted_spores.FlowerPotBlockMixin",
+    "common.spawn_modifiers.MonsterMixin",
     "common.sun_protection.FleeSunGoalMixin",
     "common.sun_protection.RestrictSunGoalMixin",
     "common.sun_protection.SkeletonSunProtectionMixin",

@@ -6,10 +6,7 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.level.entity.AMPrimedSporeBarrel;
 import com.cf28.adaptedmobs.common.level.entity.PrimedFestiveTnt;
 import com.cf28.adaptedmobs.common.level.entity.ThrownMysteryEgg;
-import com.cf28.adaptedmobs.common.level.entity.mob.Entombed;
-import com.cf28.adaptedmobs.common.level.entity.mob.Harpy;
-import com.cf28.adaptedmobs.common.level.entity.mob.Mindmould;
-import com.cf28.adaptedmobs.common.level.entity.mob.Stranger;
+import com.cf28.adaptedmobs.common.level.entity.mob.*;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
@@ -131,4 +128,12 @@ public class AMEntityTypes {
                     .eyeHeight(1.62F)
                     .noSave()
                     .noSummon());
+    
+    public static final Supplier<EntityType<Abandoned>> ABANDONED = REGISTRIES.entity("abandoned",
+        EntityType.Builder.of(Abandoned::new, MobCategory.MONSTER)
+            .sized(0.6F, 1.95F)
+            .eyeHeight(1.74F)
+            .passengerAttachments(2.0125F)
+            .ridingOffset(-0.7F)
+            .clientTrackingRange(8));
 }

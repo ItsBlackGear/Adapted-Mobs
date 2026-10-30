@@ -47,7 +47,13 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Boolean> spawnEntombed;
     public final ConfigBuilder.ConfigValue<Integer> entombedSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> entombedMaximumSpawnY;
-
+    
+    public final ConfigBuilder.ConfigValue<Boolean> spawnAbandoned;
+    public final ConfigBuilder.ConfigValue<Integer> abandonedSpawnWeight;
+    public final ConfigBuilder.ConfigValue<Integer> abandonedMaximumSpawnY;
+    
+    public final ConfigBuilder.ConfigValue<Double> skeletonSpawnModifierChance;
+    
     public CommonConfig(ConfigBuilder builder) {
         builder.push("Mystery Eggs");
         this.enableMysteryEggs = builder.comment("Determines if creepers can drop Mystery Eggs on death")
@@ -126,6 +132,20 @@ public class CommonConfig {
                 .defineInRange("Entombed Spawn Weight", 80, 0, 100);
         this.entombedMaximumSpawnY = builder.comment("Highest Y level Entombed can naturally spawn at")
                 .defineInRange("Entombed Maximum Spawn Y", 0, -64, 320);
+        builder.pop();
+        
+        builder.push("Abandoned");
+        this.spawnAbandoned = builder.comment("Determines if Abandoned should spawn in deep caves")
+            .define("Spawn Abandoned", true);
+        this.abandonedSpawnWeight = builder.comment("Determines how often Abandoned spawn")
+            .defineInRange("Abandoned Spawn Weight", 40, 0, 100);
+        this.abandonedMaximumSpawnY = builder.comment("Highest Y level Abandoned can naturally spawn at")
+            .defineInRange("Abandoned Maximum Spawn Y", 0, -64, 320);
+        builder.pop();
+        
+        builder.push("Spawn Modifiers");
+        this.skeletonSpawnModifierChance = builder.comment("Chance of Skeletons cancelling their spawn")
+            .defineInRange("Skeleton Spawn Modifier Chance", 0.15, 0.0, 1.0);
         builder.pop();
     }
 }

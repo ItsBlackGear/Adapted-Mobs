@@ -72,6 +72,7 @@ public interface CreativeTabIntegrations {
                 AMItems.ROCKET_CREEPER_SPAWN_EGG.get(),
                 AMItems.HARPY_SPAWN_EGG.get(),
                 AMItems.ENTOMBED_SPAWN_EGG.get(),
+                AMItems.ABANDONED_SPAWN_EGG.get(),
                 AMItems.MINDMOULD_SPAWN_EGG.get()
         ));
 

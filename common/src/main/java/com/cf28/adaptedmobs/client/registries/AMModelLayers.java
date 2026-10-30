@@ -39,6 +39,8 @@ public class AMModelLayers {
 
     public static final ModelLayerLocation MINDMOULD = create("mindmould");
     public static final ModelLayerLocation MINDMOULD_SMALL = create("mindmould_small");
+    
+    public static final ModelLayerLocation ABANDONED = create("abandoned", "cloth");
 
     private static ModelLayerLocation create(String name) {
         return create(name, "main");
