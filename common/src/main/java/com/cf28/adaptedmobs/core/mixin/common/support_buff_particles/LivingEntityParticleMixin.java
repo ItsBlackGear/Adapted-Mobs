@@ -25,12 +25,6 @@ public abstract class LivingEntityParticleMixin {
         if (entity.hasEffect(AMMobEffects.SUPPORT_STRENGTH)) {
             active.add(AMParticles.SUPPORTED_RED.get());
         }
-        if (entity.hasEffect(AMMobEffects.SUPPORT_SLOWNESS)) {
-            active.add(AMParticles.SUPPORTED_BLUE.get());
-        }
-        if (entity.hasEffect(AMMobEffects.SUPPORT_WEAKNESS)) {
-            active.add(AMParticles.SUPPORTED_GREY.get());
-        }
 
         if (active.isEmpty()) {
             return null;

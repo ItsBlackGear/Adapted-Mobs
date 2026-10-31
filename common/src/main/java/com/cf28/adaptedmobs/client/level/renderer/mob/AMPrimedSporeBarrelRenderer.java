@@ -44,7 +44,6 @@ public class AMPrimedSporeBarrelRenderer extends EntityRenderer<AMPrimedSporeBar
         var blockState = switch (entity.getSporeType()) {
             case ROCKET -> AMBlocks.ROCKET_SPORE_BARREL.get().defaultBlockState();
             case FESTIVE -> AMBlocks.FESTIVE_SPORE_BARREL.get().defaultBlockState();
-            default -> AMBlocks.SUPPORT_SPORE_BARREL.get().defaultBlockState();
         };
         TntMinecartRenderer.renderWhiteSolidBlock(this.blockRenderer, blockState, matrices, buffer, packedLight, fuseTicks / 5 % 2 == 0);
 

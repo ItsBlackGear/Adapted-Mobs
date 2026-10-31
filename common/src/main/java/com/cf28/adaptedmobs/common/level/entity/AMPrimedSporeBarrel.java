@@ -45,7 +45,7 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_FUSE_ID, 80);
-        builder.define(DATA_TYPE_ID, AMSporeBarrelBlock.SporeType.SUPPORT.name());
+        builder.define(DATA_TYPE_ID, AMSporeBarrelBlock.SporeType.ROCKET.name());
     }
 
     @Override
@@ -91,14 +91,7 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
         this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), radius, Level.ExplosionInteraction.NONE);
 
         if (!this.level().isClientSide() && TolerableCreepersCompat.isLoaded()) {
-            if (type == AMSporeBarrelBlock.SporeType.SUPPORT) {
-                int cloudSize = this.random.nextInt(7) + 5;
-                Entity spores = TolerableCreepersIntegration.createSupportSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize, false);
-                if (this.owner != null) {
-                    TolerableCreepersIntegration.setSporesOwner(spores, this.owner);
-                }
-                this.level().addFreshEntity(spores);
-            } else if (type == AMSporeBarrelBlock.SporeType.ROCKET) {
+            if (type == AMSporeBarrelBlock.SporeType.ROCKET) {
                 int cloudSize = this.random.nextInt(7) + 6;
                 Entity spores = TolerableCreepersIntegration.createRocketSpores(this.level(), this.getX(), this.getY() + 0.01, this.getZ(), cloudSize, false);
                 if (this.owner != null) {
@@ -128,7 +121,7 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
             try {
                 this.setSporeType(AMSporeBarrelBlock.SporeType.valueOf(compoundTag.getString("SporeType")));
             } catch (IllegalArgumentException e) {
-                this.setSporeType(AMSporeBarrelBlock.SporeType.SUPPORT);
+                this.setSporeType(AMSporeBarrelBlock.SporeType.ROCKET);
             }
         }
     }
@@ -156,7 +149,7 @@ public class AMPrimedSporeBarrel extends Entity implements TraceableEntity {
         try {
             return AMSporeBarrelBlock.SporeType.valueOf(this.entityData.get(DATA_TYPE_ID));
         } catch (IllegalArgumentException e) {
-            return AMSporeBarrelBlock.SporeType.SUPPORT;
+            return AMSporeBarrelBlock.SporeType.ROCKET;
         }
     }
 

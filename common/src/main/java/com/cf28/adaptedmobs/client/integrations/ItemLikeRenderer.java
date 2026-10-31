@@ -1,9 +1,7 @@
 package com.cf28.adaptedmobs.client.integrations;
 
 import com.cf28.adaptedmobs.client.level.model.block_entity.FestiveCreeperSkullModel;
-import com.cf28.adaptedmobs.client.level.model.block_entity.PeeperCreeperSkullModel;
 import com.cf28.adaptedmobs.client.level.model.block_entity.RocketCreeperSkullModel;
-import com.cf28.adaptedmobs.client.level.model.block_entity.SupportCreeperSkullModel;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.level.block.SkullTypes;
@@ -25,19 +23,14 @@ public class ItemLikeRenderer {
         if (TolerableCreepersCompat.isLoaded()) {
             event.register(RenderType.cutout(),
                     AMBlocks.POTTED_FESTIVE_CREEPER_SPORES_PLANT.get(),
-                    AMBlocks.POTTED_ROCKET_CREEPER_SPORES_PLANT.get(),
-                    AMBlocks.POTTED_SUPPORT_CREEPER_SPORES_PLANT.get());
+                    AMBlocks.POTTED_ROCKET_CREEPER_SPORES_PLANT.get());
         }
     }
 
     public static void setupSkullRenderers(SkullRendererEvent event) {
         event.registerSkullModel(SkullTypes.FESTIVE_CREEPER, FestiveCreeperSkullModel::new, AMModelLayers.FESTIVE_CREEPER_SKULL);
         event.registerSkullTexture(SkullTypes.FESTIVE_CREEPER, AdaptedMobs.resource("textures/entity/creeper/festive_creeper.png"));
-        event.registerSkullModel(SkullTypes.SUPPORT_CREEPER, SupportCreeperSkullModel::new, AMModelLayers.SUPPORT_CREEPER_SKULL);
-        event.registerSkullTexture(SkullTypes.SUPPORT_CREEPER, AdaptedMobs.resource("textures/entity/creeper/support_creeper.png"));
         event.registerSkullModel(SkullTypes.ROCKET_CREEPER, RocketCreeperSkullModel::new, AMModelLayers.ROCKET_CREEPER_SKULL);
         event.registerSkullTexture(SkullTypes.ROCKET_CREEPER, AdaptedMobs.resource("textures/entity/creeper/rocket_creeper_head.png"));
-        event.registerSkullModel(SkullTypes.PEEPER_CREEPER, PeeperCreeperSkullModel::new, AMModelLayers.PEEPER_CREEPER_SKULL);
-        event.registerSkullTexture(SkullTypes.PEEPER_CREEPER, AdaptedMobs.resource("textures/entity/creeper/peeper_creeper.png"));
     }
 }

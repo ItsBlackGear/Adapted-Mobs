@@ -1,9 +1,7 @@
 package com.cf28.adaptedmobs.common.level.block;
 
-import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.level.entity.AMPrimedSporeBarrel;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
-import com.evandev.tolerable_creepers.core.registry.TCParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -43,16 +41,10 @@ public class AMSporeBarrelBlock extends Block {
         return this.type;
     }
 
-    private SimpleParticleType getStepParticle(RandomSource random) {
+    private SimpleParticleType getStepParticle() {
         return switch (this.type) {
             case FESTIVE -> AMParticles.FESTIVE_SPORES.get();
             case ROCKET -> AMParticles.ROCKET_SPORES.get();
-            case SUPPORT -> {
-                if (TolerableCreepersCompat.isLoaded() && random.nextFloat() > 0.2F) {
-                    yield TCParticles.CREEPER_SPORES.get();
-                }
-                yield random.nextBoolean() ? AMParticles.SUPPORTED_YELLOW.get() : AMParticles.SUPPORTED_GREY.get();
-            }
         };
     }
 
@@ -66,7 +58,7 @@ public class AMSporeBarrelBlock extends Block {
                 double xOffset = axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
                 double yOffset = axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
                 double zOffset = axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
-                level.addParticle(this.getStepParticle(random), (double) pos.getX() + xOffset, (double) pos.getY() + yOffset, (double) pos.getZ() + zOffset, 0.0D, 0.0D, 0.0D);
+                level.addParticle(this.getStepParticle(), (double) pos.getX() + xOffset, (double) pos.getY() + yOffset, (double) pos.getZ() + zOffset, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -144,6 +136,6 @@ public class AMSporeBarrelBlock extends Block {
     }
 
     public enum SporeType {
-        FESTIVE, ROCKET, SUPPORT
+        FESTIVE, ROCKET
     }
 }

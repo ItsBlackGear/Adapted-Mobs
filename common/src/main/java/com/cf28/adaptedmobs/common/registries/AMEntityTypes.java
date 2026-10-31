@@ -9,7 +9,6 @@ import com.cf28.adaptedmobs.common.level.entity.ThrownMysteryEgg;
 import com.cf28.adaptedmobs.common.level.entity.mob.*;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
-import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.world.entity.Entity;
@@ -30,10 +29,6 @@ public class AMEntityTypes {
             EntityType.Builder.of(FestiveCreeper::new, MobCategory.MONSTER)
                     .sized(0.6F, 1.5F)
                     .clientTrackingRange(8));
-    public static final Supplier<EntityType<SupportCreeper>> SUPPORT_CREEPER = REGISTRIES.entity("support_creeper",
-            EntityType.Builder.of(SupportCreeper::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.6F)
-                    .clientTrackingRange(8));
     public static final Supplier<EntityType<RocketCreeper>> ROCKET_CREEPER = REGISTRIES.entity("rocket_creeper",
             EntityType.Builder.of(RocketCreeper::new, MobCategory.MONSTER)
                     .sized(0.6F, 2.25F)
@@ -52,13 +47,6 @@ public class AMEntityTypes {
                     .clientTrackingRange(4)
                     .updateInterval(10));
 
-    public static final Supplier<EntityType<Creeper>> SUPPORT_CREEPIE = TolerableCreepersCompat.isLoaded()
-            ? REGISTRIES.entity("support_creepie",
-            EntityType.Builder.<Creeper>of((type, level) -> (Creeper) TolerableCreepersIntegration.createSupportCreepie(type, level), MobCategory.MONSTER)
-                    .sized(0.3F, 0.85F)
-                    .clientTrackingRange(8))
-            : null;
-
     public static final Supplier<EntityType<Creeper>> ROCKET_CREEPIE = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.entity("rocket_creepie",
             EntityType.Builder.<Creeper>of((type, level) -> (Creeper) TolerableCreepersIntegration.createRocketCreepie(type, level), MobCategory.MONSTER)
@@ -71,14 +59,6 @@ public class AMEntityTypes {
             EntityType.Builder.<Creeper>of((type, level) -> (Creeper) TolerableCreepersIntegration.createFestiveCreepie(type, level), MobCategory.MONSTER)
                     .sized(0.3F, 0.7F)
                     .clientTrackingRange(8))
-            : null;
-
-    public static final Supplier<EntityType<Entity>> SUPPORT_SPORES = TolerableCreepersCompat.isLoaded()
-            ? REGISTRIES.entity("support_spores",
-            EntityType.Builder.of(TolerableCreepersIntegration::createSupportSpores, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
-                    .clientTrackingRange(4)
-                    .updateInterval(10))
             : null;
 
     public static final Supplier<EntityType<Entity>> ROCKET_SPORES = TolerableCreepersCompat.isLoaded()
@@ -116,6 +96,12 @@ public class AMEntityTypes {
                     .eyeHeight(1.74F)
                     .passengerAttachments(2.0125F)
                     .ridingOffset(-0.7F)
+                    .clientTrackingRange(8));
+
+    public static final Supplier<EntityType<Sporal>> SPORAL = REGISTRIES.entity("sporal",
+            EntityType.Builder.of(Sporal::new, MobCategory.MONSTER)
+                    .sized(0.6F, 2.6F)
+                    .eyeHeight(2.35F)
                     .clientTrackingRange(8));
 
     public static final Supplier<EntityType<Mindmould>> MINDMOULD = REGISTRIES.entity("mindmould",

@@ -43,18 +43,6 @@ public final class AMConfigScreen {
                 .option(intOption(values, "festive_spore_count_night_random", 4, 0, 100, config.festiveSporeCountNightRandom))
                 .build();
 
-        ConfigCategory supportCreeper = ConfigCategory.createBuilder()
-                .name(Component.translatable("config.adaptedmobs.category.support_creeper"))
-                .option(boolOption(values, "spawn_support_creepers", true, config.spawnSupportCreepers))
-                .option(intOption(values, "support_creeper_spawn_weight", 20, 0, 100, config.supportCreeperSpawnWeight))
-                .option(intOption(values, "support_creeper_extra_spawn_weight", 50, 0, 100, config.supportCreeperExtraSpawnWeight))
-                .option(boolOption(values, "prevent_support_creeper_block_damage", true, config.preventSupportCreeperBlockDamage))
-                .option(intOption(values, "support_spore_count_day_base", 1, 0, 100, config.supportSporeCountDayBase))
-                .option(intOption(values, "support_spore_count_day_random", 2, 0, 100, config.supportSporeCountDayRandom))
-                .option(intOption(values, "support_spore_count_night_base", 3, 0, 100, config.supportSporeCountNightBase))
-                .option(intOption(values, "support_spore_count_night_random", 4, 0, 100, config.supportSporeCountNightRandom))
-                .build();
-
         ConfigCategory rocketCreeper = ConfigCategory.createBuilder()
                 .name(Component.translatable("config.adaptedmobs.category.rocket_creeper"))
                 .option(boolOption(values, "spawn_rocket_creepers", true, config.spawnRocketCreepers))
@@ -65,6 +53,12 @@ public final class AMConfigScreen {
                 .option(intOption(values, "rocket_spore_count_day_random", 2, 0, 100, config.rocketSporeCountDayRandom))
                 .option(intOption(values, "rocket_spore_count_night_base", 3, 0, 100, config.rocketSporeCountNightBase))
                 .option(intOption(values, "rocket_spore_count_night_random", 4, 0, 100, config.rocketSporeCountNightRandom))
+                .build();
+
+        ConfigCategory sporal = ConfigCategory.createBuilder()
+                .name(Component.translatable("config.adaptedmobs.category.sporal"))
+                .option(boolOption(values, "spawn_sporals", true, config.spawnSporals))
+                .option(intOption(values, "sporal_spawn_weight", 30, 0, 100, config.sporalSpawnWeight))
                 .build();
 
         ConfigCategory harpy = ConfigCategory.createBuilder()
@@ -84,8 +78,8 @@ public final class AMConfigScreen {
 
         return builder.category(general)
                 .category(festiveCreeper)
-                .category(supportCreeper)
                 .category(rocketCreeper)
+                .category(sporal)
                 .category(harpy)
                 .category(entombed)
                 .build()

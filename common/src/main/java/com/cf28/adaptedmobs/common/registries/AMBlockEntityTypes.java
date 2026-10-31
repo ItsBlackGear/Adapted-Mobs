@@ -19,8 +19,6 @@ public class AMBlockEntityTypes {
         BlockEntityTypeBuilder.create(
             AMSkullBlockEntity::new,
             AMBlocks.FESTIVE_CREEPER_HEAD.getFirst(), AMBlocks.FESTIVE_CREEPER_HEAD.getSecond(),
-            AMBlocks.SUPPORT_CREEPER_HEAD.getFirst(), AMBlocks.SUPPORT_CREEPER_HEAD.getSecond(),
-            AMBlocks.ROCKET_CREEPER_HEAD.getFirst(), AMBlocks.ROCKET_CREEPER_HEAD.getSecond(),
-            AMBlocks.PEEPER_CREEPER_HEAD.getFirst(), AMBlocks.PEEPER_CREEPER_HEAD.getSecond()
+            AMBlocks.ROCKET_CREEPER_HEAD.getFirst(), AMBlocks.ROCKET_CREEPER_HEAD.getSecond()
         ));
 }

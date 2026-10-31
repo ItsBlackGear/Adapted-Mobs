@@ -1,7 +1,6 @@
 package com.cf28.adaptedmobs.client.level.renderer.mob;
 
 import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.FestiveCreepieEntity;
-import com.cf28.adaptedmobs.common.integrations.tolerablecreepers.SupportCreepieEntity;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -59,9 +58,6 @@ public class AMCreepieRenderer<T extends Creepie, M extends EntityModel<T>> exte
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull T entity) {
-        if (entity instanceof SupportCreepieEntity supportCreepie) {
-            return supportCreepie.getVariant().getTexture();
-        }
         return this.texture;
     }
 }

@@ -38,9 +38,6 @@ public class FlowerPotBlockMixin {
         if (stack.is(AMItems.ROCKET_CREEPER_SPORES.get())) {
             return AMBlocks.POTTED_ROCKET_CREEPER_SPORES_PLANT;
         }
-        if (stack.is(AMItems.SUPPORT_CREEPER_SPORES.get())) {
-            return AMBlocks.POTTED_SUPPORT_CREEPER_SPORES_PLANT;
-        }
         return null;
     }
 

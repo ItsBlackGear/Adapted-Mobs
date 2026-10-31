@@ -21,8 +21,10 @@ public class BiomeTagGenerator extends FabricTagProvider<Biome> {
         this.getOrCreateTagBuilder(AMBiomeTags.EXTRA_FESTIVE_CREEPER_SPAWNS)
                 .forceAddTag(BiomeTags.IS_JUNGLE);
 
-        this.getOrCreateTagBuilder(AMBiomeTags.EXTRA_SUPPORT_CREEPER_SPAWNS)
+        this.getOrCreateTagBuilder(AMBiomeTags.SPORAL_SPAWNS)
                 .add(Biomes.LUSH_CAVES)
+                .add(Biomes.SWAMP)
+                .add(Biomes.MANGROVE_SWAMP)
                 .forceAddTag(BiomeTags.IS_JUNGLE);
 
         this.getOrCreateTagBuilder(AMBiomeTags.EXTRA_ROCKET_CREEPER_SPAWNS)

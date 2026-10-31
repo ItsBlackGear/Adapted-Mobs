@@ -21,14 +21,4 @@ public class AMMobEffects {
             new MobEffect(MobEffectCategory.BENEFICIAL, 0xA64022) {
             }
                     .addAttributeModifier(Attributes.ATTACK_DAMAGE, AdaptedMobs.resource("support_strength"), 3.0, AttributeModifier.Operation.ADD_VALUE));
-
-    public static final Holder<MobEffect> SUPPORT_SLOWNESS = REGISTRIES.holder("support_slowness", () ->
-            new MobEffect(MobEffectCategory.HARMFUL, 0x518382) {
-            }
-                    .addAttributeModifier(Attributes.MOVEMENT_SPEED, AdaptedMobs.resource("support_slowness"), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-
-    public static final Holder<MobEffect> SUPPORT_WEAKNESS = REGISTRIES.holder("support_weakness", () ->
-            new MobEffect(MobEffectCategory.HARMFUL, 0x5A696D) {
-            }
-                    .addAttributeModifier(Attributes.ATTACK_DAMAGE, AdaptedMobs.resource("support_weakness"), -4.0, AttributeModifier.Operation.ADD_VALUE));
 }

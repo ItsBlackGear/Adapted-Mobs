@@ -18,20 +18,20 @@ public class LangGenerator extends FabricLanguageProvider {
     @Override
     public void generateTranslations(HolderLookup.Provider lookup, TranslationBuilder builder) {
         builder.add(AMEntityTypes.FESTIVE_CREEPER.get(), "Reaper");
-        builder.add(AMEntityTypes.SUPPORT_CREEPER.get(), "Seeper");
         builder.add(AMEntityTypes.ROCKET_CREEPER.get(), "Leaper");
         builder.add(AMEntityTypes.CREEPER.get(), "Creeper");
         builder.add(AMEntityTypes.HARPY.get(), "Harpy");
         builder.add(AMEntityTypes.ENTOMBED.get(), "Entombed");
         builder.add(AMEntityTypes.MINDMOULD.get(), "Mindmould");
+        builder.add(AMEntityTypes.SPORAL.get(), "Sporal");
 
         builder.add(AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(), "Reaper Spawn Egg");
-        builder.add(AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(), "Seeper Spawn Egg");
         builder.add(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), "Leaper Spawn Egg");
         builder.add(AMItems.HARPY_SPAWN_EGG.get(), "Harpy Spawn Egg");
         builder.add(AMItems.ENTOMBED_SPAWN_EGG.get(), "Entombed Spawn Egg");
         builder.add(AMItems.ABANDONED_SPAWN_EGG.get(), "Abandoned Spawn Egg");
         builder.add(AMItems.MINDMOULD_SPAWN_EGG.get(), "Mindmould Spawn Egg");
+        builder.add(AMItems.SPORAL_SPAWN_EGG.get(), "Sporal Spawn Egg");
 
         builder.add(AMItems.ARCHAIC_MASK_ALCHEMIST.get(), "Archaic Mask");
         builder.add(AMItems.ARCHAIC_MASK_ARCHITECT.get(), "Archaic Mask");
@@ -60,40 +60,30 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMBlocks.HARPY_EGG.get(), "Harpy Egg");
 
         builder.add(AMItems.RED_MYSTERY_EGG.get(), "Red Mystery Egg");
-        builder.add(AMItems.YELLOW_MYSTERY_EGG.get(), "Yellow Mystery Egg");
         builder.add(AMItems.BLUE_MYSTERY_EGG.get(), "Blue Mystery Egg");
         builder.add(AMItems.GREEN_MYSTERY_EGG.get(), "Green Mystery Egg");
         builder.add(AMItems.QUICKSILVER.get(), "Quicksilver");
 
         builder.add(AMBlocks.FESTIVE_CREEPER_HEAD.getFirst().get(), "Reaper Head");
-        builder.add(AMBlocks.SUPPORT_CREEPER_HEAD.getFirst().get(), "Seeper Head");
         builder.add(AMBlocks.ROCKET_CREEPER_HEAD.getFirst().get(), "Leaper Head");
-        builder.add(AMBlocks.PEEPER_CREEPER_HEAD.getFirst().get(), "Peeper Head");
 
-        builder.add(AMItems.SUPPORT_CREEPER_SPORES.get(), "Seeper Spores");
         builder.add(AMItems.ROCKET_CREEPER_SPORES.get(), "Leaper Spores");
         builder.add(AMItems.FESTIVE_CREEPER_SPORES.get(), "Reaper Spores");
 
-        builder.add(AMBlocks.SUPPORT_SPORE_BARREL.get(), "Seeper Spore Barrel");
         builder.add(AMBlocks.ROCKET_SPORE_BARREL.get(), "Leaper Spore Barrel");
         builder.add(AMBlocks.FESTIVE_SPORE_BARREL.get(), "Reaper Spore Barrel");
 
-        builder.add(AMBlocks.POTTED_SUPPORT_CREEPER_SPORES_PLANT.get(), "Potted Seeper Spore Flower");
         builder.add(AMBlocks.POTTED_ROCKET_CREEPER_SPORES_PLANT.get(), "Potted Leaper Spore Flower");
         builder.add(AMBlocks.POTTED_FESTIVE_CREEPER_SPORES_PLANT.get(), "Potted Reaper Spore Flower");
 
-        builder.add(AMEntityTypes.SUPPORT_CREEPIE.get(), "Seepie");
         builder.add(AMEntityTypes.ROCKET_CREEPIE.get(), "Leapie");
         builder.add(AMEntityTypes.FESTIVE_CREEPIE.get(), "Reapie");
 
-        builder.add(AMItems.SUPPORT_CREEPIE_SPAWN_EGG.get(), "Seepie Spawn Egg");
         builder.add(AMItems.ROCKET_CREEPIE_SPAWN_EGG.get(), "Leapie Spawn Egg");
         builder.add(AMItems.FESTIVE_CREEPIE_SPAWN_EGG.get(), "Reapie Spawn Egg");
 
         builder.add(AMMobEffects.SUPPORT_SPEED.value(), "Speed");
         builder.add(AMMobEffects.SUPPORT_STRENGTH.value(), "Strength");
-        builder.add(AMMobEffects.SUPPORT_SLOWNESS.value(), "Slowness");
-        builder.add(AMMobEffects.SUPPORT_WEAKNESS.value(), "Weakness");
 
         builder.add("block.tolerable_creepers.spore_barrel", "Creeper Spore Barrel");
         builder.add("entity.tolerable_creepers.spore_barrel", "Creeper Spore Barrel");
@@ -101,7 +91,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.title", "Adapted Mobs");
         builder.add("config.adaptedmobs.category.general", "General");
         builder.add("config.adaptedmobs.category.festive_creeper", "Reaper");
-        builder.add("config.adaptedmobs.category.support_creeper", "Seeper");
+        builder.add("config.adaptedmobs.category.sporal", "Sporal");
         builder.add("config.adaptedmobs.category.rocket_creeper", "Leaper");
         builder.add("config.adaptedmobs.category.harpy", "Harpy");
         builder.add("config.adaptedmobs.category.entombed", "Entombed");
@@ -118,14 +108,8 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add("config.adaptedmobs.option.festive_spore_count_night_base", "Reaper Spore Count Night Base");
         builder.add("config.adaptedmobs.option.festive_spore_count_night_random", "Reaper Spore Count Night Random");
 
-        builder.add("config.adaptedmobs.option.spawn_support_creepers", "Spawn Seepers");
-        builder.add("config.adaptedmobs.option.support_creeper_spawn_weight", "Seeper Spawn Weight");
-        builder.add("config.adaptedmobs.option.support_creeper_extra_spawn_weight", "Seeper Extra Spawn Weight");
-        builder.add("config.adaptedmobs.option.prevent_support_creeper_block_damage", "Prevent Seeper Block Damage");
-        builder.add("config.adaptedmobs.option.support_spore_count_day_base", "Seeper Spore Count Day Base");
-        builder.add("config.adaptedmobs.option.support_spore_count_day_random", "Seeper Spore Count Day Random");
-        builder.add("config.adaptedmobs.option.support_spore_count_night_base", "Seeper Spore Count Night Base");
-        builder.add("config.adaptedmobs.option.support_spore_count_night_random", "Seeper Spore Count Night Random");
+        builder.add("config.adaptedmobs.option.spawn_sporals", "Spawn Sporals");
+        builder.add("config.adaptedmobs.option.sporal_spawn_weight", "Sporal Spawn Weight");
 
         builder.add("config.adaptedmobs.option.spawn_rocket_creepers", "Spawn Leapers");
         builder.add("config.adaptedmobs.option.rocket_creeper_spawn_weight", "Leaper Spawn Weight");

@@ -16,9 +16,7 @@ public class BlockLootGenerator extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         this.dropSelf(AMBlocks.FESTIVE_CREEPER_HEAD.getFirst().get());
-        this.dropSelf(AMBlocks.SUPPORT_CREEPER_HEAD.getFirst().get());
         this.dropSelf(AMBlocks.ROCKET_CREEPER_HEAD.getFirst().get());
-        this.dropSelf(AMBlocks.PEEPER_CREEPER_HEAD.getFirst().get());
         
         this.add(AMBlocks.HARPY_EGG.get(), this.createSilkTouchDispatchTable(AMBlocks.HARPY_EGG.get(), this.applyExplosionDecay(AMBlocks.HARPY_EGG.get(), LootItem.lootTableItem(AMBlocks.HARPY_EGG.get()))));
     }

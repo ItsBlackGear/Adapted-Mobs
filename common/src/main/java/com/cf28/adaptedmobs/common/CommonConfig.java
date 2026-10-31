@@ -12,12 +12,6 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> festiveCreeperExtraSpawnWeight;
     public final ConfigBuilder.ConfigValue<Boolean> preventFestiveCreeperBlockDamage;
 
-    public final ConfigBuilder.ConfigValue<Boolean> spawnSupportCreepers;
-    public final ConfigBuilder.ConfigValue<Integer> supportCreeperSpawnWeight;
-    public final ConfigBuilder.ConfigValue<Integer> supportCreeperExtraSpawnWeight;
-    public final ConfigBuilder.ConfigValue<Boolean> preventSupportCreeperBlockDamage;
-    public final ConfigBuilder.ConfigValue<Boolean> debuffSupportCreeperExplosionDamage;
-
     public final ConfigBuilder.ConfigValue<Boolean> spawnRocketCreepers;
     public final ConfigBuilder.ConfigValue<Integer> rocketCreeperSpawnWeight;
     public final ConfigBuilder.ConfigValue<Integer> rocketCreeperExtraSpawnWeight;
@@ -34,10 +28,8 @@ public class CommonConfig {
     public final ConfigBuilder.ConfigValue<Integer> rocketSporeCountNightBase;
     public final ConfigBuilder.ConfigValue<Integer> rocketSporeCountNightRandom;
 
-    public final ConfigBuilder.ConfigValue<Integer> supportSporeCountDayBase;
-    public final ConfigBuilder.ConfigValue<Integer> supportSporeCountDayRandom;
-    public final ConfigBuilder.ConfigValue<Integer> supportSporeCountNightBase;
-    public final ConfigBuilder.ConfigValue<Integer> supportSporeCountNightRandom;
+    public final ConfigBuilder.ConfigValue<Boolean> spawnSporals;
+    public final ConfigBuilder.ConfigValue<Integer> sporalSpawnWeight;
 
     public final ConfigBuilder.ConfigValue<Boolean> spawnHarpies;
     public final ConfigBuilder.ConfigValue<Integer> harpySpawnWeight;
@@ -73,16 +65,6 @@ public class CommonConfig {
                 .define("Prevent Festive Creeper Block Damage", true);
         builder.pop();
         
-        builder.push("Support Creeper");
-        this.spawnSupportCreepers = builder.comment("Determines if Support Creepers should spawn").define("Spawn Support Creepers", true);
-        this.supportCreeperSpawnWeight = builder.comment("Determines how often do Support Creepers spawn").defineInRange("Support Creeper Spawn Weight", 20, 0, 100);
-        this.supportCreeperExtraSpawnWeight = builder.comment("Determines how often do Support Creepers spawn in extra biomes").defineInRange("Support Creeper Extra Spawn Weight", 50, 0, 100);
-        this.preventSupportCreeperBlockDamage = builder.comment("Requires Tolerable Creepers. Prevents Support Creeper explosions from damaging blocks and spawns a Support Creeper spore cloud instead")
-                .define("Prevent Support Creeper Block Damage", true);
-        this.debuffSupportCreeperExplosionDamage = builder.comment("Requires Tolerable Creepers. Halves the damage Support Creeper explosions deal to entities")
-                .define("Debuff Support Creeper Explosion Damage", true);
-        builder.pop();
-        
         builder.push("Rocket Creeper");
         this.spawnRocketCreepers = builder.comment("Determines if Rocket Creepers should spawn").define("Spawn Rocket Creepers", true);
         this.rocketCreeperSpawnWeight = builder.comment("Determines how often do Rocket Creepers spawn").defineInRange("Rocket Creeper Spawn Weight", 25, 0, 100);
@@ -107,11 +89,9 @@ public class CommonConfig {
         this.rocketSporeCountNightRandom = builder.comment("Upper bound (exclusive) of the random bonus added to the night base count").defineInRange("Rocket Spore Count Night Random", 4, 0, 100);
         builder.pop();
 
-        builder.push("Support Creeper Spores");
-        this.supportSporeCountDayBase = builder.comment("Base number of Support Creepies a Support Creeper's spore cloud tries to spawn during the day").defineInRange("Support Spore Count Day Base", 1, 0, 100);
-        this.supportSporeCountDayRandom = builder.comment("Upper bound (exclusive) of the random bonus added to the day base count").defineInRange("Support Spore Count Day Random", 2, 0, 100);
-        this.supportSporeCountNightBase = builder.comment("Base number of Support Creepies a Support Creeper's spore cloud tries to spawn at night").defineInRange("Support Spore Count Night Base", 3, 0, 100);
-        this.supportSporeCountNightRandom = builder.comment("Upper bound (exclusive) of the random bonus added to the night base count").defineInRange("Support Spore Count Night Random", 4, 0, 100);
+        builder.push("Sporal");
+        this.spawnSporals = builder.comment("Determines if Sporals should spawn in lush caves, jungles and swamps").define("Spawn Sporals", true);
+        this.sporalSpawnWeight = builder.comment("Determines how often Sporals spawn").defineInRange("Sporal Spawn Weight", 30, 0, 100);
         builder.pop();
 
         builder.push("Harpy");

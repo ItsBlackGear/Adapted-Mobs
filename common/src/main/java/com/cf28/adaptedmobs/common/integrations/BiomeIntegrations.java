@@ -30,13 +30,6 @@ public class BiomeIntegrations extends FeatureManager {
                 writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.FESTIVE_CREEPER.get(), weight, 1, 1));
             }
             
-            if (AdaptedMobs.CONFIG.spawnSupportCreepers.get()) {
-                int weight = context.is(AMBiomeTags.EXTRA_SUPPORT_CREEPER_SPAWNS)
-                    ? AdaptedMobs.CONFIG.supportCreeperExtraSpawnWeight.get()
-                    : AdaptedMobs.CONFIG.supportCreeperSpawnWeight.get();
-                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.SUPPORT_CREEPER.get(), weight, 1, 2));
-            }
-            
             if (AdaptedMobs.CONFIG.spawnRocketCreepers.get()) {
                 int weight = context.is(AMBiomeTags.EXTRA_ROCKET_CREEPER_SPAWNS)
                     ? AdaptedMobs.CONFIG.rocketCreeperExtraSpawnWeight.get()
@@ -45,6 +38,12 @@ public class BiomeIntegrations extends FeatureManager {
             }
         });
         
+        this.addIf(context -> context.is(AMBiomeTags.SPORAL_SPAWNS), (context, writer) -> {
+            if (AdaptedMobs.CONFIG.spawnSporals.get()) {
+                writer.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(AMEntityTypes.SPORAL.get(), AdaptedMobs.CONFIG.sporalSpawnWeight.get(), 1, 2));
+            }
+        });
+
         this.addIf(context -> context.is(BiomeTags.IS_MOUNTAIN), (context, writer) -> {
             if (AdaptedMobs.CONFIG.spawnHarpies.get()) {
                 writer.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(AMEntityTypes.HARPY.get(), AdaptedMobs.CONFIG.harpySpawnWeight.get(), 1, 2));

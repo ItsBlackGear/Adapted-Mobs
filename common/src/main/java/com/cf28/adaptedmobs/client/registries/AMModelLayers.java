@@ -9,15 +9,6 @@ public class AMModelLayers {
     public static final ModelLayerLocation FESTIVE_CREEPER_ARMOR = create("festive_creeper", "armor");
     public static final ModelLayerLocation FESTIVE_CREEPER_CLOTH = create("festive_creeper", "cloth");
 
-    public static final ModelLayerLocation SUPPORT_CREEPER = create("support_creeper");
-    public static final ModelLayerLocation SUPPORT_CREEPER_SKULL = create("support_creeper", "skull");
-    public static final ModelLayerLocation SUPPORT_CREEPER_ARMOR = create("support_creeper", "armor");
-    public static final ModelLayerLocation SUPPORT_CREEPER_CLOTH = create("support_creeper", "cloth");
-
-    public static final ModelLayerLocation PEEPER_CREEPER = create("peeper_creeper");
-    public static final ModelLayerLocation PEEPER_CREEPER_SKULL = create("peeper_creeper", "skull");
-    public static final ModelLayerLocation PEEPER_CREEPER_ARMOR = create("peeper_creeper", "armor");
-
     public static final ModelLayerLocation ROCKET_CREEPER = create("rocket_creeper");
     public static final ModelLayerLocation ROCKET_CREEPER_SKULL = create("rocket_creeper", "skull");
     public static final ModelLayerLocation ROCKET_CREEPER_ARMOR = create("rocket_creeper", "armor");
@@ -27,7 +18,6 @@ public class AMModelLayers {
     public static final ModelLayerLocation CREEPER_ARMOR = create("creeper", "armor");
     public static final ModelLayerLocation CREEPER_CLOTH = create("creeper", "cloth");
 
-    public static final ModelLayerLocation SUPPORT_CREEPIE = create("support_creepie");
     public static final ModelLayerLocation ROCKET_CREEPIE = create("rocket_creepie");
     public static final ModelLayerLocation FESTIVE_CREEPIE = create("festive_creepie");
 
@@ -41,6 +31,8 @@ public class AMModelLayers {
     public static final ModelLayerLocation MINDMOULD_SMALL = create("mindmould_small");
     
     public static final ModelLayerLocation ABANDONED = create("abandoned", "cloth");
+
+    public static final ModelLayerLocation SPORAL = create("sporal");
 
     private static ModelLayerLocation create(String name) {
         return create(name, "main");

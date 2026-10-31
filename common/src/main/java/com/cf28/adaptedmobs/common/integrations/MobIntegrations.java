@@ -3,7 +3,6 @@ package com.cf28.adaptedmobs.common.integrations;
 import com.cf28.adaptedmobs.common.level.entity.mob.*;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.RocketCreeper;
-import com.cf28.adaptedmobs.common.level.entity.mob.creeper.SupportCreeper;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.TamableCreeper;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.evandev.tolerable_creepers.common.entity.Creepie;
@@ -17,7 +16,6 @@ import static com.blackgear.platform.common.integration.MobIntegration.Event;
 public class MobIntegrations {
     public static void setupMobAttributes(Event event) {
         event.registerAttributes(AMEntityTypes.FESTIVE_CREEPER, FestiveCreeper::createAttributes);
-        event.registerAttributes(AMEntityTypes.SUPPORT_CREEPER, SupportCreeper::createAttributes);
         event.registerAttributes(AMEntityTypes.ROCKET_CREEPER, RocketCreeper::createAttributes);
         event.registerAttributes(AMEntityTypes.CREEPER, TamableCreeper::createAttributes);
         event.registerAttributes(AMEntityTypes.HARPY, Harpy::createAttributes);
@@ -25,9 +23,9 @@ public class MobIntegrations {
         event.registerAttributes(AMEntityTypes.MINDMOULD, Mindmould::createAttributes);
         event.registerAttributes(AMEntityTypes.STRANGER, Stranger::createAttributes);
         event.registerAttributes(AMEntityTypes.ABANDONED, Skeleton::createAttributes);
+        event.registerAttributes(AMEntityTypes.SPORAL, Sporal::createAttributes);
 
         if (TolerableCreepersCompat.isLoaded()) {
-            event.registerAttributes(AMEntityTypes.SUPPORT_CREEPIE, Creepie::createAttributes);
             event.registerAttributes(AMEntityTypes.ROCKET_CREEPIE, Creepie::createAttributes);
             event.registerAttributes(AMEntityTypes.FESTIVE_CREEPIE, Creepie::createAttributes);
         }
@@ -35,10 +33,10 @@ public class MobIntegrations {
 
     public static void setupSpawnPlacements(Event event) {
         event.registerPlacement(AMEntityTypes.FESTIVE_CREEPER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
-        event.registerPlacement(AMEntityTypes.SUPPORT_CREEPER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
         event.registerPlacement(AMEntityTypes.ROCKET_CREEPER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
         event.registerPlacement(AMEntityTypes.HARPY, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Harpy::checkHarpySpawnRules);
         event.registerPlacement(AMEntityTypes.ENTOMBED, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Entombed::checkEntombedSpawnRules);
         event.registerPlacement(AMEntityTypes.ABANDONED, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Abandoned::checkAbandonedSpawnRules);
+        event.registerPlacement(AMEntityTypes.SPORAL, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
     }
 }

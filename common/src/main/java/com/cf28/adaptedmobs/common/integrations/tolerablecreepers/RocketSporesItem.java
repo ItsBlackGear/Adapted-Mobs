@@ -1,7 +1,6 @@
 package com.cf28.adaptedmobs.common.integrations.tolerablecreepers;
 
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
-import com.cf28.adaptedmobs.common.level.block.AMSporeBarrelBlock;
 import com.evandev.tolerable_creepers.common.item.CreeperSporesItem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -25,7 +24,7 @@ public class RocketSporesItem extends CreeperSporesItem {
                 SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL,
                 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!level.isClientSide()) {
-            level.addFreshEntity(TolerableCreepersIntegration.createSporeItemProjectile(AMSporeBarrelBlock.SporeType.ROCKET, player, level));
+            level.addFreshEntity(TolerableCreepersIntegration.createRocketSporeItemProjectile(player, level));
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         if (!player.isCreative()) stack.shrink(1);

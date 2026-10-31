@@ -20,9 +20,7 @@ public abstract class LivingEntityMixin {
     private static boolean am$isCreeperHead(ItemStack itemstack) {
         return itemstack.is(Items.CREEPER_HEAD)
                 || itemstack.is(AMBlocks.FESTIVE_CREEPER_HEAD.getFirst().get().asItem())
-                || itemstack.is(AMBlocks.SUPPORT_CREEPER_HEAD.getFirst().get().asItem())
-                || itemstack.is(AMBlocks.ROCKET_CREEPER_HEAD.getFirst().get().asItem())
-                || itemstack.is(AMBlocks.PEEPER_CREEPER_HEAD.getFirst().get().asItem());
+                || itemstack.is(AMBlocks.ROCKET_CREEPER_HEAD.getFirst().get().asItem());
     }
 
     @Inject(method = "getVisibilityPercent", at = @At("RETURN"), cancellable = true)

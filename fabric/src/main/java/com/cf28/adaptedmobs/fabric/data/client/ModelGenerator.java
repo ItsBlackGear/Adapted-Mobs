@@ -19,21 +19,19 @@ public class ModelGenerator extends FabricModelProvider {
     @Override
     public void generateBlockStateModels(BlockModelGenerators gen) {
         gen.delegateItemModel(AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
-        gen.delegateItemModel(AMItems.SUPPORT_CREEPER_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.FESTIVE_CREEPIE_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
-        gen.delegateItemModel(AMItems.SUPPORT_CREEPIE_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.ROCKET_CREEPIE_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.HARPY_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.ENTOMBED_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.ABANDONED_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
         gen.delegateItemModel(AMItems.MINDMOULD_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
+        gen.delegateItemModel(AMItems.SPORAL_SPAWN_EGG.get(), TEMPLATE_SPAWN_EGG);
     }
     
     @Override
     public void generateItemModels(ItemModelGenerators gen) {
         gen.generateFlatItem(AMItems.RED_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
-        gen.generateFlatItem(AMItems.YELLOW_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.BLUE_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.GREEN_MYSTERY_EGG.get(), ModelTemplates.FLAT_ITEM);
         gen.generateFlatItem(AMItems.QUICKSILVER.get(), ModelTemplates.FLAT_ITEM);

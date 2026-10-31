@@ -25,17 +25,12 @@ public class AMItems {
     public static final Supplier<Item> RED_MYSTERY_EGG = REGISTRIES.register("red_mystery_egg",
             properties -> new MysteryEggItem(AMEntityTypes.FESTIVE_CREEPER, properties),
             new Properties().stacksTo(16));
-    public static final Supplier<Item> YELLOW_MYSTERY_EGG = REGISTRIES.register("yellow_mystery_egg",
-            properties -> new MysteryEggItem(AMEntityTypes.SUPPORT_CREEPER, properties),
-            new Properties().stacksTo(16));
     public static final Supplier<Item> BLUE_MYSTERY_EGG = REGISTRIES.register("blue_mystery_egg",
             properties -> new MysteryEggItem(AMEntityTypes.ROCKET_CREEPER, properties),
             new Properties().stacksTo(16));
 
     public static final Supplier<Item> FESTIVE_CREEPER_SPAWN_EGG = REGISTRIES.register("festive_creeper_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPER, 10571065, 0, properties));
-    public static final Supplier<Item> SUPPORT_CREEPER_SPAWN_EGG = REGISTRIES.register("support_creeper_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPER, 7110705, 0, properties));
     public static final Supplier<Item> ROCKET_CREEPER_SPAWN_EGG = REGISTRIES.register("rocket_creeper_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPER, 5999444, 0, properties));
 
@@ -47,6 +42,9 @@ public class AMItems {
     
     public static final Supplier<Item> ABANDONED_SPAWN_EGG = REGISTRIES.register("abandoned_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.ABANDONED, 0x3c3d42, 0x6e737c, properties));
+
+    public static final Supplier<Item> SPORAL_SPAWN_EGG = REGISTRIES.register("sporal_spawn_egg",
+            properties -> createSpawnEgg(AMEntityTypes.SPORAL, 0x596235, 0xB95878, properties));
 
     public static final Supplier<Item> MINDMOULD_SPAWN_EGG = REGISTRIES.register("mindmould_spawn_egg",
         properties -> createSpawnEgg(AMEntityTypes.MINDMOULD, 0x92959B, 0x6F6078, properties));
@@ -83,10 +81,6 @@ public class AMItems {
             ? REGISTRIES.register("festive_creepie_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.FESTIVE_CREEPIE, 10571065, 8754737, properties))
             : null;
-    public static final Supplier<Item> SUPPORT_CREEPIE_SPAWN_EGG = TolerableCreepersCompat.isLoaded()
-            ? REGISTRIES.register("support_creepie_spawn_egg",
-            properties -> createSpawnEgg(AMEntityTypes.SUPPORT_CREEPIE, 7110705, 10895394, properties))
-            : null;
     public static final Supplier<Item> ROCKET_CREEPIE_SPAWN_EGG = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("rocket_creepie_spawn_egg",
             properties -> createSpawnEgg(AMEntityTypes.ROCKET_CREEPIE, 5999444, 10800234, properties))
@@ -98,10 +92,6 @@ public class AMItems {
 
     public static final Supplier<Item> ROCKET_CREEPER_SPORES = TolerableCreepersCompat.isLoaded()
             ? REGISTRIES.register("rocket_creeper_spores", TolerableCreepersIntegration::createRocketSporesItem, new Properties())
-            : null;
-
-    public static final Supplier<Item> SUPPORT_CREEPER_SPORES = TolerableCreepersCompat.isLoaded()
-            ? REGISTRIES.register("support_creeper_spores", TolerableCreepersIntegration::createSupportSporesItem, new Properties())
             : null;
 
     public static Item getMaskByVariant(MaskVariant variant) {

@@ -29,9 +29,7 @@ public class ClientSetup {
         event.register(AMParticles.FESTIVE_SPORES, AMSporeParticle.Provider::new);
         event.register(AMParticles.ROCKET_SPORES, AMSporeParticle.Provider::new);
         event.register(AMParticles.SUPPORTED_RED, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
-        event.register(AMParticles.SUPPORTED_BLUE, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
         event.register(AMParticles.SUPPORTED_YELLOW, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
-        event.register(AMParticles.SUPPORTED_GREY, sprites -> new AMFlowerParticle.Provider(sprites, 0.65F));
         event.register(AMParticles.CREEPER_HEAL, sprites -> new AMFlowerParticle.Provider(sprites, 0.5F, false));
         event.register(AMParticles.BRAIN_GOO, AMMindmouldParticle.Provider::new);
     }

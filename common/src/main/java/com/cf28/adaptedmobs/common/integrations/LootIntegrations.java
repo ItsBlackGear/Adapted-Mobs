@@ -1,14 +1,17 @@
 package com.cf28.adaptedmobs.common.integrations;
 
 import com.blackgear.platform.common.data.LootModifier;
+import com.blackgear.platform.core.Environment;
 import com.blackgear.platform.core.events.ServerLifecycleEvents;
 import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMItems;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -17,16 +20,22 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.function.Supplier;
 
 public final class LootIntegrations implements LootModifier.LootTableModifier {
     public static final LootIntegrations INSTANCE = new LootIntegrations();
+
+    private static final String NO_MANS_LAND_ID = "nomansland";
+    private static final ResourceLocation AWKWARD_RESIDUE = ResourceLocation.fromNamespaceAndPath(NO_MANS_LAND_ID, "awkward_residue");
 
     private static NbtPredicate isTame(boolean tamed) {
         CompoundTag tag = new CompoundTag();
@@ -42,13 +51,27 @@ public final class LootIntegrations implements LootModifier.LootTableModifier {
             this.addMysteryEggPool(context, AMItems.GREEN_MYSTERY_EGG);
         } else if (loot.equals(AMEntityTypes.FESTIVE_CREEPER.get().getDefaultLootTable())) {
             this.addMysteryEggPool(context, AMItems.RED_MYSTERY_EGG);
-        } else if (loot.equals(AMEntityTypes.SUPPORT_CREEPER.get().getDefaultLootTable())) {
-            this.addMysteryEggPool(context, AMItems.YELLOW_MYSTERY_EGG);
         } else if (loot.equals(AMEntityTypes.ROCKET_CREEPER.get().getDefaultLootTable())) {
             this.addMysteryEggPool(context, AMItems.BLUE_MYSTERY_EGG);
+        } else if (loot.equals(AMEntityTypes.SPORAL.get().getDefaultLootTable())) {
+            this.addSporalResiduePool(context);
         } else if (loot.equals(BuiltInLootTables.ANCIENT_CITY)) {
             this.addAncientCityMaskPool(context);
         }
+    }
+
+    private void addSporalResiduePool(LootModifier.LootTableContext context) {
+        if (!Environment.hasModLoaded(NO_MANS_LAND_ID)) {
+            return;
+        }
+
+        BuiltInRegistries.ITEM.getOptional(AWKWARD_RESIDUE).ifPresent(residue -> context.addPool(
+                LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(residue)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                .apply(EnchantedCountIncreaseFunction.lootingMultiplier(context.registries(), UniformGenerator.between(0.0F, 1.0F))))
+        ));
     }
 
     private void addAncientCityMaskPool(LootModifier.LootTableContext context) {

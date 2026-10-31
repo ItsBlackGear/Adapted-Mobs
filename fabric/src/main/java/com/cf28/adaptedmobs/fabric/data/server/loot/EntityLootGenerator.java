@@ -95,25 +95,8 @@ public class EntityLootGenerator extends SimpleFabricLootTableProvider {
                         )
         );
 
-        this.add(
-                AMEntityTypes.SUPPORT_CREEPER,
-                output,
-                LootTable.lootTable()
-                        .withPool(
-                                LootPool.lootPool()
-                                        .setRolls(ConstantValue.exactly(1.0F))
-                                        .add(
-                                                LootItem.lootTableItem(Items.GUNPOWDER)
-                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
-                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
-                                        )
-                        )
-                        .withPool(
-                                LootPool.lootPool()
-                                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
-                                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
-                        )
-        );
+        // Awkward Residue is added at runtime by LootIntegrations when No Man's Land is installed
+        this.add(AMEntityTypes.SPORAL, output, LootTable.lootTable());
 
         this.add(
                 AMEntityTypes.CREEPER,
