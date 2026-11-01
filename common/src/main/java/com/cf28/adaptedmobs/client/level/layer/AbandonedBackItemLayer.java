@@ -28,9 +28,9 @@ public class AbandonedBackItemLayer extends RenderLayer<Abandoned, AbandonedMode
             pose.pushPose();
             this.getParentModel().body.translateAndRotate(pose);
 
-            pose.translate(0.0F, -0.4F, 0.17F);
+            pose.translate(0.0F, -0.45F, 0.17F);
             pose.mulPose(Axis.ZP.rotationDegrees(-90.0F));
-            pose.scale(0.85F, 0.85F, 0.85F);
+            pose.scale(0.75F, 0.75F, 0.75F);
 
             this.itemRenderer.renderStatic(stowed, ItemDisplayContext.FIXED, packedLight, OverlayTexture.NO_OVERLAY, pose, buffer, entity.level(), entity.getId());
             pose.popPose();
