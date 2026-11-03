@@ -305,8 +305,8 @@ public class Mindmould extends AgeableMob implements Enemy {
 
     @Override
     public void tick() {
-        this.squish += (this.targetSquish - this.squish) * 0.5F;
         this.oSquish = this.squish;
+        this.squish += (this.targetSquish - this.squish) * 0.5F;
         super.tick();
 
         if (this.isDummy() && this.isDisguised()) this.clearDisguise();
