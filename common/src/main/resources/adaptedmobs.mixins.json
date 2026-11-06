@@ -7,7 +7,8 @@
     "client.ClientLevelMixin",
     "client.GuiMixin",
     "client.HumanoidModelMixin",
-    "client.LivingEntityRendererMixin"
+    "client.LivingEntityRendererMixin",
+    "client.ScreenEffectRendererMixin"
   ],
   "mixins": [
     "common.AnvilMenuMixin",

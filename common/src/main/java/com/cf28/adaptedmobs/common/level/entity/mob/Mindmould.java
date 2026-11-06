@@ -59,6 +59,13 @@ public class Mindmould extends AgeableMob implements Enemy {
         return Optional.of(player);
     }
 
+    public static @Nullable Mindmould getAnyRiding(Player player) {
+        for (Entity passenger : player.getPassengers()) {
+            if (passenger.getType().equals(AMEntityTypes.MINDMOULD.get())) return (Mindmould) passenger;
+        }
+        return null;
+    }
+
     protected @NotNull ParticleOptions getParticleType() {
         if (this.isDisguised()) {
             return new BlockParticleOption(ParticleTypes.BLOCK, this.getDisguiseBlock());
@@ -95,7 +102,13 @@ public class Mindmould extends AgeableMob implements Enemy {
 
     @Override
     public @NotNull Vec3 getVehicleAttachmentPoint(@NotNull Entity entity) {
-        return super.getVehicleAttachmentPoint(entity).add(0, 0.5, 0);
+        float vehicleScale = entity instanceof LivingEntity living ? living.getScale() : 1.0F;
+        return super.getVehicleAttachmentPoint(entity).add(0, 0.5 * vehicleScale, 0);
+    }
+
+    // TODO probably dont use instanceof but I'm sure it's fine
+    public @Nullable Player getAttachedPlayer() {
+        return (this.getVehicle() instanceof Player player) ? player : null;
     }
 
     private static final class TransformContext {
@@ -219,11 +232,16 @@ public class Mindmould extends AgeableMob implements Enemy {
         return serverLevel.getBlockState(blockPos);
     }
 
+    private float receivedDamage = 0.0f;
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (super.hurt(source, amount)) {
             this.clearDisguise();
-            this.stopRiding();
+            if (this.getVehicle() != null) {
+                receivedDamage += amount;
+                if (receivedDamage >= 5f || this.isBaby())
+                    this.stopRiding();
+            }
             return true;
         }
         return false;
@@ -245,6 +263,7 @@ public class Mindmould extends AgeableMob implements Enemy {
     @Override public void stopRiding() {
         Entity vehicle = this.getVehicle();
         super.stopRiding();
+        receivedDamage = 0.0f;
 
         if (vehicle instanceof ServerPlayer serverPlayer)
             this.sendPassengers(serverPlayer);

@@ -22,16 +22,19 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class MindmouldVesselLayer extends RenderLayer<Mindmould, MindmouldModel<Mindmould>> {
     private final BlockRenderDispatcher blockRenderer;
@@ -52,6 +55,12 @@ public final class MindmouldVesselLayer extends RenderLayer<Mindmould, Mindmould
     ) {
         if (mindmould.isInvisible()) return;
 
+//        Minecraft minecraft = Minecraft.getInstance();
+//        Player mainPlayer = minecraft.player;
+//        if (mainPlayer != null && mindmould.getVehicle() != null
+//        && Objects.equals(mindmould.getAttachedPlayer(), mainPlayer)
+//        && minecraft.options.getCameraType().isFirstPerson()) return;
+
         mindmould.updateClientDisguise(partialTick);
         BlockState blockState = mindmould.getClientBlock();
 
@@ -66,6 +75,27 @@ public final class MindmouldVesselLayer extends RenderLayer<Mindmould, Mindmould
         if (baby) facadeModel = MindmouldFacadeModel.getFacadeModel(blockModel, blockState, seed, this.getFacadeCorner(mindmould));
 
         poseStack.pushPose();
+
+        Player player = mindmould.getAttachedPlayer();
+        if (player != null) {
+            Matrix4f pose = poseStack.last().pose();
+            poseStack.mulPose(Axis.YP.rotation((float) Mth.atan2(pose.m20(), pose.m22())));
+
+            float headYaw = Mth.rotLerp(partialTick, player.yHeadRotO, player.yHeadRot);
+            float playerPitch = Mth.lerp(partialTick, player.xRotO, player.getXRot());
+
+            Vec3 playerEye = player.getEyePosition(partialTick).subtract(0, 0.12 * player.getScale(), 0)
+                .subtract(Minecraft.getInstance().gameRenderer.getMainCamera().getPosition());
+            Vector3f rotationPivot = new Matrix4f(pose).invert().transformPosition(
+                (float) playerEye.x, (float) playerEye.y, (float) playerEye.z, new Vector3f()
+            );
+
+            poseStack.translate(rotationPivot.x(), rotationPivot.y(), rotationPivot.z());
+            poseStack.mulPose(Axis.YP.rotationDegrees(headYaw - 180.0F));
+            poseStack.mulPose(Axis.XP.rotationDegrees(playerPitch));
+            poseStack.translate(-rotationPivot.x(), -rotationPivot.y(), -rotationPivot.z());
+        }
+
         model.transformFacade(poseStack);
 
 //        float bodyYaw = Mth.rotLerp(partialTick, mindmould.yBodyRotO, mindmould.yBodyRot);
