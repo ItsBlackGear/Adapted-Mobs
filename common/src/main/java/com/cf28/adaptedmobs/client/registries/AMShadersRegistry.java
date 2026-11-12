@@ -9,15 +9,14 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class AMShadersRegistry {
     private static ShaderInstance MINDMOULD_SHADER;
     public static ShaderInstance getMindmouldShader() { return MINDMOULD_SHADER; }
+
+    private static ShaderInstance MINDMOULD_OVERLAY_SHADER;
+    public static ShaderInstance getMindmouldOverlayShader() { return MINDMOULD_OVERLAY_SHADER; }
 
     @FunctionalInterface
     public interface AMShaderRegisterEvent {
@@ -27,8 +26,11 @@ public class AMShadersRegistry {
     public static void bootstrap(final AMShaderRegisterEvent event) throws IOException {
         event.register(
             AdaptedMobs.resource("rendertype_mindmould_facade"),
-            DefaultVertexFormat.NEW_ENTITY,
-            (shader) -> MINDMOULD_SHADER = shader
+            DefaultVertexFormat.NEW_ENTITY, (shader) -> MINDMOULD_SHADER = shader
+        );
+        event.register(
+            AdaptedMobs.resource("mindmould_overlay"),
+            DefaultVertexFormat.POSITION_TEX, (shader) -> MINDMOULD_OVERLAY_SHADER = shader
         );
     }
 }

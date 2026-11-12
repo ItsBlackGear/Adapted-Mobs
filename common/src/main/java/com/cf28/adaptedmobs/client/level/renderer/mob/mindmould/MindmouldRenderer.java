@@ -27,36 +27,6 @@ public class MindmouldRenderer extends MobRenderer<Mindmould, MindmouldModel<Min
 
     public static ResourceLocation getOverlayTexture() { return MINDMOULD_OVERLAY_TEXTURE; }
 
-    public static void renderScreenEffect(Mindmould mindmould, PoseStack poseStack) {
-        ResourceLocation texture = getVesselTexture(mindmould);
-
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-
-        // :p
-        Vector4f uvMapping = new Vector4f(
-            16f / 64f, 16f / 64f,
-            32f / 64f, 32f / 64f
-        );
-        if (mindmould.isBaby()) {
-            uvMapping.x = 8f / 64f;
-            uvMapping.z = 16f / 64f;
-        }
-
-        float size = .75f;
-        float opacity = .7f;
-        Matrix4f matrix4f = poseStack.last().pose();
-        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.addVertex(matrix4f, -size, -size, -0.5F).setUv(uvMapping.z, uvMapping.w).setColor(1f, 1F, 1F, opacity);
-        bufferbuilder.addVertex(matrix4f, size, -size, -0.5F).setUv(uvMapping.x, uvMapping.w).setColor(1f, 1F, 1F, opacity);
-        bufferbuilder.addVertex(matrix4f, size, size, -0.5F).setUv(uvMapping.x, uvMapping.y).setColor(1f, 1F, 1F, opacity);
-        bufferbuilder.addVertex(matrix4f, -size, size, -0.5F).setUv(uvMapping.z, uvMapping.y).setColor(1f, 1F, 1F, opacity);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-        RenderSystem.disableBlend();
-    }
-
     private final MindmouldModel<Mindmould> smallModel;
     private final MindmouldModel<Mindmould> defaultModel;
 

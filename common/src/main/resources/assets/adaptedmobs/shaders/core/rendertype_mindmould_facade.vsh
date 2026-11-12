@@ -54,6 +54,7 @@ void main() {
     vec3 pos = Position + ChunkOffset;
     // TODO: apply some variance to this so that it isnt the same for every mindmould
     vec3 RawPosition = FacadeInverseTransform * (Position - FacadeOrigin);
+    // that might not actually be true vvvv
     RawPosition = round(RawPosition * 1024.0) / 1024.0; // reduces jitter with floating point imprecision
     pos.xz += vertexJitter(RawPosition, GameTime * 1000.) * 0.025;
     gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
