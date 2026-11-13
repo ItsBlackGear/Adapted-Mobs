@@ -59,9 +59,10 @@ public class Mindmould extends AgeableMob implements Enemy {
         return Optional.of(player);
     }
 
-    public static @Nullable Mindmould getAnyRiding(Player player) {
+    public static @Nullable Mindmould getAnyRiding(Entity player) {
         for (Entity passenger : player.getPassengers()) {
-            if (passenger.getType().equals(AMEntityTypes.MINDMOULD.get())) return (Mindmould) passenger;
+            if (passenger.getType().equals(AMEntityTypes.MINDMOULD.get()))
+                return (Mindmould) passenger;
         }
         return null;
     }
