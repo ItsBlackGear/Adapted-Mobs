@@ -62,9 +62,10 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     private static final int GLIDE_TICKS = 30;
     private static final double SLOW_FALL_DAMPING = 0.94D;
     private static final int RIDE_TOGGLE_COOLDOWN = 20;
-    private static final double PERCH_HEIGHT_RATIO = 0.95D;
+    private static final double PERCH_HEIGHT_RATIO = 1.04D;
     private static final int PASSENGER_RESYNC_INTERVAL = 100;
     private static final int NATURAL_COUNT_CACHE_TICKS = 40;
+    private static final double MAX_CARRY_HEIGHT = 12.0D;
 
     private static final Map<ServerLevel, NaturalCount> NATURAL_COUNTS = new WeakHashMap<>();
     private final FlyingPathNavigation flyingNavigation;
@@ -257,7 +258,7 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     public void tick() {
         if (this.isVehicle()) {
             this.setDeltaMovement(this.getDeltaMovement().x, 0.25D, this.getDeltaMovement().z);
-            if (!this.level().isClientSide && (this.getDistanceToGround(this.blockPosition()) >= 20.0D || this.level().getBlockState(this.blockPosition().above()).isSolid())) {
+            if (!this.level().isClientSide && (this.getDistanceToGround(this.blockPosition()) >= MAX_CARRY_HEIGHT || this.level().getBlockState(this.blockPosition().above()).isSolid())) {
                 this.ejectPassengers();
             }
         }
@@ -333,12 +334,14 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
             sendPassengerList(player);
         }
 
-        this.yBodyRot = player.yBodyRot;
-        this.yBodyRotO = player.yBodyRotO;
-        this.setYRot(player.yBodyRot);
-        this.yRotO = player.yBodyRotO;
-        this.setYHeadRot(player.yBodyRot);
-        this.yHeadRotO = player.yBodyRotO;
+        float yaw = player.getYHeadRot();
+        float yawO = player.yHeadRotO;
+        this.yBodyRot = yaw;
+        this.yBodyRotO = yawO;
+        this.setYRot(yaw);
+        this.yRotO = yawO;
+        this.setYHeadRot(yaw);
+        this.yHeadRotO = yawO;
         this.setXRot(0.0F);
         this.xRotO = 0.0F;
     }
@@ -388,7 +391,7 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     private void calculateFlapping() {
         this.oFlap = this.flap;
         this.oFlapSpeed = this.flapSpeed;
-        boolean airborne = this.isFlying();
+        boolean airborne = this.isFlying() || this.isOnPlayerHead();
         this.flapSpeed = this.flapSpeed + (float) (airborne ? 4 : -1) * 0.3F;
         this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
         if (airborne && this.flapping < 1.0F) {
@@ -412,6 +415,10 @@ public class Harpy extends TamableAnimal implements FlyingAnimal {
     @Override
     public boolean isFlying() {
         return !this.isBaby() && !this.isPassenger() && this.groundedTicks < GROUND_HYSTERESIS;
+    }
+
+    public boolean isOnPlayerHead() {
+        return this.getVehicle() instanceof Player;
     }
 
     public boolean isPerched() {

@@ -11,6 +11,8 @@ public class AMBiomeTags {
 
     public static final TagKey<Biome> EXTRA_FESTIVE_CREEPER_SPAWNS = REGISTRY.register("extra_festive_creeper_spawns");
     public static final TagKey<Biome> SPORAL_SPAWNS = REGISTRY.register("sporal_spawns");
+    public static final TagKey<Biome> PINK_SPORAL_SPAWNS = REGISTRY.register("pink_sporal_spawns");
+    public static final TagKey<Biome> WHITE_SPORAL_SPAWNS = REGISTRY.register("white_sporal_spawns");
     public static final TagKey<Biome> EXTRA_ROCKET_CREEPER_SPAWNS = REGISTRY.register("extra_rocket_creeper_spawns");
     public static final TagKey<Biome> HAS_HARPY_NEST = REGISTRY.register("has_structure/harpy_nest");
     public static final TagKey<Biome> HARPY_DAYTIME_SPAWNS = REGISTRY.register("harpy_daytime_spawns");

@@ -27,6 +27,13 @@ public class BiomeTagGenerator extends FabricTagProvider<Biome> {
                 .add(Biomes.MANGROVE_SWAMP)
                 .forceAddTag(BiomeTags.IS_JUNGLE);
 
+        this.getOrCreateTagBuilder(AMBiomeTags.PINK_SPORAL_SPAWNS)
+                .add(Biomes.LUSH_CAVES);
+
+        this.getOrCreateTagBuilder(AMBiomeTags.WHITE_SPORAL_SPAWNS)
+                .add(Biomes.SWAMP)
+                .add(Biomes.MANGROVE_SWAMP);
+
         this.getOrCreateTagBuilder(AMBiomeTags.EXTRA_ROCKET_CREEPER_SPAWNS)
                 .add(Biomes.SNOWY_PLAINS)
                 .add(Biomes.ICE_SPIKES)
