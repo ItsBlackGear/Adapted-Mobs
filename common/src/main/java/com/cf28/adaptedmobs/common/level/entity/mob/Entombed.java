@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class Entombed extends Monster {
     public static final int MAX_COMFORT_LIGHT = 4;
-    public static final int BURNING_LIGHT = 15;
+    public static final int BURNING_LIGHT = 13;
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(Entombed.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_AFRAID_OF_LIGHT = SynchedEntityData.defineId(Entombed.class, EntityDataSerializers.BOOLEAN);
@@ -192,10 +192,9 @@ public class Entombed extends Monster {
 
             if (!inBurningLight && LambDynLightsCompat.isLoaded()) {
                 Player nearestLightingPlayer = this.getNearestLightingPlayer(3.0D);
-                if (nearestLightingPlayer != null && LambDynLightsCompat.getLivingEntityLuminance(nearestLightingPlayer) >= BURNING_LIGHT) {
-                    if (nearestLightingPlayer.distanceToSqr(this) <= 2.25D) {
-                        inBurningLight = true;
-                    }
+
+                if (nearestLightingPlayer != null && LambDynLightsCompat.getLivingEntityLuminance(nearestLightingPlayer) >= BURNING_LIGHT && nearestLightingPlayer.distanceToSqr(this) <= 2.25D) {
+                    inBurningLight = true;
                 }
             }
 
@@ -212,11 +211,14 @@ public class Entombed extends Monster {
         if (!LambDynLightsCompat.isLoaded()) {
             return null;
         }
+
         Player nearest = null;
         double nearestDistSq = range * range;
+
         for (Player player : this.level().players()) {
             if (player.isAlive() && !player.isSpectator()) {
                 double distSq = this.distanceToSqr(player);
+
                 if (distSq <= nearestDistSq) {
                     if (LambDynLightsCompat.getLivingEntityLuminance(player) > MAX_COMFORT_LIGHT) {
                         nearest = player;
@@ -291,21 +293,14 @@ public class Entombed extends Monster {
     }
 
     public boolean isTargetInLightOrHoldingLight(LivingEntity target) {
-        if (target == null) {
-            return false;
-        }
-        BlockPos targetPos = target.blockPosition();
-        BlockPos eyePos = BlockPos.containing(target.getX(), target.getEyeY(), target.getZ());
-        if (this.isPosLit(targetPos) || this.isPosLit(eyePos)) {
-            return true;
-        }
-        return LambDynLightsCompat.isLoaded() && LambDynLightsCompat.getLivingEntityLuminance(target) > 0;
+        return false;
     }
 
     public boolean isPositionInTargetLight(BlockPos pos, LivingEntity target) {
         if (target == null || !LambDynLightsCompat.isLoaded()) {
             return false;
         }
+
         int luminance = LambDynLightsCompat.getLivingEntityLuminance(target);
         if (luminance > MAX_COMFORT_LIGHT) {
             int safeRadius = luminance - MAX_COMFORT_LIGHT;
