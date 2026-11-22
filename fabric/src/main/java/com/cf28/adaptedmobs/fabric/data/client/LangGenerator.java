@@ -82,8 +82,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMItems.ROCKET_CREEPIE_SPAWN_EGG.get(), "Leapie Spawn Egg");
         builder.add(AMItems.FESTIVE_CREEPIE_SPAWN_EGG.get(), "Reapie Spawn Egg");
 
-        builder.add(AMMobEffects.SUPPORT_SPEED.value(), "Speed");
-        builder.add(AMMobEffects.SUPPORT_STRENGTH.value(), "Strength");
+        builder.add(AMMobEffects.SPORE.value(), "Spore");
 
         builder.add("block.tolerable_creepers.spore_barrel", "Creeper Spore Barrel");
         builder.add("entity.tolerable_creepers.spore_barrel", "Creeper Spore Barrel");

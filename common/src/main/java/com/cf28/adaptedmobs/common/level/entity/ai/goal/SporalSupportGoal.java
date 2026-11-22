@@ -2,8 +2,6 @@ package com.cf28.adaptedmobs.common.level.entity.ai.goal;
 
 import com.cf28.adaptedmobs.common.level.entity.mob.Sporal;
 import com.cf28.adaptedmobs.common.registries.AMMobEffects;
-import net.minecraft.core.Holder;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -106,16 +104,11 @@ public class SporalSupportGoal extends Goal {
     }
 
     private void bestow(LivingEntity supported) {
-        supported.addEffect(new MobEffectInstance(AMMobEffects.SUPPORT_SPEED, BUFF_DURATION, 0, false, false, true), this.sporal);
-        supported.addEffect(new MobEffectInstance(AMMobEffects.SUPPORT_STRENGTH, BUFF_DURATION, 0, false, false, true), this.sporal);
+        supported.addEffect(new MobEffectInstance(AMMobEffects.SPORE, BUFF_DURATION, 0, false, false, true), this.sporal);
     }
 
     private static boolean needsBuff(LivingEntity entity) {
-        return isRunningOut(entity, AMMobEffects.SUPPORT_SPEED) || isRunningOut(entity, AMMobEffects.SUPPORT_STRENGTH);
-    }
-
-    private static boolean isRunningOut(LivingEntity entity, Holder<MobEffect> effect) {
-        MobEffectInstance instance = entity.getEffect(effect);
+        MobEffectInstance instance = entity.getEffect(AMMobEffects.SPORE);
         return instance == null || instance.getDuration() < REFRESH_THRESHOLD;
     }
 
