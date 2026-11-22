@@ -2,7 +2,9 @@ package com.cf28.adaptedmobs.common.level.entity.mob;
 
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.SporalFleeGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.SporalSupportGoal;
+import com.cf28.adaptedmobs.core.tags.AMBiomeTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,6 +32,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -40,19 +44,24 @@ public class Sporal extends Monster {
 
     public static final byte BESTOW_EVENT = 4;
 
-    // Matches vanilla Slow Falling
-    private static final double SLOW_FALL_GRAVITY = 0.01;
+    private static final double DASH_FALL_GRAVITY = 0.01;
+    private static final double FALL_GRAVITY = 0.04;
+    private static final float LEAP_BLEND_IN = 0.25F;
+    private static final float LEAP_BLEND_OUT = 0.15F;
     private static final int DASH_COOLDOWN = 120;
     private static final double DASH_HORIZONTAL_SPEED = 0.9;
     private static final double DASH_VERTICAL_SPEED = 0.45;
 
     public final AnimationState bestowAnimationState = new AnimationState();
-    public final AnimationState leapAnimationState = new AnimationState();
 
     @Nullable
     private LivingEntity supported;
     private int dashCooldown;
     private int dashTicks;
+    @Nullable
+    private Vec3 pendingDashThreat;
+    private float leapBlend;
+    private float leapBlendO;
 
     public Sporal(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -85,7 +94,11 @@ public class Sporal extends Monster {
 
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
-        this.setVariant(Variant.random(this.random.nextFloat()));
+        if (spawnType == MobSpawnType.NATURAL || spawnType == MobSpawnType.CHUNK_GENERATION) {
+            this.setVariant(Variant.forBiome(level.getBiome(this.blockPosition()), this.random));
+        } else {
+            this.setVariant(Variant.random(this.random.nextFloat()));
+        }
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
@@ -94,7 +107,8 @@ public class Sporal extends Monster {
         super.tick();
 
         if (this.level().isClientSide()) {
-            this.leapAnimationState.animateWhen(this.isDashing(), this.tickCount);
+            this.leapBlendO = this.leapBlend;
+            this.leapBlend = this.isDashing() ? Math.min(1.0F, this.leapBlend + LEAP_BLEND_IN) : Math.max(0.0F, this.leapBlend - LEAP_BLEND_OUT);
             this.spawnBloomParticles();
             return;
         }
@@ -110,6 +124,17 @@ public class Sporal extends Monster {
                 this.setDashing(false);
             }
         }
+
+        if (this.pendingDashThreat != null && this.onGround()) {
+            if (this.canDash()) {
+                this.dashAwayFrom(this.pendingDashThreat);
+            }
+            this.pendingDashThreat = null;
+        }
+    }
+
+    public float getLeapBlend(float partialTick) {
+        return Mth.lerp(partialTick, this.leapBlendO, this.leapBlend);
     }
 
     private void spawnBloomParticles() {
@@ -153,8 +178,12 @@ public class Sporal extends Monster {
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
         boolean hurt = super.hurt(source, amount);
-        if (hurt && !this.level().isClientSide() && source.getEntity() instanceof LivingEntity attacker && this.canDash()) {
-            this.dashAwayFrom(attacker.position());
+        if (hurt && !this.level().isClientSide() && source.getEntity() instanceof LivingEntity attacker) {
+            if (this.canDash()) {
+                this.dashAwayFrom(attacker.position());
+            } else if (!this.onGround() && !this.isDashing()) {
+                this.pendingDashThreat = attacker.position();
+            }
         }
         return hurt;
     }
@@ -162,7 +191,8 @@ public class Sporal extends Monster {
     @Override
     protected double getDefaultGravity() {
         double gravity = super.getDefaultGravity();
-        return this.getDeltaMovement().y <= 0.0 ? Math.min(gravity, SLOW_FALL_GRAVITY) : gravity;
+        if (this.getDeltaMovement().y > 0.0) return gravity;
+        return Math.min(gravity, this.isDashing() ? DASH_FALL_GRAVITY : FALL_GRAVITY);
     }
 
     @Override
@@ -243,6 +273,7 @@ public class Sporal extends Monster {
         WHITE("white");
 
         private static final float WHITE_CHANCE = 0.05F;
+        private static final float SWAMP_WHITE_CHANCE = 0.1F;
 
         private final String name;
 
@@ -253,6 +284,12 @@ public class Sporal extends Monster {
         public static Variant random(float roll) {
             if (roll < WHITE_CHANCE) return WHITE;
             return roll < WHITE_CHANCE + (1.0F - WHITE_CHANCE) / 2.0F ? PINK : RED;
+        }
+
+        public static Variant forBiome(Holder<Biome> biome, RandomSource random) {
+            if (biome.is(AMBiomeTags.PINK_SPORAL_SPAWNS) && random.nextBoolean()) return PINK;
+            if (biome.is(AMBiomeTags.WHITE_SPORAL_SPAWNS) && random.nextFloat() < SWAMP_WHITE_CHANCE) return WHITE;
+            return RED;
         }
 
         public static Variant byId(int id) {

@@ -77,6 +77,13 @@ public class HarpyModel<T extends Harpy> extends EntityModel<T> {
         this.wing_left.y = 5.0F + bodyDrop;
         this.wing_right.y = 5.0F + bodyDrop;
 
+        if (entity.isOnPlayerHead()) {
+            this.leg_left.xRot = 0.0F;
+            this.leg_right.xRot = 0.0F;
+            this.flapWings(ageInTicks);
+            return;
+        }
+
         if (entity.isPerched()) {
             this.leg_left.xRot = SITTING_LEG;
             this.leg_right.xRot = SITTING_LEG;
@@ -95,12 +102,16 @@ public class HarpyModel<T extends Harpy> extends EntityModel<T> {
         }
 
         if (entity.isFlying()) {
-            this.wing_left.zRot = -0.0873F - ageInTicks;
-            this.wing_right.zRot = 0.0873F + ageInTicks;
+            this.flapWings(ageInTicks);
         } else {
             this.wing_left.zRot = 0.0F;
             this.wing_right.zRot = 0.0F;
         }
+    }
+
+    private void flapWings(float bob) {
+        this.wing_left.zRot = -0.0873F - bob;
+        this.wing_right.zRot = 0.0873F + bob;
     }
 
     @Override

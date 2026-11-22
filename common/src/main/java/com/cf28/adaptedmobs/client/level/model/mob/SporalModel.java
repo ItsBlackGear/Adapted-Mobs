@@ -2,6 +2,7 @@ package com.cf28.adaptedmobs.client.level.model.mob;
 
 import com.cf28.adaptedmobs.client.level.animation.SporalAnimations;
 import com.cf28.adaptedmobs.common.level.entity.mob.Sporal;
+import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,8 +12,10 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 public class SporalModel extends HierarchicalModel<Sporal> {
+    private static final long LEAP_POSE_MILLIS = (long) (SporalAnimations.LEAP.lengthInSeconds() * 1000.0F);
     private static final String[] PETALS = {"petal_0", "petal_1", "petal_2", "petal_3"};
 
     private final ModelPart root;
@@ -22,6 +25,7 @@ public class SporalModel extends HierarchicalModel<Sporal> {
     private final ModelPart head;
     private final ModelPart petals;
     private final ModelPart[] petalLeaves = new ModelPart[PETALS.length];
+    private final Vector3f animationCache = new Vector3f();
 
     public SporalModel(ModelPart root) {
         this.root = root;
@@ -78,12 +82,11 @@ public class SporalModel extends HierarchicalModel<Sporal> {
         this.head.zRot -= idleSway * 0.04F;
         this.petals.yRot += Mth.sin(ageInTicks * 0.03F) * 0.12F;
 
-        float petalLift;
-        if (entity.isDashing()) {
-            petalLift = 0.45F;
-        } else {
-            petalLift = this.animateStride(limbSwing, Math.min(limbSwingAmount, 1.0F));
-        }
+        float leap = entity.getLeapBlend(ageInTicks - entity.tickCount);
+        leap = leap * leap * (3.0F - 2.0F * leap);
+
+        float stride = this.animateStride(limbSwing, Math.min(limbSwingAmount, 1.0F) * (1.0F - leap));
+        float petalLift = Mth.lerp(leap, stride, 0.45F);
 
         for (int i = 0; i < this.petalLeaves.length; i++) {
             float flutter = Mth.sin(ageInTicks * 0.12F + i * Mth.HALF_PI) * 0.06F;
@@ -91,15 +94,17 @@ public class SporalModel extends HierarchicalModel<Sporal> {
         }
 
         this.animate(entity.bestowAnimationState, SporalAnimations.BESTOW, ageInTicks);
-        this.animate(entity.leapAnimationState, SporalAnimations.LEAP, ageInTicks);
+        if (leap > 0.0F) {
+            KeyframeAnimations.animate(this, SporalAnimations.LEAP, LEAP_POSE_MILLIS, leap, this.animationCache);
+        }
     }
 
     private float animateStride(float limbSwing, float amount) {
         float stride = limbSwing * 0.45F;
-        this.leftLeg.xRot = Mth.cos(stride) * 0.9F * amount;
-        this.rightLeg.xRot = Mth.cos(stride + Mth.PI) * 0.9F * amount;
+        this.leftLeg.xRot = Mth.cos(stride) * 0.5F * amount;
+        this.rightLeg.xRot = Mth.cos(stride + Mth.PI) * 0.5F * amount;
 
-        float lift = Math.abs(Mth.sin(stride)) * 1.5F * amount;
+        float lift = Math.abs(Mth.sin(stride)) * 0.8F * amount;
         this.leftLeg.y -= lift;
         this.rightLeg.y -= lift;
         this.upper.y -= lift;

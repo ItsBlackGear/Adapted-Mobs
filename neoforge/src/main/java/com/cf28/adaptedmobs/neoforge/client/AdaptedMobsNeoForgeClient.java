@@ -1,6 +1,7 @@
 package com.cf28.adaptedmobs.neoforge.client;
 
 import com.cf28.adaptedmobs.client.level.model.mob.ArchaicMaskModel;
+import com.cf28.adaptedmobs.client.level.renderer.effect.MindmouldEffectRenderer;
 import com.cf28.adaptedmobs.client.registries.AMModelLayers;
 import com.cf28.adaptedmobs.client.registries.AMShadersRegistry;
 import com.cf28.adaptedmobs.common.level.item.mask.ArchaicMaskItem;
@@ -38,6 +39,7 @@ public class AdaptedMobsNeoForgeClient {
                 (location, vertexFormat, consumer)
                     -> event.registerShader(new ShaderInstance(event.getResourceProvider(), location, vertexFormat), consumer)
             );
+            MindmouldEffectRenderer.getInstance().setupPostChain();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
