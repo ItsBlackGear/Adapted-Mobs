@@ -59,6 +59,14 @@ public class AMFlowerParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
+    public static ParticleProvider<SimpleParticleType> sporeBlossomSized(SpriteSet sprites) {
+        return (type, level, x, y, z, xVelocity, yVelocity, zVelocity) -> {
+            AMFlowerParticle particle = new AMFlowerParticle(level, x, y, z, xVelocity, yVelocity, zVelocity, sprites, 1.0F, true);
+            particle.quadSize = 0.1F * (level.random.nextFloat() * 0.5F + 0.5F) * 2.0F * (level.random.nextFloat() * 0.6F + 0.6F);
+            return particle;
+        };
+    }
+
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprites;
         private final float sizeMultiplier;

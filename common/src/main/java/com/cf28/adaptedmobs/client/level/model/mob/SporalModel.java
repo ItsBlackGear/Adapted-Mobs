@@ -93,8 +93,6 @@ public class SporalModel extends HierarchicalModel<Sporal> {
     @Override
     public void setupAnim(@NotNull Sporal entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.head.yRot = netHeadYaw * Mth.DEG_TO_RAD;
-        this.head.xRot = headPitch * Mth.DEG_TO_RAD;
 
         float idleSway = Mth.sin(ageInTicks * 0.05F);
         this.upper.zRot += idleSway * 0.03F;
@@ -131,7 +129,6 @@ public class SporalModel extends HierarchicalModel<Sporal> {
         this.upper.xRot += 0.08F * amount;
         this.upper.zRot += Mth.sin(stride) * 0.06F * amount;
 
-        // The roots flare away from the legs and rattle with each step, out of phase so they don't move as one sheet.
         float rootShake = stride * 4.0F;
         this.frontRoots.xRot += (-0.25F + Mth.sin(rootShake) * 0.2F) * amount;
         this.frontRoots.zRot += Mth.sin(rootShake * 0.5F) * 0.08F * amount;

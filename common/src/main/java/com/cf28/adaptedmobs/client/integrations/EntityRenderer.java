@@ -33,6 +33,7 @@ public class EntityRenderer {
         event.register(AMEntityTypes.STRANGER.get(), StrangerRenderer::new);
         event.register(AMEntityTypes.ABANDONED.get(), AbandonedRenderer::new);
         event.register(AMEntityTypes.SPORAL.get(), SporalRenderer::new);
+        event.register(AMEntityTypes.SPORE_CLOUD.get(), NoopEntityRenderer::new);
 
         event.register(AMEntityTypes.FESTIVE_TNT.get(), FestiveTntRenderer::new);
         event.register(AMEntityTypes.MYSTERY_EGG.get(), ThrownItemRenderer::new);

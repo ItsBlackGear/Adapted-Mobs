@@ -5,6 +5,7 @@ import com.cf28.adaptedmobs.common.integrations.TolerableCreepersCompat;
 import com.cf28.adaptedmobs.common.integrations.TolerableCreepersIntegration;
 import com.cf28.adaptedmobs.common.level.entity.AMPrimedSporeBarrel;
 import com.cf28.adaptedmobs.common.level.entity.PrimedFestiveTnt;
+import com.cf28.adaptedmobs.common.level.entity.SporeCloud;
 import com.cf28.adaptedmobs.common.level.entity.ThrownMysteryEgg;
 import com.cf28.adaptedmobs.common.level.entity.mob.*;
 import com.cf28.adaptedmobs.common.level.entity.mob.creeper.FestiveCreeper;
@@ -84,6 +85,13 @@ public class AMEntityTypes {
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
                     .updateInterval(10));
+
+    public static final Supplier<EntityType<SporeCloud>> SPORE_CLOUD = REGISTRIES.entity("spore_cloud",
+            EntityType.Builder.<SporeCloud>of(SporeCloud::new, MobCategory.MISC)
+                    .fireImmune()
+                    .sized(4.0F, 3.0F)
+                    .clientTrackingRange(10)
+                    .updateInterval(Integer.MAX_VALUE));
 
     public static final Supplier<EntityType<Harpy>> HARPY = REGISTRIES.entity("harpy",
             EntityType.Builder.of(Harpy::new, MobCategory.CREATURE)

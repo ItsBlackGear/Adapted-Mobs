@@ -1,7 +1,10 @@
 package com.cf28.adaptedmobs.common.level.entity.ai.goal;
 
 import com.cf28.adaptedmobs.common.level.entity.mob.Sporal;
+import com.cf28.adaptedmobs.common.level.entity.SporeCloud;
+import com.cf28.adaptedmobs.common.registries.AMEntityTypes;
 import com.cf28.adaptedmobs.common.registries.AMMobEffects;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -12,11 +15,10 @@ import java.util.Comparator;
 import java.util.EnumSet;
 
 public class SporalSupportGoal extends Goal {
-    private static final int BUFF_DURATION = 200;
     private static final int REFRESH_THRESHOLD = 40;
     private static final int BESTOW_DELAY = 10;
-    private static final double FOLLOW_DISTANCE = 3.0;
-    private static final double BESTOW_DISTANCE = 6.0;
+    private static final int BESTOW_COOLDOWN = 100;
+    private static final double FOLLOW_DISTANCE = 1.5;
     private static final double DASH_DISTANCE = 8.0;
 
     private final Sporal sporal;
@@ -26,6 +28,7 @@ public class SporalSupportGoal extends Goal {
     private LivingEntity candidate;
     private int bestowTicks = -1;
     private int repathDelay;
+    private int bestowCooldown;
 
     public SporalSupportGoal(Sporal sporal, double range, double speed) {
         this.sporal = sporal;
@@ -93,18 +96,30 @@ public class SporalSupportGoal extends Goal {
             this.sporal.getNavigation().stop();
         }
 
+        if (this.bestowCooldown > 0) {
+            this.bestowCooldown--;
+        }
+
         if (this.bestowTicks >= 0) {
             if (this.bestowTicks-- == 0) {
-                this.bestow(supported);
+                this.bestow();
             }
-        } else if (needsBuff(supported) && distanceSqr <= BESTOW_DISTANCE * BESTOW_DISTANCE && this.sporal.hasLineOfSight(supported)) {
+        } else if (this.bestowCooldown <= 0 && needsBuff(supported) && this.isInCloudRange(supported) && this.sporal.hasLineOfSight(supported)) {
             this.bestowTicks = BESTOW_DELAY;
             this.sporal.level().broadcastEntityEvent(this.sporal, Sporal.BESTOW_EVENT);
         }
     }
 
-    private void bestow(LivingEntity supported) {
-        supported.addEffect(new MobEffectInstance(AMMobEffects.SPORE, BUFF_DURATION, 0, false, false, true), this.sporal);
+    private void bestow() {
+        SporeCloud cloud = new SporeCloud(AMEntityTypes.SPORE_CLOUD.get(), this.sporal.level());
+        cloud.setPos(this.sporal.getX(), this.sporal.getY(), this.sporal.getZ());
+        this.sporal.level().addFreshEntity(cloud);
+        this.sporal.playSound(SoundEvents.PUFFER_FISH_BLOW_OUT, 0.8F, 1.1F + this.sporal.getRandom().nextFloat() * 0.2F);
+        this.bestowCooldown = BESTOW_COOLDOWN;
+    }
+
+    private boolean isInCloudRange(LivingEntity entity) {
+        return AMEntityTypes.SPORE_CLOUD.get().getDimensions().makeBoundingBox(this.sporal.position()).intersects(entity.getBoundingBox());
     }
 
     private static boolean needsBuff(LivingEntity entity) {

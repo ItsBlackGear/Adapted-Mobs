@@ -24,6 +24,7 @@ public class LangGenerator extends FabricLanguageProvider {
         builder.add(AMEntityTypes.ENTOMBED.get(), "Entombed");
         builder.add(AMEntityTypes.MINDMOULD.get(), "Mindmould");
         builder.add(AMEntityTypes.SPORAL.get(), "Sporal");
+        builder.add(AMEntityTypes.SPORE_CLOUD.get(), "Spore Cloud");
 
         builder.add(AMItems.FESTIVE_CREEPER_SPAWN_EGG.get(), "Reaper Spawn Egg");
         builder.add(AMItems.ROCKET_CREEPER_SPAWN_EGG.get(), "Leaper Spawn Egg");

@@ -2,10 +2,12 @@ package com.cf28.adaptedmobs.common.level.entity.mob;
 
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.SporalFleeGoal;
 import com.cf28.adaptedmobs.common.level.entity.ai.goal.SporalSupportGoal;
+import com.cf28.adaptedmobs.common.level.entity.SporeCloud;
+import com.cf28.adaptedmobs.common.registries.AMMobEffects;
+import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.tags.AMBiomeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -17,7 +19,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -25,8 +29,6 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +54,8 @@ public class Sporal extends Monster {
     private static final int DASH_COOLDOWN = 120;
     private static final double DASH_HORIZONTAL_SPEED = 0.9;
     private static final double DASH_VERTICAL_SPEED = 0.45;
+    private static final double SPORE_PROXIMITY = 1.5;
+    private static final int SPORE_PROXIMITY_INTERVAL = 10;
 
     public final AnimationState bestowAnimationState = new AnimationState();
 
@@ -81,8 +86,6 @@ public class Sporal extends Monster {
         this.goalSelector.addGoal(1, new SporalFleeGoal(this, 12.0F, 1.0, 1.3));
         this.goalSelector.addGoal(2, new SporalSupportGoal(this, 16.0, 1.15));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -113,6 +116,10 @@ public class Sporal extends Monster {
             return;
         }
 
+        if (this.tickCount % SPORE_PROXIMITY_INTERVAL == 0) {
+            this.sporeNearbyPlayers();
+        }
+
         if (this.dashCooldown > 0) {
             this.dashCooldown--;
         }
@@ -133,6 +140,13 @@ public class Sporal extends Monster {
         }
     }
 
+    private void sporeNearbyPlayers() {
+        AABB area = this.getBoundingBox().inflate(SPORE_PROXIMITY);
+        for (Player player : this.level().getEntitiesOfClass(Player.class, area, EntitySelector.NO_CREATIVE_OR_SPECTATOR)) {
+            player.addEffect(new MobEffectInstance(AMMobEffects.SPORE, SporeCloud.EFFECT_DURATION, 0, false, false, true), this);
+        }
+    }
+
     public float getLeapBlend(float partialTick) {
         return Mth.lerp(partialTick, this.leapBlendO, this.leapBlend);
     }
@@ -144,7 +158,7 @@ public class Sporal extends Monster {
         double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
         double y = this.getY() + this.getBbHeight() * (this.isDashing() ? this.random.nextDouble() : 0.75);
         double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
-        this.level().addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, x, y, z, 0.0, 0.0, 0.0);
+        this.level().addParticle(AMParticles.SPORE.get(), x, y, z, 0.0, 0.0, 0.0);
     }
 
     public boolean canDash() {
@@ -273,7 +287,8 @@ public class Sporal extends Monster {
         WHITE("white");
 
         private static final float WHITE_CHANCE = 0.05F;
-        private static final float SWAMP_WHITE_CHANCE = 0.1F;
+        private static final float SWAMP_WHITE_CHANCE = 0.05F;
+        private static final float LUSH_CAVES_WHITE_CHANCE = 0.12F;
 
         private final String name;
 
@@ -287,7 +302,9 @@ public class Sporal extends Monster {
         }
 
         public static Variant forBiome(Holder<Biome> biome, RandomSource random) {
-            if (biome.is(AMBiomeTags.PINK_SPORAL_SPAWNS) && random.nextBoolean()) return PINK;
+            if (biome.is(AMBiomeTags.PINK_SPORAL_SPAWNS)) {
+                return random.nextFloat() < LUSH_CAVES_WHITE_CHANCE ? WHITE : PINK;
+            }
             if (biome.is(AMBiomeTags.WHITE_SPORAL_SPAWNS) && random.nextFloat() < SWAMP_WHITE_CHANCE) return WHITE;
             return RED;
         }

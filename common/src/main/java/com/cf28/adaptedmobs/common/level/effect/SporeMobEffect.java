@@ -1,5 +1,6 @@
 package com.cf28.adaptedmobs.common.level.effect;
 
+import com.cf28.adaptedmobs.common.level.entity.SporeCloud;
 import com.cf28.adaptedmobs.common.registries.AMMobEffects;
 import com.cf28.adaptedmobs.common.registries.AMParticles;
 import com.cf28.adaptedmobs.core.AdaptedMobs;
@@ -20,7 +21,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import java.util.List;
 
 public class SporeMobEffect extends MobEffect {
-    private static final int CLOUD_EFFECT_DURATION = 100;
     private static final int CLOUD_DURATION = 40;
     private static final float CLOUD_RADIUS = 0.75F;
 
@@ -32,8 +32,7 @@ public class SporeMobEffect extends MobEffect {
             new Modifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_ID, 3.0, AttributeModifier.Operation.ADD_VALUE))
     );
     private static final List<Modifier> PLAYER_MODIFIERS = List.of(
-            new Modifier(Attributes.MOVEMENT_SPEED, new AttributeModifier(SPEED_ID, -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
-            new Modifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_ID, -4.0, AttributeModifier.Operation.ADD_VALUE))
+            new Modifier(Attributes.MOVEMENT_SPEED, new AttributeModifier(SPEED_ID, -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
     );
 
     public SporeMobEffect() {
@@ -42,7 +41,6 @@ public class SporeMobEffect extends MobEffect {
 
     private static boolean isPlayer(AttributeMap attributeMap) {
         return attributeMap.hasAttribute(Attributes.BLOCK_INTERACTION_RANGE); // possibly slightly questionable heuristic, but vanilla only hands the attribute map, not the entity
-
     }
 
     @Override
@@ -77,7 +75,7 @@ public class SporeMobEffect extends MobEffect {
         cloud.setDuration(CLOUD_DURATION);
         cloud.setWaitTime(0);
         cloud.setParticle(AMParticles.SPORE.get());
-        cloud.addEffect(new MobEffectInstance(AMMobEffects.SPORE, CLOUD_EFFECT_DURATION, 0, false, false, true));
+        cloud.addEffect(new MobEffectInstance(AMMobEffects.SPORE, SporeCloud.EFFECT_DURATION, 0, false, false, true));
         entity.level().addFreshEntity(cloud);
     }
 

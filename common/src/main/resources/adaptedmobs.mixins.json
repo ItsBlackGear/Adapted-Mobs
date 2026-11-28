@@ -20,6 +20,7 @@
     "common.festive_tnt.ExplosionMixin",
     "common.potted_spores.FlowerPotBlockMixin",
     "common.spawn_modifiers.MonsterMixin",
+    "common.spore_effect.FoodDataMixin",
     "common.sun_protection.FleeSunGoalMixin",
     "common.sun_protection.RestrictSunGoalMixin",
     "common.sun_protection.SkeletonSunProtectionMixin",

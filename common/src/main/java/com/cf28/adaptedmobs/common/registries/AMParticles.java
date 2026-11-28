@@ -13,6 +13,7 @@ public class AMParticles {
     public static final Supplier<SimpleParticleType> FESTIVE_SPORES = REGISTRIES.register("festive_spores", false);
     public static final Supplier<SimpleParticleType> ROCKET_SPORES = REGISTRIES.register("rocket_spores", false);
     public static final Supplier<SimpleParticleType> SPORE = REGISTRIES.register("spore", false);
+    public static final Supplier<SimpleParticleType> SPORE_SMOKE = REGISTRIES.register("spore_smoke", false);
     public static final Supplier<SimpleParticleType> CREEPER_HEAL = REGISTRIES.register("creeper_heal", false);
     public static final Supplier<SimpleParticleType> BRAIN_GOO = REGISTRIES.register("brain_goo", false);
 }
